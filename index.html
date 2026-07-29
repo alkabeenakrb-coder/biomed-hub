@@ -221,7 +221,7 @@
         </div>
     </footer>
 
-    <!-- السكربت المحدث للتحكم بالمنيو والعداد الحي من السيرفر -->
+    <!-- السكربت المحدث للتحكم بالمنيو والعداد الحي بدون كاش -->
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -232,15 +232,15 @@
 
         menuBtn.addEventListener('click', toggleMenu);
 
-        // جلب العداد من Netlify Functions مع الأنيميشن السلس
+        // جلب العداد من Netlify Functions مع مانع الكاش لتحديث 2612 المباشر
         async function fetchFollowers() {
             const counterElement = document.getElementById('followers-count');
             if (!counterElement) return;
 
             try {
-                const response = await fetch('/.netlify/functions/followers');
+                const response = await fetch('/.netlify/functions/followers?t=' + new Date().getTime());
                 const data = await response.json();
-                const target = data.followers || 2610;
+                const target = data.followers || 2612;
 
                 let count = 0;
                 const speed = 25;
@@ -259,7 +259,7 @@
                 updateCount();
             } catch (error) {
                 console.error('Error fetching followers:', error);
-                counterElement.innerText = '2,610';
+                counterElement.innerText = '2,612';
             }
         }
 
