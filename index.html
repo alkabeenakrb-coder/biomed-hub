@@ -6,6 +6,8 @@
     <title>BioMed Hub | منصة الهندسة الطبية</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script>
@@ -39,7 +41,7 @@
                 <img src="M.png.PNG" alt="BioMed Hub" class="w-10 h-10 object-contain">
                 <div>
                     <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
-                    <p class="text-xs text-purple-600 font-medium">منصة الهندسة الطبية </p>
+                    <p class="text-xs text-purple-600 font-medium">منصة هندسة الطب الحياتي</p>
                 </div>
             </div>
 
@@ -85,19 +87,19 @@
             <div class="grid sm:grid-cols-3 gap-6">
                 
                 <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm hover:border-purple-300 transition">
-                    <div class="text-3xl">💻</div>
+                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-laptop-code"></i></div>
                     <h3 class="font-bold text-lg text-purple-900">ورش عمل أونلاين</h3>
                     <p class="text-slate-600 text-xs leading-relaxed">محاضرات وورش تفاعلية تغطي الجانب العملي وسوق العمل الطبي.</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm hover:border-purple-300 transition">
-                    <div class="text-3xl">🛠️</div>
+                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-screwdriver-wrench"></i></div>
                     <h3 class="font-bold text-lg text-purple-900">صيانة وتشخيص</h3>
                     <p class="text-slate-600 text-xs leading-relaxed">تطوير العقلية الهندسية للتعامل مع الأعطال والمخططات الطبية.</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm hover:border-purple-300 transition">
-                    <div class="text-3xl">🤝</div>
+                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-users"></i></div>
                     <h3 class="font-bold text-lg text-purple-900">مجتمع متكامل</h3>
                     <p class="text-slate-600 text-xs leading-relaxed">تجمع للطلبة والمهندسين لتبادل الخبرات والفرص المهنية.</p>
                 </div>
@@ -106,18 +108,32 @@
         </div>
     </section>
 
-    <!-- التواصل والتليجرام (Footer) -->
+    <!-- التواصل والأيقونات الدائرية (Footer) -->
     <footer id="contact" class="py-12 px-6 text-center bg-white">
         <div class="max-w-md mx-auto space-y-6">
             <h2 class="text-xl font-bold text-purple-900">تواصل معنا وتطوّر معنا</h2>
-            <p class="text-slate-500 text-xs">جميع الإعلانات والورش تُنشر عبر قنواتنا الرسمية:</p>
+            <p class="text-slate-500 text-xs">تابعنا وانضم لقنواتنا عبر منصات التواصل الاجتماعي:</p>
 
-            <div class="flex flex-col gap-3">
-                <a href="#" class="bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-900 py-3 px-6 rounded-xl font-bold text-sm transition border border-purple-200 flex items-center justify-center gap-2">
-                    📲 قناة التليجرام
+            <!-- الأيقونات الدائرية الشبيهة بالصورة -->
+            <div class="flex items-center justify-center gap-4 pt-2">
+                <!-- التليجرام -->
+                <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition duration-200 text-lg shadow-sm">
+                    <i class="fa-brands fa-telegram"></i>
                 </a>
-                <a href="#" class="bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-900 py-3 px-6 rounded-xl font-bold text-sm transition border border-purple-200 flex items-center justify-center gap-2">
-                    📷 صفحة الانستغرام
+
+                <!-- الانستغرام -->
+                <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition duration-200 text-lg shadow-sm">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <!-- اليوتيوب -->
+                <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition duration-200 text-lg shadow-sm">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+
+                <!-- الفيسبوك -->
+                <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition duration-200 text-lg shadow-sm">
+                    <i class="fa-brands fa-facebook-f"></i>
                 </a>
             </div>
 
