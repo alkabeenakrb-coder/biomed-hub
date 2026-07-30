@@ -125,9 +125,11 @@
         </div>
     </section>
 
-    <!-- Followers Bar -->
+    <!-- Stats Bar (Followers & Workshops Count) -->
     <section class="py-8 bg-purple-900 text-white border-y border-purple-800 my-6">
-        <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-around gap-6 text-center">
+        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 gap-8 text-center items-center">
+            
+            <!-- Followers Count -->
             <div class="space-y-1">
                 <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
                     <i class="fa-solid fa-user-graduate"></i>
@@ -139,17 +141,18 @@
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
             </div>
 
-            <div class="hidden sm:block w-px h-12 bg-purple-700/60"></div>
-
-            <div class="space-y-2">
-                <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl">
-                    <i class="fa-brands fa-instagram"></i>
+            <!-- Workshops Count (New) -->
+            <div class="space-y-1 sm:border-r sm:border-purple-700/60">
+                <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
+                    <i class="fa-solid fa-chalkboard-user"></i>
                 </div>
-                <p class="text-xs text-purple-300 font-semibold">تابعنا ليصلك كل جديد</p>
-                <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="inline-block bg-purple-800 hover:bg-purple-700 text-purple-100 text-xs font-bold px-5 py-2 rounded-xl transition border border-purple-600/50 shadow-sm">
-                    حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
-                </a>
+                <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
+                    <span>+</span>
+                    <span id="workshops-count">5</span>
+                </div>
+                <p class="text-purple-200 text-xs sm:text-sm font-medium">ورشة عمل مُقدمة</p>
             </div>
+
         </div>
     </section>
 
@@ -256,6 +259,7 @@
 
             let workshopsHtml = '';
             let followersCount = '2,665';
+            let workshopsCount = '5';
 
             for (let i = 1; i < rows.length; i++) {
                 const cols = rows[i];
@@ -271,6 +275,13 @@
                     followersCount = title || '2,665';
                     const followerEl = document.getElementById('followers-count');
                     if (followerEl) followerEl.innerText = followersCount;
+                    continue;
+                }
+
+                if (type === 'workshops_count') {
+                    workshopsCount = title || '5';
+                    const workshopsCountEl = document.getElementById('workshops-count');
+                    if (workshopsCountEl) workshopsCountEl.innerText = workshopsCount;
                     continue;
                 }
 
