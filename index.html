@@ -283,9 +283,10 @@
 
                 let htmlContent = '';
 
+                // يبدأ من i = 1 لتخطي صف العناوين (Header)
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
-                    if (cols.length < 2) continue; // تخطي الأسطر الفارغة تماماً
+                    if (cols.length < 2) continue;
 
                     const type = cols[0] ? cols[0].trim().toLowerCase() : '';
                     const title = cols[1] ? cols[1].trim() : '';
@@ -294,7 +295,7 @@
                     const details = cols[4] ? cols[4].trim() : '';
                     const link = cols[5] ? cols[5].trim() : '';
 
-                    // التحقق إذا كان السطر مخصص لعدد المتابعين في الشيت
+                    // تحديث العداد تلقائياً
                     if (type === 'followers' && counterElement) {
                         const target = parseInt(title.replace(/,/g, '')) || 2612;
                         counterElement.innerText = target.toLocaleString('en-US');
