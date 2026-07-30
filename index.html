@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -34,6 +34,41 @@
 </head>
 <body class="bg-white text-slate-800 antialiased">
 
+    <!-- نافذة الترحيب المنبثقة (Welcome Modal) -->
+    <div id="welcome-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center space-y-5 shadow-2xl border border-purple-100 transform scale-95 transition-transform duration-300 relative">
+            
+            <!-- زر الإغلاق X -->
+            <button onclick="closeWelcomeModal()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 text-lg w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- أيقونة الترحيب -->
+            <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-hand-sparkles text-purple-600"></i>
+            </div>
+
+            <!-- النصوص -->
+            <div class="space-y-2">
+                <h3 class="text-xl font-black text-purple-900">أهلاً بك في BioMed Hub! 👋</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    مساحتك التعليمية والتطويرية في مجالات الهندسة الطبية وصيانة الأجهزة. يسعدنا انضمامك لمجتمعنا!
+                </p>
+            </div>
+
+            <!-- الأزرار -->
+            <div class="space-y-2 pt-2">
+                <a href="https://t.me/Biomedhubiq" target="_blank" onclick="closeWelcomeModal()" class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-md shadow-purple-200">
+                    انضم لقناتنا على التليجرام <i class="fa-solid fa-paper-plane mr-1"></i>
+                </a>
+                <button onclick="closeWelcomeModal()" class="block w-full bg-slate-50 hover:bg-slate-100 text-slate-500 font-bold text-xs py-2.5 rounded-xl transition">
+                    تصفح الموقع
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <!-- Navbar مع زر القائمة للموبايل -->
     <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
@@ -48,6 +83,7 @@
 
             <div class="hidden md:flex items-center gap-6">
                 <a href="#steps" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">كيف تبدأ؟</a>
+                <a href="#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
                     تواصل معنا
@@ -62,6 +98,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
             <a href="#steps" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">كيف تبدأ؟</a>
+            <a href="#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
             <a href="#contact" onclick="toggleMenu()" class="block bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm">
                 تواصل معنا
@@ -91,8 +128,8 @@
             <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition shadow-md shadow-purple-200">
                 انضم إلى قنواتنا
             </a>
-            <a href="#steps" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
-                كيف تبدأ؟
+            <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
+                استعرض الورش
             </a>
         </div>
     </section>
@@ -164,10 +201,93 @@
         </div>
     </section>
 
+    <!-- قسم الورش والفعاليات (Workshops Section) -->
+    <section id="workshops" class="py-14 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-10 space-y-2">
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">الأنشطة والفعاليات</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">الورش التدريبية</h2>
+            <p class="text-slate-500 text-xs">احجز مقعدك في ورشنا التفاعلية أو استعرض أرشيف المحاضرات</p>
+        </div>
+
+        <!-- شبكة كروت الورش -->
+        <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- ورشة قادمة -->
+            <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between relative overflow-hidden">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                        </span>
+                        <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-black text-purple-900 leading-snug">
+                            العقلية الصحيحة لتشخيص الأعطال في الأجهزة الطبية
+                        </h3>
+                        
+                        <p class="text-xs text-purple-700 font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear"></i> تقديم: المهندس الحارث عادل البداوي
+                        </p>
+
+                        <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                            <p><i class="fa-regular fa-calendar-check text-purple-600 ml-1.5"></i> <strong>الورشة القادمة</strong></p>
+                            <p><i class="fa-solid fa-video text-purple-600 ml-1.5"></i> المنصة: <strong>Google Meet</strong></p>
+                        </div>
+
+                        <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+                            <li class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-purple-600 text-[10px]"></i> كيفية تتبع الأعطال الكهربائية والميكانيكية.
+                            </li>
+                            <li class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-purple-600 text-[10px]"></i> قراءة المخططات الهندسية للأجهزة.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pt-6">
+                    <a href="https://t.me/Biomedhubiq" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                        سجل حضورك الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ورشة سابقة / مسجلة -->
+            <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">
+                            ورشة مسجلة
+                        </span>
+                        <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-play ml-1"></i> أرشيف الورش</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-bold text-slate-800 leading-snug">
+                            مدخل إلى المبيعات والصيانة الطبية في السوق العراقي
+                        </h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            جلسة تفاعلية ناقشنا فيها أساسيات العمل في شركات الأجهزة الطبية وكيفية التهيؤ لسوق العمل بعد التخرج.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pt-6">
+                    <a href="https://t.me/Biomedhubiq" target="_blank" class="block w-full text-center bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold py-3 rounded-xl transition">
+                        مشاهدة التسجيل على التليجرام <i class="fa-brands fa-telegram mr-1 text-sky-500"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- أقسام المنصة البسيطة -->
     <section id="services" class="py-14 bg-purple-50/60 border-y border-purple-100 px-6">
         <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl font-extrabold text-purple-900 text-center mb-8">ماذا نقدم في  BioMed Hub؟</h2>
+            <h2 class="text-2xl font-extrabold text-purple-900 text-center mb-8">ماذا نقدم في BioMed Hub؟</h2>
 
             <div class="grid sm:grid-cols-3 gap-6">
                 
@@ -221,7 +341,7 @@
         </div>
     </footer>
 
-    <!-- السكربت المحدث لجلب المتابعين تلقائياً عبر Apify API -->
+    <!-- السكربتات المحدثة (المنيو، النافذة الترحيبية، جلب المتابعين) -->
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -232,6 +352,37 @@
 
         menuBtn.addEventListener('click', toggleMenu);
 
+        // وظائف النافذة الترحيبية
+        function showWelcomeModal() {
+            const modal = document.getElementById('welcome-modal');
+            if (!modal) return;
+
+            if (!sessionStorage.getItem('welcomeShown')) {
+                setTimeout(() => {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modal.querySelector('div').classList.remove('scale-95');
+                        modal.querySelector('div').classList.add('scale-100');
+                    }, 50);
+                }, 1000);
+            }
+        }
+
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcome-modal');
+            if (!modal) return;
+
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                sessionStorage.setItem('welcomeShown', 'true');
+            }, 300);
+        }
+
         // جلب المتابعين من Apify وعرض أنيميشن العداد
         async function fetchFollowers() {
             const counterElement = document.getElementById('followers-count');
@@ -240,10 +391,9 @@
             const apifyUrl = "https://api.apify.com/v2/datasets/TdtYUfriv0DuMyN4e/items?signature=MC4xNzg2NTc5OTY1OTYyLjFrZWsxVUVzY0drTWFBa3d6Tmsxdg&format=json&clean=true";
 
             try {
-                const response = await fetch(apifyUrl);
+                const response = toFetch = await fetch(apifyUrl);
                 const data = await response.json();
 
-                // قراءة عدد المتابعين من النتيجة المباشرة
                 const target = (data && data[0] && data[0].followersCount) ? data[0].followersCount : 2612;
 
                 let count = 0;
@@ -267,7 +417,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', fetchFollowers);
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchFollowers();
+            showWelcomeModal();
+        });
     </script>
 
 </body>
