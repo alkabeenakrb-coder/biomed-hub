@@ -195,7 +195,14 @@
     <footer id="contact" class="py-12 px-6 text-center bg-white">
         <div class="max-w-md mx-auto space-y-6">
             <h2 class="text-xl font-bold text-purple-900">تواصل معنا وتطوّر معنا</h2>
-            <p class="text-slate-500 text-xs">تابعنا عبر منصات التواصل الاجتماعي:</p>
+            <p class="text-slate-500 text-xs">تابعنا عبر منصات التواصل الاجتماعي أو راسلنا على البريد:</p>
+
+            <!-- الإيميل الرسمي -->
+            <div>
+                <a href="mailto:info@biomedhubiq.com" class="inline-flex items-center gap-2 bg-purple-50 text-purple-800 hover:bg-purple-100 px-4 py-2 rounded-xl text-xs font-bold border border-purple-200 transition shadow-sm">
+                    <i class="fa-solid fa-envelope text-purple-600"></i> info@biomedhubiq.com
+                </a>
+            </div>
 
             <div class="flex items-center justify-center gap-4 pt-2">
                 <a href="https://t.me/Biomedhubiq" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm">
@@ -226,7 +233,6 @@
         }
         menuBtn.addEventListener('click', toggleMenu);
 
-        // رابط قوقل شيت المحدث الخاص بك
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
         async function fetchGoogleSheetData() {
@@ -245,11 +251,9 @@
 
         function parseCSVAndRender(csvText) {
             const rows = csvText.split('\n').map(row => {
-                // تقسيم السطر مع مراعاة الفواصل داخل الحقول
                 return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'));
             });
 
-            // تخطي صف العنوان (Header) وتبدأ من الصف الثاني
             let workshopsHtml = '';
             let followersCount = '2,665';
 
