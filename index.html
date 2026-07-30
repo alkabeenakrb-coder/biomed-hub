@@ -125,45 +125,50 @@
         </div>
     </section>
 
-    <!-- Followers & Workshops Bar -->
-    <section class="py-8 bg-purple-900 text-white border-y border-purple-800 my-6">
-        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-6 items-center text-center">
-            
-            <!-- عداد المتابعين -->
-            <div class="space-y-1">
-                <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
-                    <i class="fa-solid fa-user-graduate"></i>
-                </div>
-                <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
-                    <span>+</span>
-                    <span id="followers-count">2,665</span>
-                </div>
-                <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
-            </div>
+    <!-- Dual Boxes Section: Followers+Instagram & Workshops Count -->
+    <section class="py-10 bg-slate-50 border-y border-purple-100 my-6">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
+                
+                <!-- المربع الأول: المتابعين + زر الانستغرام -->
+                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
+                    <div class="space-y-1">
+                        <div class="text-purple-300 text-2xl mb-1">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
+                            <span>+</span>
+                            <span id="followers-count">2,665</span>
+                        </div>
+                        <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
+                    </div>
 
-            <!-- عداد الورش المقدمة -->
-            <div class="space-y-1 sm:border-x sm:border-purple-700/60 px-4">
-                <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
-                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <div class="pt-3 border-t border-purple-800/80">
+                        <p class="text-xs text-purple-300 font-semibold mb-2">تابعنا ليصلك كل جديد</p>
+                        <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="inline-block bg-purple-800 hover:bg-purple-700 text-purple-100 text-xs font-bold px-5 py-2.5 rounded-xl transition border border-purple-600/50 shadow-sm w-full">
+                            حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
-                    <span>+</span>
-                    <span>6</span>
-                </div>
-                <p class="text-purple-200 text-xs sm:text-sm font-medium">ورشة تدريبية مقدمة</p>
-            </div>
 
-            <!-- زر الانستغرام -->
-            <div class="space-y-2">
-                <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl">
-                    <i class="fa-brands fa-instagram"></i>
+                <!-- المربع الثاني: عداد الورش المقدمة -->
+                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-center text-center space-y-4">
+                    <div class="space-y-1">
+                        <div class="text-purple-300 text-2xl mb-1">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
+                            <span>+</span>
+                            <span>0</span>
+                        </div>
+                        <p class="text-purple-200 text-xs sm:text-sm font-medium">ورشة تدريبية مقدمة</p>
+                    </div>
+                    <div class="text-purple-300 text-[11px] font-medium bg-purple-800/50 py-2 rounded-xl border border-purple-700/40">
+                        فعاليات مستمرة لتطوير المهارات
+                    </div>
                 </div>
-                <p class="text-xs text-purple-300 font-semibold">تابعنا ليصلك كل جديد</p>
-                <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="inline-block bg-purple-800 hover:bg-purple-700 text-purple-100 text-xs font-bold px-5 py-2 rounded-xl transition border border-purple-600/50 shadow-sm">
-                    حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
-                </a>
-            </div>
 
+            </div>
         </div>
     </section>
 
@@ -313,7 +318,6 @@
                             </a>
                         </div>
                     </div>`;
-                } else if, else if (type === 'archived') { // <-- ملاحظة: النسخ خليه صاحي
                 } else if (type === 'archived') {
                     workshopsHtml += `
                     <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
