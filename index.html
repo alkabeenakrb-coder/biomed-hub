@@ -9,7 +9,7 @@
     <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- خط Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -132,38 +132,26 @@
                 
                 <!-- المربع الأول: المتابعين + زر الانستغرام -->
                 <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
-                    <div class="space-y-1">
-                        <div class="text-purple-300 text-2xl mb-1">
-                            <i class="fa-solid fa-user-graduate"></i>
-                        </div>
-                        <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
-                            <span>+</span>
-                            <span id="followers-count">2,665</span>
-                        </div>
-                        <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
+                    <div>
+                        <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div class="text-3xl font-black"><span>+</span> <span id="followers-count">2,665</span></div>
+                        <p class="text-purple-200 text-xs font-medium">مهندس وطالب في مجتمعنا</p>
                     </div>
-
-                    <div class="pt-3 border-t border-purple-800/80">
-                        <p class="text-xs text-purple-300 font-semibold mb-2">تابعنا ليصلك كل جديد</p>
-                        <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="inline-block bg-purple-800 hover:bg-purple-700 text-purple-100 text-xs font-bold px-5 py-2.5 rounded-xl transition border border-purple-600/50 shadow-sm w-full">
+                    <div class="pt-3 border-t border-purple-800">
+                        <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="block bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-sm">
                             حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- المربع الثاني: عداد الورش المقدمة -->
-                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-center text-center space-y-4">
-                    <div class="space-y-1">
-                        <div class="text-purple-300 text-2xl mb-1">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                        </div>
-                        <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
-                            <span>+</span>
-                            <span>0</span>
-                        </div>
-                        <p class="text-purple-200 text-xs sm:text-sm font-medium">ورشة تدريبية مقدمة</p>
+                <!-- المربع الثاني: عداد الورش (على الصفر) -->
+                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
+                    <div>
+                        <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-chalkboard-user"></i></div>
+                        <div class="text-3xl font-black"><span>+</span> 0</div>
+                        <p class="text-purple-200 text-xs font-medium">ورشة تدريبية مقدمة</p>
                     </div>
-                    <div class="text-purple-300 text-[11px] font-medium bg-purple-800/50 py-2 rounded-xl border border-purple-700/40">
+                    <div class="text-purple-300 text-[11px] bg-purple-800/50 py-2 rounded-xl border border-purple-700/40">
                         فعاليات مستمرة لتطوير المهارات
                     </div>
                 </div>
