@@ -285,75 +285,82 @@
 
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
-                    if (cols.length >= 6) {
-                        const type = cols[0].trim().toLowerCase();
-                        const title = cols[1].trim();
-                        const speaker = cols[2].trim();
-                        const platform = cols[3].trim();
-                        const details = cols[4].trim();
-                        const link = cols[5].trim();
+                    if (cols.length < 2) continue; // تخطي الأسطر الفارغة تماماً
 
-                        // التحقق إذا كان السطر مخصص لعدد المتابعين في الشيت
-                        if (type === 'followers' && counterElement) {
-                            const target = parseInt(title.replace(/,/g, '')) || 2612;
-                            counterElement.innerText = target.toLocaleString('en-US');
-                            continue;
-                        }
+                    const type = cols[0] ? cols[0].trim().toLowerCase() : '';
+                    const title = cols[1] ? cols[1].trim() : '';
+                    const speaker = cols[2] ? cols[2].trim() : '';
+                    const platform = cols[3] ? cols[3].trim() : '';
+                    const details = cols[4] ? cols[4].trim() : '';
+                    const link = cols[5] ? cols[5].trim() : '';
 
-                        if (type === 'next') {
-                            htmlContent += `
-                            <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
-                                <div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
-                                        </span>
-                                        <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
-                                    </div>
-                                    <div class="space-y-3">
-                                        <h3 class="text-lg font-black text-purple-900">${title}</h3>
-                                        <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speaker}</p>
-                                        <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                            <p>${platform}</p>
-                                        </div>
-                                        <p class="text-xs text-slate-600 leading-relaxed">${details}</p>
-                                    </div>
+                    // التحقق إذا كان السطر مخصص لعدد المتابعين في الشيت
+                    if (type === 'followers' && counterElement) {
+                        const target = parseInt(title.replace(/,/g, '')) || 2612;
+                        counterElement.innerText = target.toLocaleString('en-US');
+                        continue;
+                    }
+
+                    if (type === 'next') {
+                        htmlContent += `
+                        <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                                    </span>
+                                    <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
                                 </div>
-                                <div class="pt-6">
-                                    <a href="${link}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                                        سجل حضورك الآن <i class="fa-solid fa-arrow-left mr-1"></i>
-                                    </a>
-                                </div>
-                            </div>`;
-                        } else if (type === 'archived') {
-                            htmlContent += `
-                            <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speaker}</span>
-                                        <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                                <div class="space-y-3">
+                                    <h3 class="text-lg font-black text-purple-900">${title}</h3>
+                                    <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speaker}</p>
+                                    <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                                        <p>${platform}</p>
                                     </div>
-                                    <div class="space-y-3">
-                                        <h3 class="text-lg font-bold text-slate-800">${title}</h3>
-                                        <p class="text-xs text-slate-500 leading-relaxed">${details}</p>
-                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed">${details}</p>
                                 </div>
-                                <div class="pt-6">
-                                    <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
-                                        انتهت الورشة بنجاح
-                                    </div>
+                            </div>
+                            <div class="pt-6">
+                                <a href="${link}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                                    سجل حضورك الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                                </a>
+                            </div>
+                        </div>`;
+                    } else if (type === 'archived') {
+                        htmlContent += `
+                        <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speaker}</span>
+                                    <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
                                 </div>
-                            </div>`;
-                        }
+                                <div class="space-y-3">
+                                    <h3 class="text-lg font-bold text-slate-800">${title}</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed">${details}</p>
+                                </div>
+                            </div>
+                            <div class="pt-6">
+                                <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
+                                    انتهت الورشة بنجاح
+                                </div>
+                            </div>
+                        </div>`;
                     }
                 }
 
-                if (container && htmlContent !== '') {
-                    container.innerHTML = htmlContent;
+                if (container) {
+                    if (htmlContent !== '') {
+                        container.innerHTML = htmlContent;
+                    } else {
+                        container.innerHTML = '<div class="text-center col-span-2 py-8 text-slate-400 text-xs">لا توجد ورش معروضة حالياً.</div>';
+                    }
                 }
 
             } catch (err) {
                 console.error('Error loading data:', err);
+                if (container) {
+                    container.innerHTML = '<div class="text-center col-span-2 py-8 text-red-400 text-xs">حدث خطأ أثناء تحميل الورش.</div>';
+                }
             }
         }
 
