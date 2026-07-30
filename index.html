@@ -141,14 +141,14 @@
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
             </div>
 
-            <!-- عداد الورش المقدمة -->
+            <!-- عداد الورش المقدمة (مباشرة من الكود) -->
             <div class="space-y-1 sm:border-x sm:border-purple-700/60 px-4">
                 <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
                     <i class="fa-solid fa-chalkboard-user"></i>
                 </div>
                 <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
                     <span>+</span>
-                    <span id="workshops-count-display">0</span>
+                    <span>6</span>
                 </div>
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">ورشة تدريبية مقدمة</p>
             </div>
@@ -270,7 +270,6 @@
 
             let workshopsHtml = '';
             let followersCount = '2,665';
-            let workshopsCount = '0';
 
             for (let i = 1; i < rows.length; i++) {
                 const cols = rows[i];
@@ -286,13 +285,6 @@
                     followersCount = title || '2,665';
                     const followerEl = document.getElementById('followers-count');
                     if (followerEl) followerEl.innerText = followersCount;
-                    continue;
-                }
-
-                if (type === 'workshops_count') {
-                    workshopsCount = title || '0';
-                    const workshopEl = document.getElementById('workshops-count-display');
-                    if (workshopEl) workshopEl.innerText = workshopsCount;
                     continue;
                 }
 
@@ -355,4 +347,3 @@
     </script>
 </body>
 </html>
-
