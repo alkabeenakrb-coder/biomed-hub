@@ -1,282 +1,31 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioMed Hub | منصة الهندسة الطبية</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome للأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- خط Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        purple: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-    </style>
-</head>
-<body class="bg-white text-slate-800 antialiased">
+<div class="max-w-3xl mx-auto px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
 
-    <!-- Navbar -->
-    <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            
-            <div class="flex items-center gap-3">
-                <img src="M.png.PNG" alt="BioMed Hub" class="w-10 h-10 object-contain">
-                <div>
-                    <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
-                    <p class="text-xs text-purple-600 font-medium">منصة الهندسة الطبية</p>
-                </div>
-            </div>
-
-            <div class="hidden md:flex items-center gap-6">
-                <a href="#steps" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">كيف تبدأ؟</a>
-                <a href="#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
-                <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
-                <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                    تواصل معنا
-                </a>
-            </div>
-
-            <button id="menu-btn" class="md:hidden text-purple-900 text-2xl focus:outline-none p-1">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
-            <a href="#steps" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">كيف تبدأ؟</a>
-            <a href="#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
-            <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
-            <a href="#contact" onclick="toggleMenu()" class="block bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm">
-                تواصل معنا
-            </a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="py-16 px-6 max-w-4xl mx-auto text-center space-y-6">
-        <div class="w-full flex justify-center mb-2">
-            <img src="M.png.PNG" alt="BioMed Hub Logo" class="w-36 h-36 object-contain drop-shadow-md">
-        </div>
-
-        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-4 py-1.5 rounded-full">
-            مبادرة تعليمية وتطويرية مستمرة
-        </span>
-
-        <h1 class="text-3xl sm:text-4xl font-black text-purple-900 leading-relaxed">
-            مساحة تعليمية وتطويرية لمهندسي وطلبة الهندسة الطبية
-        </h1>
-
-        <p class="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">
-            نهدف لبناء مجتمع مهني بسيط وفعال، ونشر المعرفة التطبيقية في مجالات صيانة الأجهزة الطبية والمبيعات والمجال الهندسي الطبي.
-        </p>
-
-        <div class="pt-4 flex justify-center gap-4">
-            <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition shadow-md shadow-purple-200">
-                انضم إلى قنواتنا
-            </a>
-            <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
-                استعرض الورش
-            </a>
-        </div>
-    </section>
-
-    <!-- Steps -->
-    <section id="steps" class="py-12 px-6 max-w-5xl mx-auto border-t border-purple-100">
-        <div class="text-center mb-10">
-            <h2 class="text-2xl font-extrabold text-purple-900">كيف تبدأ مع BioMed Hub؟</h2>
-            <p class="text-slate-500 text-xs mt-1">3 خطوات بسيطة للانضمام والتطوير معنا</p>
-        </div>
-
-        <div class="grid sm:grid-cols-3 gap-6">
-            <div class="bg-purple-50/50 p-6 rounded-2xl border border-purple-100 text-center shadow-sm">
-                <span class="w-9 h-9 bg-purple-600 text-white font-black text-sm rounded-full flex items-center justify-center mx-auto mb-4">1</span>
-                <h3 class="font-bold text-base text-purple-900 mb-2">تابع منصاتنا الرسمية</h3>
-                <p class="text-slate-600 text-xs leading-relaxed">انضم إلى قنوات الانستغرام والفيسبوك والتليجرام لمتابعة الإعلانات والورش.</p>
-            </div>
-            <div class="bg-purple-50/50 p-6 rounded-2xl border border-purple-100 text-center shadow-sm">
-                <span class="w-9 h-9 bg-purple-600 text-white font-black text-sm rounded-full flex items-center justify-center mx-auto mb-4">2</span>
-                <h3 class="font-bold text-base text-purple-900 mb-2">احضر الورش التفاعلية</h3>
-                <p class="text-slate-600 text-xs leading-relaxed">شارِك في المحاضرات الأونلاين واستفد من الخبرات العملية في الصيانة والمبيعات.</p>
-            </div>
-            <div class="bg-purple-50/50 p-6 rounded-2xl border border-purple-100 text-center shadow-sm">
-                <span class="w-9 h-9 bg-purple-600 text-white font-black text-sm rounded-full flex items-center justify-center mx-auto mb-4">3</span>
-                <h3 class="font-bold text-base text-purple-900 mb-2">تطوّر مع المجتمع</h3>
-                <p class="text-slate-600 text-xs leading-relaxed">تبادل الخبرات والأسئلة مع زملائك من مهندسي وطلبة الهندسة الطبية.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dual Boxes Section: Connected to Google Sheets -->
-    <section class="py-10 bg-slate-50 border-y border-purple-100 my-6">
-        <div class="max-w-3xl mx-auto px-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
-                
-                <!-- المربع الأول: المتابعين (يقرأ من الشيت) -->
-                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
-                    <div>
-                        <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-user-graduate"></i></div>
-                        <div class="text-3xl font-black"><span>+</span> <span id="followers-count">2666</span></div>
-                        <p class="text-purple-200 text-xs font-medium">مهندس وطالب في مجتمعنا</p>
-                    </div>
-                    <div class="pt-3 border-t border-purple-800">
-                        <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="block bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-sm">
-                            حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- المربع الثاني: عداد الورش (المضاف حديثاً والمتناسق) -->
-                <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
-                    <div>
-                        <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-chalkboard-user"></i></div>
-<div class="text-3xl font-black">+ 3</div>
-
-                        <p class="text-xs mt-2 text-purple-200 font-medium">ورشة تدريبية مقدمة</p>
-                    </div>
-                    <div class="text-purple-300 text-[11px] bg-purple-800/50 py-2 rounded-xl border border-purple-700/40">
-                        فعاليات مستمرة لتطوير المهارات
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Workshops Section -->
-    <section id="workshops" class="py-14 px-6 max-w-5xl mx-auto">
-        <div class="text-center mb-10 space-y-2">
-            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">الأنشطة والفعاليات</span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">الورش التدريبية</h2>
-            <p class="text-slate-500 text-xs">احجز مقعدك في الورشة القادمة أو استعرض الورش التي تم تقديمها سابقاً</p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> قريباً جداً
-                        </span>
-                        <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
-                    </div>
-                    <div class="space-y-3">
-                        <h3 class="text-lg font-black text-purple-900">ورش عمل وتدريبات تخصصية قادمة</h3>
-                        <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> إدارة BioMed Hub</p>
-                        <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                            <p>ترقبوا الإعلانات الرسمية عبر قناتنا على التليجرام والانستغرام.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-6">
-                    <a href="https://t.me/Biomedhubiq" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                        انضم لقناة التليجرام للمتابعة <i class="fa-solid fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">مجتمع المهندسين</span>
-                        <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> متاح دائماً</span>
-                    </div>
-                    <div class="space-y-3">
-                        <h3 class="text-lg font-bold text-slate-800">تطوير المهارات الهندسية الطبية</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">ورش مستمرة، مناقشات، ومشاركة للخبرات العملية لمواكبة سوق العمل وتطوير المهارات التقنية.</p>
-                    </div>
-                </div>
-                <div class="pt-6">
-                    <div class="w-full text-center bg-purple-100 text-purple-800 text-xs font-bold py-3 rounded-xl">
-                        كن على أتم الاستعداد
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services -->
-    <section id="services" class="py-14 bg-purple-50/60 border-y border-purple-100 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl font-extrabold text-purple-900 text-center mb-8">ماذا نقدم في BioMed Hub؟</h2>
-            <div class="grid sm:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm">
-                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-laptop-code"></i></div>
-                    <h3 class="font-bold text-lg text-purple-900">ورش عمل أونلاين</h3>
-                    <p class="text-slate-600 text-xs leading-relaxed">محاضرات وورش تفاعلية تغطي الجانب العملي وسوق العمل الطبي.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm">
-                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                    <h3 class="font-bold text-lg text-purple-900">صيانة وتشخيص</h3>
-                    <p class="text-slate-600 text-xs leading-relaxed">تطوير العقلية الهندسية للتعامل مع الأعطال والمخططات الطبية.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-purple-100 text-center space-y-3 shadow-sm">
-                    <div class="text-3xl text-purple-600"><i class="fa-solid fa-users"></i></div>
-                    <h3 class="font-bold text-lg text-purple-900">مجتمع متكامل</h3>
-                    <p class="text-slate-600 text-xs leading-relaxed">تجمع للطلبة والمهندسين لتبادل الخبرات والفرص المهنية.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact" class="py-12 px-6 text-center bg-white">
-        <div class="max-w-md mx-auto space-y-6">
-            <h2 class="text-xl font-bold text-purple-900">تواصل معنا وتطوّر معنا</h2>
-            <p class="text-slate-500 text-xs">تابعنا عبر منصات التواصل الاجتماعي أو راسلنا على البريد:</p>
-
+        <!-- المربع الأول: المتابعين -->
+        <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
             <div>
-                <a href="mailto:info@biomedhubiq.com" class="inline-flex items-center gap-2 bg-purple-50 text-purple-800 hover:bg-purple-100 px-4 py-2 rounded-xl text-xs font-bold border border-purple-200 transition shadow-sm">
-                    <i class="fa-solid fa-envelope text-purple-600"></i> info@biomedhubiq.com
+                <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="text-3xl font-black"><span>+</span> <span id="followers-count">2666</span></div>
+                <p class="text-purple-200 text-xs font-medium">مهندس وطالب في مجتمعنا</p>
+            </div>
+            <div class="pt-3 border-t border-purple-800">
+                <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="block bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-sm">
+                    حساب الانستغرام <i class="fa-solid fa-arrow-left text-[10px] mr-1"></i>
                 </a>
             </div>
-
-            <div class="flex items-center justify-center gap-4 pt-2">
-                <a href="https://t.me/Biomedhubiq" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm">
-                    <i class="fa-brands fa-telegram"></i>
-                </a>
-                <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-                <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm">
-                    <i class="fa-brands fa-youtube"></i>
-                </a>
-                <a href="https://www.facebook.com/share/1cCuin92Bm/?mibextid=wwXIfr" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm">
-                    <i class="fa-brands fa-facebook-f"></i>
-                </a>
-            </div>
-
-            <p class="text-slate-400 text-xs pt-6 border-t border-purple-100">BioMed Hub &copy; 2026</p>
         </div>
-    </footer>
 
-    <!-- Mobile Menu Script -->
-    <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        <!-- المربع الثاني: الورش التدريبية -->
+        <div class="bg-purple-900 text-white rounded-3xl p-6 shadow-md border border-purple-800 flex flex-col justify-between text-center space-y-4">
+            <div>
+                <div class="text-purple-300 text-2xl mb-1"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="text-3xl font-black">+ <span id="workshops-count">0</span></div>
+                <p class="text-xs mt-2 text-purple-200 font-medium">ورشة تدريبية مقدمة</p>
+            </div>
+            <div class="text-purple-300 text-[11px] bg-purple-800/50 py-2 rounded-xl border border-purple-700/40">
+                فعاليات مستمرة لتطوير المهارات
+            </div>
+        </div>
 
-        function toggleMenu() {
-            mobileMenu.classList.toggle('hidden');
-        }
-        menuBtn.addEventListener('click', toggleMenu);
-    </script>
-</body>
-</html>
+    </div>
+</div>
