@@ -144,7 +144,7 @@
                 
                 <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
                     <span>+</span>
-                    <span id="followers-count">0</span>
+                    <span id="followers-count">2,612</span>
                 </div>
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
             </div>
@@ -221,7 +221,7 @@
         </div>
     </footer>
 
-    <!-- السكربت المحدث للتحكم بالمنيو والعداد الحي بدون كاش -->
+    <!-- السكربت المحدث لجلب المتابعين تلقائياً عبر Apify API -->
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -232,15 +232,19 @@
 
         menuBtn.addEventListener('click', toggleMenu);
 
-        // جلب العداد من Netlify Functions مع مانع الكاش لتحديث 2612 المباشر
+        // جلب المتابعين من Apify وعرض أنيميشن العداد
         async function fetchFollowers() {
             const counterElement = document.getElementById('followers-count');
             if (!counterElement) return;
 
+            const apifyUrl = "https://api.apify.com/v2/datasets/TdtYUfriv0DuMyN4e/items?signature=MC4xNzg2NTc5OTY1OTYyLjFrZWsxVUVzY0drTWFBa3d6Tmsxdg&format=json&clean=true";
+
             try {
-                const response = await fetch('/.netlify/functions/followers?t=' + new Date().getTime());
+                const response = await fetch(apifyUrl);
                 const data = await response.json();
-                const target = data.followers || 2612;
+
+                // قراءة عدد المتابعين من النتيجة المباشرة
+                const target = (data && data[0] && data[0].followersCount) ? data[0].followersCount : 2612;
 
                 let count = 0;
                 const speed = 25;
