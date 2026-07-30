@@ -127,7 +127,7 @@
 
     <!-- Followers & Workshops Bar -->
     <section class="py-8 bg-purple-900 text-white border-y border-purple-800 my-6">
-        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-8 items-center text-center">
+        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-6 items-center text-center">
             
             <!-- عداد المتابعين -->
             <div class="space-y-1">
@@ -141,7 +141,7 @@
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
             </div>
 
-            <!-- عداد الورش المقدمة (مباشرة من الكود) -->
+            <!-- عداد الورش المقدمة -->
             <div class="space-y-1 sm:border-x sm:border-purple-700/60 px-4">
                 <div class="flex items-center justify-center gap-2 text-purple-300 text-2xl mb-1">
                     <i class="fa-solid fa-chalkboard-user"></i>
@@ -313,6 +313,7 @@
                             </a>
                         </div>
                     </div>`;
+                } else if, else if (type === 'archived') { // <-- ملاحظة: النسخ خليه صاحي
                 } else if (type === 'archived') {
                     workshopsHtml += `
                     <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
