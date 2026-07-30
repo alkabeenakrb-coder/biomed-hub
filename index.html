@@ -135,7 +135,7 @@
         </div>
     </section>
 
-    <!-- شريط الإحصائيات مع العداد المحدث تلقائياً -->
+    <!-- شريط الإحصائيات مع العداد المحدث من Google Sheets -->
     <section class="py-8 bg-purple-900 text-white border-y border-purple-800 my-6">
         <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-around gap-6 text-center">
             
@@ -248,53 +248,17 @@
 
         menuBtn.addEventListener('click', toggleMenu);
 
-        // جلب المتابعين من Apify وعرض أنيميشن العداد
-        async function fetchFollowers() {
-            const counterElement = document.getElementById('followers-count');
-            if (!counterElement) return;
-
-            const apifyUrl = "https://api.apify.com/v2/datasets/TdtYUfriv0DuMyN4e/items?signature=MC4xNzg2NTc5OTY1OTYyLjFrZWsxVUVzY0drTWFBa3d6Tmsxdg&format=json&clean=true";
-
-            try {
-                const response = await fetch(apifyUrl);
-                const data = await response.json();
-
-                const target = (data && data[0] && data[0].followersCount) ? data[0].followersCount : 2612;
-
-                let count = 0;
-                const speed = 25;
-                const increment = Math.max(1, Math.ceil(target / 40));
-
-                const updateCount = () => {
-                    count += increment;
-                    if (count < target) {
-                        counterElement.innerText = count.toLocaleString('en-US');
-                        setTimeout(updateCount, speed);
-                    } else {
-                        counterElement.innerText = target.toLocaleString('en-US');
-                    }
-                };
-
-                updateCount();
-            } catch (error) {
-                console.error('Error fetching followers:', error);
-                counterElement.innerText = '2,612';
-            }
-        }
-
-        // دالة قراءة وتوزيع بيانات الورش من ملف Google Sheets (CSV)
-        async function loadWorkshops() {
+        // دالة قراءة وتوزيع بيانات الورش والمتابعين من ملف Google Sheets (CSV)
+        async function loadDataFromSheet() {
             const container = document.getElementById('workshops-container');
-            if (!container) return;
-
-            // رابط الـ CSV المباشر لملف الكوكل شيت الخاص بك
+            const counterElement = document.getElementById('followers-count');
+            
             const sheetCSVUrl = 'https://docs.google.com/spreadsheets/d/10rujFTwvLdIeGl7tELKuv8tM_8GA8fy0EWTPRFW0DzA/gviz/tq?tqx=out:csv';
 
             try {
                 const res = await fetch(sheetCSVUrl);
                 const text = await res.text();
                 
-                // تحليل ملف الـ CSV بدقة (دعم النصوص التي تحتوي على فواصل بين علامات التنصيص)
                 const rows = [];
                 const lines = text.split('\n');
                 for (let line of lines) {
@@ -319,7 +283,6 @@
 
                 let htmlContent = '';
 
-                // البدء من الصف الثاني لتخطي العناوين
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
                     if (cols.length >= 6) {
@@ -329,6 +292,13 @@
                         const platform = cols[3].trim();
                         const details = cols[4].trim();
                         const link = cols[5].trim();
+
+                        // التحقق إذا كان السطر مخصص لعدد المتابعين في الشيت
+                        if (type === 'followers' && counterElement) {
+                            const target = parseInt(title.replace(/,/g, '')) || 2612;
+                            counterElement.innerText = target.toLocaleString('en-US');
+                            continue;
+                        }
 
                         if (type === 'next') {
                             htmlContent += `
@@ -378,17 +348,17 @@
                     }
                 }
 
-                if (htmlContent === '') throw new Error('No valid rows');
-                container.innerHTML = htmlContent;
+                if (container && htmlContent !== '') {
+                    container.innerHTML = htmlContent;
+                }
 
             } catch (err) {
-                console.error('Error loading workshops:', err);
+                console.error('Error loading data:', err);
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchFollowers();
-            loadWorkshops();
+            loadDataFromSheet();
         });
     </script>
 
