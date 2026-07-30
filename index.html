@@ -134,7 +134,7 @@
                 </div>
                 <div class="text-3xl sm:text-4xl font-black tracking-tight flex justify-center items-center gap-1">
                     <span>+</span>
-                    <span id="followers-count">2,612</span>
+                    <span id="followers-count">2,665</span>
                 </div>
                 <p class="text-purple-200 text-xs sm:text-sm font-medium">مهندس وطالب في مجتمعنا</p>
             </div>
@@ -162,7 +162,8 @@
         </div>
 
         <div id="workshops-container" class="grid md:grid-cols-2 gap-6">
-            <div class="text-center col-span-2 py-8 text-slate-400 text-xs">جاري تحميل الورش...</div>
+            <!-- سيتم جلب الورش وعرضها تلقائياً هنا -->
+            <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري تحميل الورش من جدول البيانات...</div>
         </div>
     </section>
 
@@ -215,7 +216,7 @@
         </div>
     </footer>
 
-    <!-- Script -->
+    <!-- Script to fetch data from Google Sheets CSV -->
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -225,126 +226,105 @@
         }
         menuBtn.addEventListener('click', toggleMenu);
 
-        async function loadDataFromSheet() {
-            const container = document.getElementById('workshops-container');
-            const counterElement = document.getElementById('followers-count');
-            
-            const sheetCSVUrl = 'https://docs.google.com/spreadsheets/d/10rujFTwvLdIeGl7tELKuv8tM_8GA8fy0EWTPRFW0DzA/gviz/tq?tqx=out:csv';
+        // رابط قوقل شيت المحدث الخاص بك
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
+        async function fetchGoogleSheetData() {
             try {
-                const res = await fetch(sheetCSVUrl);
-                const text = await res.text();
-                
-                const rows = [];
-                const lines = text.split('\n');
-                for (let line of lines) {
-                    if (!line.trim()) continue;
-                    const row = [];
-                    let inQuotes = false;
-                    let currentValue = '';
-                    for (let i = 0; i < line.length; i++) {
-                        const char = line[i];
-                        if (char === '"') {
-                            inQuotes = !inQuotes;
-                        } else if (char === ',' && !inQuotes) {
-                            row.push(currentValue.trim().replace(/^"|"$/g, ''));
-                            currentValue = '';
-                        } else {
-                            currentValue += char;
-                        }
-                    }
-                    row.push(currentValue.trim().replace(/^"|"$/g, ''));
-                    rows.push(row);
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                parseCSVAndRender(data);
+            } catch (error) {
+                console.error('خطأ في جلب البيانات:', error);
+                document.getElementById('workshops-container').innerHTML = `
+                    <div class="col-span-2 text-center text-rose-500 text-xs py-4">
+                        تعذر جلب البيانات من قوقل شيت. تأكد من إتمام النشر على الويب.
+                    </div>`;
+            }
+        }
+
+        function parseCSVAndRender(csvText) {
+            const rows = csvText.split('\n').map(row => {
+                // تقسيم السطر مع مراعاة الفواصل داخل الحقول
+                return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'));
+            });
+
+            // تخطي صف العنوان (Header) وتبدأ من الصف الثاني
+            let workshopsHtml = '';
+            let followersCount = '2,665';
+
+            for (let i = 1; i < rows.length; i++) {
+                const cols = rows[i];
+                if (!cols || cols.length < 2 || !cols[0]) continue;
+
+                const type = cols[0].trim();
+                const title = cols[1] || '';
+                const speaker = cols[2] || '';
+                const platform = cols[3] || '';
+                const details = cols[4] || '';
+
+                if (type === 'followers') {
+                    followersCount = title || '2,665';
+                    const followerEl = document.getElementById('followers-count');
+                    if (followerEl) followerEl.innerText = followersCount;
+                    continue;
                 }
 
-                let htmlContent = '';
-
-                // نبدأ من i = 1 لتخطي سطر العناوين، ونقرا كل الأسطر بمرونة تامة
-                for (let i = 1; i < rows.length; i++) {
-                    const cols = rows[i];
-                    if (cols.length < 2) continue;
-
-                    const type = cols[0] ? cols[0].trim().toLowerCase() : '';
-                    const title = cols[1] ? cols[1].trim() : '';
-                    const speaker = cols[2] ? cols[2].trim() : '';
-                    const platform = cols[3] ? cols[3].trim() : '';
-                    const details = cols[4] ? cols[4].trim() : '';
-                    const link = cols[5] ? cols[5].trim() : '#';
-
-                    // جلب عدد المتابعين تلقائياً
-                    if (type === 'followers' || title === '2665' || (type.includes('follow') && counterElement)) {
-                        const val = parseInt(title.replace(/,/g, '')) || parseInt(type.replace(/,/g, '')) || 2665;
-                        counterElement.innerText = val.toLocaleString('en-US');
-                        continue;
-                    }
-
-                    // إذا كان السطر لأرشيف أو ورشة قادمة أو حتى لو كان نوع آخر يتم عرضه كورشة
-                    if (type === 'archived' || (platform && platform.includes('أرشيف'))) {
-                        htmlContent += `
-                        <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
-                            <div>
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speaker || 'ورشة سابقة'}</span>
-                                    <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <h3 class="text-lg font-bold text-slate-800">${title}</h3>
-                                    <p class="text-xs text-slate-500 leading-relaxed">${details}</p>
-                                </div>
+                if (type === 'next') {
+                    workshopsHtml += `
+                    <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                                </span>
+                                <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
                             </div>
-                            <div class="pt-6">
-                                <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
-                                    انتهت الورشة بنجاح
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-black text-purple-900">${title}</h3>
+                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speaker}</p>
+                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                                    <p>${platform}</p>
                                 </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">${details}</p>
                             </div>
-                        </div>`;
-                    } else {
-                        // أي ورشة أخرى (تعتبر فعالة أو حالية)
-                        htmlContent += `
-                        <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
-                            <div>
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
-                                    </span>
-                                    <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <h3 class="text-lg font-black text-purple-900">${title}</h3>
-                                    <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speaker}</p>
-                                    <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                        <p>${platform}</p>
-                                    </div>
-                                    <p class="text-xs text-slate-600 leading-relaxed">${details}</p>
-                                </div>
+                        </div>
+                        <div class="pt-6">
+                            <a href="https://t.me/Biomedhubiq" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                                سجل حضورك الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>`;
+                } else if (type === 'archived') {
+                    workshopsHtml += `
+                    <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speaker}</span>
+                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
                             </div>
-                            <div class="pt-6">
-                                <a href="${link}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                                    سجل حضورك الآن <i class="fa-solid fa-arrow-left mr-1"></i>
-                                </a>
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-bold text-slate-800">${title}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${details || platform}</p>
                             </div>
-                        </div>`;
-                    }
+                        </div>
+                        <div class="pt-6">
+                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
+                                انتهت الورشة بنجاح
+                            </div>
+                        </div>
+                    </div>`;
                 }
+            }
 
-                if (container) {
-                    if (htmlContent !== '') {
-                        container.innerHTML = htmlContent;
-                    } else {
-                        container.innerHTML = '<div class="text-center col-span-2 py-8 text-slate-400 text-xs">لا توجد ورش معروضة حالياً.</div>';
-                    }
-                }
-
-            } catch (err) {
-                console.error('Error loading data:', err);
-                if (container) {
-                    container.innerHTML = '<div class="text-center col-span-2 py-8 text-red-400 text-xs">حدث خطأ أثناء تحميل الورش.</div>';
-                }
+            const container = document.getElementById('workshops-container');
+            if (container && workshopsHtml) {
+                container.innerHTML = workshopsHtml;
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadDataFromSheet();
+            fetchGoogleSheetData();
         });
     </script>
 </body>
