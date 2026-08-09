@@ -29,7 +29,7 @@ from flask import Flask, jsonify, request, send_from_directory, abort
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(APP_DIR, 'data.json')
 
-ADMIN_PASSWORD_HASH = '074a5a5cedd772e5664d2eb81728b10063d28ec6cb3123297ae12c9a7138af59'  # biomedhub2026
+ADMIN_PASSWORD_HASH = '074a5a5cedd772e5664d2eb81728b10063d28ec6cb3123297ae12c9a7138af59'  # 11223344
 
 app = Flask(__name__, static_folder=None, static_url_path='')
 
