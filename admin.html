@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | BioMed Hub</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Tajawal', 'sans-serif'], },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd',
+                            400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9',
+                            800: '#5b21b6', 900: '#4c1d95', 950: '#2e1065',
+                        }
+                    },
+                    boxShadow: { glow: '0 0 40px -8px rgba(139, 92, 246, 0.45)', }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .bg-grid {
+            background-image:
+                linear-gradient(to left, rgba(76,29,149,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(76,29,149,0.05) 1px, transparent 1px);
+            background-size: 42px 42px;
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f5f3ff; }
+        ::-webkit-scrollbar-thumb { background: #a78bfa; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-brand-50 to-white text-slate-800 antialiased min-h-screen">
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
+        <div class="bg-grid absolute inset-0"></div>
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-brand-300 rounded-full blur-3xl opacity-40"></div>
+        <div class="absolute -bottom-24 -left-20 w-80 h-80 bg-brand-400 rounded-full blur-3xl opacity-30"></div>
+
+        <div class="relative w-full max-w-md">
+            <div class="bg-white/80 backdrop-blur-xl rounded-3xl border border-brand-100 shadow-2xl p-8 space-y-6">
+                <div class="text-center space-y-3">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center shadow-glow">
+                        <i class="fa-solid fa-shield-halved text-white text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-black text-brand-950">لوحة إدارة BioMed Hub</h1>
+                    <p class="text-sm text-slate-500">هذه المنطقة مخصصة للإدارة فقط</p>
+                </div>
+
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">كلمة المرور</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-key absolute right-4 top-1/2 -translate-y-1/2 text-brand-400"></i>
+                            <input type="password" id="password-input" required
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300"
+                                placeholder="أدخل كلمة المرور" autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <p id="login-error" class="hidden text-rose-600 text-xs font-bold bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+                        <i class="fa-solid fa-circle-exclamation ml-1"></i> كلمة المرور غير صحيحة
+                    </p>
+
+                    <button type="submit"
+                        class="w-full bg-gradient-to-l from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-black py-3.5 rounded-xl transition shadow-glow">
+                        <i class="fa-solid fa-unlock ml-2"></i> دخول اللوحة
+                    </button>
+                </form>
+
+                <p class="text-[11px] text-slate-400 text-center">
+                    <i class="fa-solid fa-lock ml-1"></i> محمية — لا يمكن لأي شخص آخر الوصول
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DASHBOARD ================= -->
+    <div id="dashboard" class="hidden min-h-screen">
+        <!-- Topbar -->
+        <header class="bg-white/85 backdrop-blur-xl border-b border-brand-100 sticky top-0 z-50">
+            <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-black overflow-hidden flex items-center justify-center shadow-glow">
+                        <img src="/logo.jpg?v=4" alt="BioMed Hub" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="font-black text-brand-950 leading-none">لوحة الإدارة</h1>
+                        <p class="text-[11px] text-brand-500 font-bold mt-1">BioMed Hub</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="index.html" class="bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 px-4 py-2.5 rounded-xl text-[13px] font-bold transition">
+                        <i class="fa-solid fa-eye ml-2"></i> عرض الموقع
+                    </a>
+                    <button id="logout-btn" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2.5 rounded-xl text-[13px] font-bold transition">
+                        <i class="fa-solid fa-right-from-bracket ml-2"></i> خروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto px-5 py-8 space-y-8">
+
+            <!-- Manage Stats -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center text-white text-lg shadow-glow">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </span>
+                    <div>
+                        <h2 class="font-black text-brand-950 text-lg">إعدادات الأرقام والإحصائيات</h2>
+                        <p class="text-xs text-slate-400 font-bold">عدّل عدد المتابعين وعدد الورش ليظهر في الموقع</p>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2"><i class="fa-solid fa-user-graduate text-brand-500 ml-1"></i> عدد المتابعين</label>
+                        <input type="number" id="stats-followers" min="0"
+                            class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400"
+                            placeholder="مثال: 2665">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2"><i class="fa-solid fa-chalkboard-user text-brand-500 ml-1"></i> عدد الورش</label>
+                        <input type="number" id="stats-workshops" min="0"
+                            class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400"
+                            placeholder="مثال: 5">
+                    </div>
+                </div>
+
+                <button id="save-stats-btn" onclick="saveStats()"
+                    class="w-full bg-gradient-to-l from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-black py-3.5 rounded-xl transition shadow-glow">
+                    <i class="fa-solid fa-floppy-disk ml-2"></i> حفظ الأرقام وتحديث الموقع
+                </button>
+                <p id="stats-message" class="hidden text-center text-sm font-bold rounded-xl px-4 py-3 mt-3"></p>
+            </section>
+
+            <!-- Live Broadcast -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-400 flex items-center justify-center text-white text-lg shadow-glow">
+                            <i class="fa-solid fa-tower-broadcast"></i>
+                        </span>
+                        <div>
+                            <h2 class="font-black text-brand-950 text-lg">البث المباشر</h2>
+                            <p class="text-xs text-slate-400 font-bold">بث مباشر بأسلوب ميت — كتم، تعليقات، رفع يد — يشغّله الأدمن فقط</p>
+                        </div>
+                    </div>
+                    <span id="live-status-chip" class="text-xs font-black px-3 py-1.5 rounded-full bg-slate-100 text-slate-500">غير نشط</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="live.html?admin=1" class="flex-1 min-w-[180px] bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white text-sm font-black py-3.5 rounded-xl transition text-center shadow-lg">
+                        <i class="fa-solid fa-tower-broadcast ml-2"></i> فتح استوديو البث
+                    </a>
+                    <button id="stop-live-btn" onclick="stopLiveHttp()" class="hidden bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-5 py-3.5 rounded-xl text-sm font-bold transition">
+                        <i class="fa-solid fa-stop ml-1"></i> إيقاف فوري
+                    </button>
+                </div>
+                <p class="text-[11px] text-slate-400 font-bold mt-3">
+                    <i class="fa-solid fa-circle-info ml-1"></i> عند بدء البث يظهر شعار "مباشر" في الموقع ويرتبط جميع الزوار بالبث. التسجيل يُحفظ تلقائياً داخل المنصة ويظهر في "تسجيلات البث" بالأسفل.
+                </p>
+            </section>
+
+            <!-- Recordings -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center text-white text-lg shadow-glow">
+                            <i class="fa-solid fa-video"></i>
+                        </span>
+                        <div>
+                            <h2 class="font-black text-brand-950 text-lg">تسجيلات البث</h2>
+                            <p class="text-xs text-slate-400 font-bold">مقاطع البث المباشر المحفوظة داخل المنصة</p>
+                        </div>
+                    </div>
+                    <button id="refresh-rec-btn" class="bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 px-3 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-rotate ml-1"></i> تحديث
+                    </button>
+                </div>
+                <div id="recordings-list" class="space-y-3">
+                    <div class="text-center text-slate-400 text-sm font-bold py-8">لا توجد تسجيلات بعد.</div>
+                </div>
+            </section>
+
+            <!-- Change Password -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-300 flex items-center justify-center text-white text-lg shadow-glow">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <div>
+                        <h2 class="font-black text-brand-950 text-lg">تغيير رمز الدخول</h2>
+                        <p class="text-xs text-slate-400 font-bold">غيّر كلمة مرور لوحة الإدارة — محمي ومحفوظ في الخادم</p>
+                    </div>
+                </div>
+
+                <form id="change-password-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">رمز الدخول الحالي</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-brand-400"></i>
+                            <input type="password" id="current-password" required autocomplete="current-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300"
+                                placeholder="اكتب الرمز الحالي">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">رمز الدخول الجديد</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-shield-halved absolute right-4 top-1/2 -translate-y-1/2 text-brand-400"></i>
+                            <input type="password" id="new-password" minlength="4" required autocomplete="new-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300"
+                                placeholder="4 أحرف على الأقل">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">تأكيد رمز الدخول الجديد</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-circle-check absolute right-4 top-1/2 -translate-y-1/2 text-brand-400"></i>
+                            <input type="password" id="confirm-password" required autocomplete="new-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300"
+                                placeholder="أعد كتابة الرمز الجديد">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="change-password-btn"
+                        class="w-full bg-gradient-to-l from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-black py-3.5 rounded-xl transition shadow-glow">
+                        <i class="fa-solid fa-rotate ml-2"></i> تغيير رمز الدخول
+                    </button>
+                    <p id="change-password-message" class="hidden text-center text-sm font-bold rounded-xl px-4 py-3"></p>
+                </form>
+            </section>
+
+            <!-- Change Studio Password -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-600 to-rose-400 flex items-center justify-center text-white text-lg shadow-glow">
+                        <i class="fa-solid fa-tower-broadcast"></i>
+                    </span>
+                    <div>
+                        <h2 class="font-black text-brand-950 text-lg">كلمة مرور البث</h2>
+                        <p class="text-xs text-slate-400 font-bold">كلمة مستقلة لدخول استوديو البث المباشر — قابلة للتغيير</p>
+                    </div>
+                </div>
+
+                <form id="change-studio-password-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">كلمة مرور البث الحالية</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-rose-400"></i>
+                            <input type="password" id="current-studio-password" required autocomplete="current-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder:text-slate-300"
+                                placeholder="اكتب كلمة البث الحالية">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">كلمة مرور البث الجديدة</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-shield-halved absolute right-4 top-1/2 -translate-y-1/2 text-rose-400"></i>
+                            <input type="password" id="new-studio-password" minlength="4" required autocomplete="new-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder:text-slate-300"
+                                placeholder="4 أحرف على الأقل">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">تأكيد كلمة مرور البث الجديدة</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-circle-check absolute right-4 top-1/2 -translate-y-1/2 text-rose-400"></i>
+                            <input type="password" id="confirm-studio-password" required autocomplete="new-password"
+                                class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 pr-12 pl-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder:text-slate-300"
+                                placeholder="أعد كتابة كلمة البث الجديدة">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="change-studio-password-btn"
+                        class="w-full bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white text-sm font-black py-3.5 rounded-xl transition shadow-glow">
+                        <i class="fa-solid fa-rotate ml-2"></i> تغيير كلمة مرور البث
+                    </button>
+                    <p id="change-studio-password-message" class="hidden text-center text-sm font-bold rounded-xl px-4 py-3"></p>
+                </form>
+            </section>
+
+            <!-- Compose -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center text-white text-lg shadow-glow">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </span>
+                    <div>
+                        <h2 class="font-black text-brand-950 text-lg">نشر منشور جديد</h2>
+                        <p class="text-xs text-slate-400 font-bold">يُعرض في قسم "آخر المستجدات" بالموقع — نص وصورة وفيديو بدون لايكات وتعليقات</p>
+                    </div>
+                </div>
+
+                <form id="post-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">عنوان المنشور <span class="text-rose-500">*</span></label>
+                        <input type="text" id="post-title" required maxlength="120"
+                            class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300"
+                            placeholder="مثال: ورشة الصيانة الوقائية الأسبوع القادم">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">نص المنشور <span class="text-rose-500">*</span></label>
+                        <textarea id="post-body" required maxlength="2000" rows="4"
+                            class="w-full bg-brand-50/50 border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300 resize-none"
+                            placeholder="اكتب تفاصيل الإعلان هنا..."></textarea>
+                        <p class="text-[11px] text-slate-400 mt-1 font-bold"><span id="char-count">0</span> / 2000 حرف</p>
+                    </div>
+
+                    <!-- Media type -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2">إرفاق وسائط (اختياري)</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" data-mtype="none" class="mtype-btn flex-1 min-w-[90px] bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 rounded-xl py-3 text-xs font-black transition">
+                                <i class="fa-regular fa-file-lines ml-1"></i> نص فقط
+                            </button>
+                            <button type="button" data-mtype="image" class="mtype-btn flex-1 min-w-[90px] bg-white text-slate-500 border border-slate-200 rounded-xl py-3 text-xs font-black transition">
+                                <i class="fa-regular fa-image ml-1"></i> صورة
+                            </button>
+                            <button type="button" data-mtype="video" class="mtype-btn flex-1 min-w-[90px] bg-white text-slate-500 border border-slate-200 rounded-xl py-3 text-xs font-black transition">
+                                <i class="fa-solid fa-video ml-1"></i> فيديو
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Image input -->
+                    <div id="media-image" class="hidden bg-brand-50/50 border border-dashed border-brand-300 rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <label for="image-file" class="cursor-pointer bg-white hover:bg-brand-50 border border-brand-200 text-brand-700 rounded-xl px-4 py-3 text-sm font-bold transition shadow-sm">
+                                <i class="fa-solid fa-upload ml-1"></i> رفع صورة من الجهاز
+                            </label>
+                            <input type="file" id="image-file" accept="image/*" class="hidden">
+                            <span id="image-file-name" class="text-xs text-slate-400 font-bold">لم يتم اختيار ملف</span>
+                        </div>
+                        <div class="text-center text-xs text-slate-300 font-bold">أو</div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-2">رابط صورة من الإنترنت</label>
+                            <input type="url" id="image-url" placeholder="https://example.com/image.jpg"
+                                class="w-full bg-white border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300">
+                        </div>
+                        <div id="image-preview" class="hidden">
+                            <img id="image-preview-src" class="rounded-xl max-h-52 object-cover border border-brand-200" alt="معاينة">
+                            <button type="button" id="clear-image" class="mt-2 text-xs text-rose-500 font-bold hover:text-rose-700">
+                                <i class="fa-solid fa-xmark ml-1"></i> إزالة الصورة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Video input -->
+                    <div id="media-video" class="hidden bg-brand-50/50 border border-dashed border-brand-300 rounded-2xl p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-2"><i class="fa-brands fa-youtube text-rose-500 ml-1"></i> رابط فيديو من الإنترنت</label>
+                            <input type="url" id="video-url" placeholder="https://youtube.com/watch?v=xxx  أو  https://.../video.mp4"
+                                class="w-full bg-white border border-brand-200 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-400 placeholder:text-slate-300">
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-bold">يدعم روابط يوتيوب أو روابط ملفات فيديو مباشرة (mp4 وغيرها).</p>
+                        <div id="video-preview" class="hidden">
+                            <video id="video-preview-src" controls class="w-full max-h-56 rounded-xl bg-black"></video>
+                            <button type="button" id="clear-video" class="mt-2 text-xs text-rose-500 font-bold hover:text-rose-700">
+                                <i class="fa-solid fa-xmark ml-1"></i> إزالة الفيديو
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-gradient-to-l from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white text-sm font-black py-4 rounded-xl transition shadow-glow">
+                        <i class="fa-solid fa-paper-plane ml-2"></i> نشر المنشور الآن
+                    </button>
+                    <p id="publish-message" class="hidden text-center text-sm font-bold rounded-xl px-4 py-3"></p>
+                </form>
+            </section>
+
+            <!-- Subscriptions / Storage note -->
+            <section class="bg-white/70 rounded-3xl border border-brand-100 p-6 space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-500 text-lg flex-shrink-0">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black text-brand-950 mb-1">طريقة حفظ المنشورات</h3>
+                        <p class="text-xs text-slate-500 font-bold leading-relaxed">
+                            المنشورات تُحفظ محلياً في متصفح الأدمن وتُعرض على الصفحة الرئيسية من نفس المتصفح.
+                            لتُعرض لجميع الزوار، اربط Google Apps Script كما في <code class="bg-brand-100 text-brand-700 rounded px-1.5 py-0.5" dir="ltr">apps_script.gs</code> وضبط
+                            رابط الويب في ملف <code class="bg-brand-100 text-brand-700 rounded px-1.5 py-0.5" dir="ltr">index.html</code>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manage posts -->
+            <section class="bg-white rounded-3xl border border-brand-100 shadow-soft p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-300 flex items-center justify-center text-white text-lg shadow-glow">
+                            <i class="fa-solid fa-list-ul"></i>
+                        </span>
+                        <div>
+                            <h2 class="font-black text-brand-950">المنشورات المنشورة</h2>
+                            <p class="text-xs text-slate-400 font-bold">إدارة المنشورات وحذفها</p>
+                        </div>
+                    </div>
+                    <button id="refresh-btn" class="bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 px-3 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-rotate ml-1"></i> تحديث
+                    </button>
+                </div>
+
+                <div id="posts-list" class="space-y-3">
+                    <div class="text-center text-slate-400 text-sm font-bold py-8">لا توجد منشورات بعد.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /* ============ الإعدادات ============ */
+        // غيّر كلمة المرور هنا (قيمة SHA-256 لكلمة المرور)
+        // كلمة المرور الافتراضية هي: biomedhub2026
+        const ADMIN_PASSWORD_HASH = '074a5a5cedd772e5664d2eb81728b10063d28ec6cb3123297ae12c9a7138af59';
+        const SESSION_KEY = 'bmh_admin_session';
+        const TOKEN_KEY = 'bmh_admin_token';
+        const STORAGE_KEY = 'biomedhubiq_posts';
+        const STATS_FOLLOWERS_KEY = 'bmh_followers';
+        const STATS_WORKSHOPS_KEY = 'bmh_workshops';
+        // (اختياري) رابط Google Apps Script webapp
+        const POSTS_API = '';
+
+        // {منlingam: true إذا كان يعمل عبر خادم (http) — وإلا يستخدم المتصفح}
+        const SERVER_MODE = (location.protocol === 'http:' || location.protocol === 'https:');
+
+        async function serverFetch(path, options = {}) {
+            const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+            const token = sessionStorage.getItem(TOKEN_KEY);
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            const res = await fetch(path, Object.assign({}, options, { headers }));
+            return res;
+        }
+
+        /* ============ SHA-256 Hash ============ */
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        /* ============ Session ============ */
+        function isLoggedIn() { return sessionStorage.getItem(SESSION_KEY) === '1'; }
+        function setLoggedIn(v) { sessionStorage.setItem(SESSION_KEY, v ? '1' : '0'); }
+
+        function showScreen(isLogged) {
+            document.getElementById('login-screen').classList.toggle('hidden', isLogged);
+            document.getElementById('dashboard').classList.toggle('hidden', !isLogged);
+        }
+
+        async function validateServerSession() {
+            // إذا متصل بالخادم نتأكد أن التوكن ساري
+            try {
+                const res = await serverFetch('/api/stats');
+                return res.ok;
+            } catch (e) { return false; }
+        }
+
+        (async () => {
+            if (isLoggedIn()) {
+                if (SERVER_MODE) {
+                    const ok = await validateServerSession();
+                    if (!ok) { setLoggedIn(false); showScreen(false); return; }
+                }
+                showScreen(true);
+                wireDashboard();
+            } else {
+                showScreen(false);
+            }
+        })();
+
+        /* ============ Login ============ */
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password-input').value;
+            const errEl = document.getElementById('login-error');
+            let logged = false;
+
+            if (SERVER_MODE) {
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    });
+                    const json = await res.json();
+                    if (res.ok && json.token) {
+                        sessionStorage.setItem(TOKEN_KEY, json.token);
+                        logged = true;
+                    }
+                } catch (e) { logged = false; }
+            }
+
+            if (!logged) {
+                const hash = await sha256(password);
+                logged = (hash === ADMIN_PASSWORD_HASH);
+            }
+
+            if (logged) {
+                errEl.classList.add('hidden');
+                setLoggedIn(true);
+                showScreen(true);
+                document.getElementById('password-input').value = '';
+                wireDashboard();
+            } else {
+                errEl.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            if (SERVER_MODE) {
+                try { await fetch('/api/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + (sessionStorage.getItem(TOKEN_KEY) || '') } }); } catch (e) {}
+                sessionStorage.removeItem(TOKEN_KEY);
+            }
+            setLoggedIn(false);
+            showScreen(false);
+        });
+
+        /* ============ Dashboard functions ============ */
+        function wireDashboard() {
+            loadStatsInputs();
+            renderPosts();
+            loadLiveStatus();
+            loadRecordings();
+            setInterval(loadLiveStatus, 10000);
+        }
+
+        /* ==== Live broadcast status ==== */
+        async function loadLiveStatus() {
+            try {
+                const res = await fetch('/api/live/status');
+                const json = await res.json();
+                if (!json || !json.ok) return;
+                const chip = document.getElementById('live-status-chip');
+                const stopBtn = document.getElementById('stop-live-btn');
+                if (json.live) {
+                    chip.textContent = '🔴 مباشر الآن — ' + (json.title || '') + ' (' + json.viewers + ' مشاهد)';
+                    chip.className = 'text-xs font-black px-3 py-1.5 rounded-full bg-rose-100 text-rose-600';
+                    stopBtn.classList.remove('hidden');
+                } else {
+                    chip.textContent = 'غير نشط';
+                    chip.className = 'text-xs font-black px-3 py-1.5 rounded-full bg-slate-100 text-slate-500';
+                    stopBtn.classList.add('hidden');
+                }
+            } catch (e) {}
+        }
+
+        async function stopLiveHttp() {
+            try {
+                const res = await serverFetch('/api/live/stop', { method: 'POST' });
+                if (res.ok) loadLiveStatus();
+            } catch (e) {}
+        }
+
+        /* ==== Recordings (stored broadcasts) ==== */
+        function formatBytes(b) {
+            if (!b) return '0';
+            const units = ['بايت', 'ك.ب', 'م.ب', 'ج.ب'];
+            let i = 0, n = b;
+            while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+            return n.toFixed(i ? 1 : 0) + ' ' + units[i];
+        }
+
+        async function loadRecordings() {
+            const list = document.getElementById('recordings-list');
+            try {
+                const res = await fetch('/api/recordings');
+                const json = await res.json();
+                const recs = (json && json.ok && Array.isArray(json.recordings)) ? json.recordings : [];
+                if (!recs.length) {
+                    list.innerHTML = '<div class="text-center text-slate-400 text-sm font-bold py-8">لا توجد تسجيلات بعد.</div>';
+                    return;
+                }
+                list.innerHTML = recs.map(r => `
+                    <div class="flex items-start justify-between gap-4 bg-brand-50/50 border border-brand-100 rounded-2xl p-4">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-video text-brand-500 text-sm"></i>
+                                <h4 class="font-black text-brand-950 text-sm truncate">${escapeHtml(r.title)}</h4>
+                            </div>
+                            <p class="text-[11px] text-slate-400 font-bold"><i class="fa-regular fa-calendar ml-1"></i>${formatDate(r.createdAt)} · ${formatBytes(r.size)}</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <button onclick="playRecording('${r.file}')" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition">
+                                <i class="fa-solid fa-play ml-1"></i> تشغيل
+                            </button>
+                            <button onclick="deleteRecording('${r.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 w-9 h-9 rounded-xl flex items-center justify-center transition" title="حذف">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div class="text-center text-slate-400 text-sm font-bold py-8">تعذر تحميل التسجيلات.</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        function playRecording(file) {
+            const url = '/recordings/' + file;
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-[90] bg-black/80 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="relative w-full max-w-3xl bg-slate-900 rounded-3xl p-4">
+                    <button onclick="this.closest('div').parentElement.remove()" class="absolute -top-3 -left-3 w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-sm shadow-lg z-10" title="إغلاق">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <video controls autoplay src="${url}" class="w-full rounded-2xl aspect-video bg-black"></video>
+                </div>`;
+            document.body.appendChild(modal);
+        }
+
+        async function deleteRecording(id) {
+            if (!confirm('حذف هذا التسجيل نهائياً من المنصة؟')) return;
+            try {
+                const res = await serverFetch('/api/recordings/' + encodeURIComponent(id), { method: 'DELETE' });
+                if (res.ok) loadRecordings();
+            } catch (e) {}
+        }
+
+        document.getElementById('refresh-rec-btn').addEventListener('click', loadRecordings);
+
+        /* ==== Stats (numbers) ==== */
+        async function loadStatsInputs() {
+            if (SERVER_MODE) {
+                try {
+                    const res = await fetch('/api/stats');
+                    const json = await res.json();
+                    if (json && json.stats) {
+                        if (json.stats.followers) document.getElementById('stats-followers').value = json.stats.followers;
+                        if (json.stats.workshops) document.getElementById('stats-workshops').value = json.stats.workshops;
+                    }
+                } catch (e) {}
+            }
+            const f = localStorage.getItem(STATS_FOLLOWERS_KEY);
+            const w = localStorage.getItem(STATS_WORKSHOPS_KEY);
+            if (f && !document.getElementById('stats-followers').value) document.getElementById('stats-followers').value = f;
+            if (w && !document.getElementById('stats-workshops').value) document.getElementById('stats-workshops').value = w;
+        }
+
+        async function saveStats() {
+            const f = document.getElementById('stats-followers').value.trim();
+            const w = document.getElementById('stats-workshops').value.trim();
+            if (SERVER_MODE) {
+                try {
+                    await serverFetch('/api/stats', {
+                        method: 'POST',
+                        body: JSON.stringify({ followers: f, workshops: w })
+                    });
+                } catch (e) { console.error('فشل حفظ الأرقام على الخادم:', e); }
+            }
+            if (f) localStorage.setItem(STATS_FOLLOWERS_KEY, f);
+            if (w) localStorage.setItem(STATS_WORKSHOPS_KEY, w);
+            const el = document.getElementById('stats-message');
+            el.classList.remove('hidden');
+            el.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
+            el.innerHTML = '<i class="fa-solid fa-circle-check ml-1"></i> تم حفظ الأرقام وتظهر الآن في الموقع الرئيسي.';
+            setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        /* ==== Posts CRUD ==== */
+        function getLocalPosts() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+            catch (e) { return []; }
+        }
+        function saveLocalPosts(posts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        async function fetchServerPosts() {
+            try {
+                const res = await fetch('/api/posts');
+                if (res.ok) {
+                    const json = await res.json();
+                    return (json && Array.isArray(json.posts)) ? json.posts : [];
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        async function renderPosts() {
+            let posts = null;
+            if (SERVER_MODE) posts = await fetchServerPosts();
+            if (!posts) posts = getLocalPosts();
+            posts = posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+            const list = document.getElementById('posts-list');
+            if (!posts.length) {
+                list.innerHTML = '<div class="text-center text-slate-400 text-sm font-bold py-8">لا توجد منشورات بعد.</div>';
+                return;
+            }
+
+            list.innerHTML = posts.map(p => {
+                const badge = p.mediaType === 'image'
+                    ? '<span class="inline-flex items-center gap-1 text-[10px] text-brand-600 bg-brand-100 rounded-full px-2 py-0.5 font-bold"><i class="fa-regular fa-image"></i> صورة</span>'
+                    : p.mediaType === 'video'
+                    ? '<span class="inline-flex items-center gap-1 text-[10px] text-brand-600 bg-brand-100 rounded-full px-2 py-0.5 font-bold"><i class="fa-solid fa-video"></i> فيديو</span>'
+                    : '<span class="inline-flex items-center gap-1 text-[10px] text-slate-400 bg-slate-100 rounded-full px-2 py-0.5 font-bold"><i class="fa-regular fa-file-lines"></i> نص</span>';
+                return `
+                <div class="flex items-start justify-between gap-4 bg-brand-50/50 border border-brand-100 rounded-2xl p-4">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-black text-brand-950 text-sm truncate">${p.title}</h4>
+                            ${badge}
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-1">${p.body}</p>
+                        <span class="text-[11px] text-brand-400 font-bold"><i class="fa-regular fa-calendar ml-1"></i>${formatDate(p.date)}</span>
+                    </div>
+                    <button onclick="deletePost('${p.id}')" class="flex-shrink-0 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 w-9 h-9 rounded-xl flex items-center justify-center transition" title="حذف">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        function formatDate(iso) {
+            try {
+                return new Date(iso).toLocaleDateString('ar-IQ', { year: 'numeric', month: 'short', day: 'numeric' });
+            } catch (e) { return iso; }
+        }
+
+        async function deletePost(id) {
+            if (SERVER_MODE) {
+                try {
+                    const res = await serverFetch('/api/posts/' + encodeURIComponent(id), { method: 'DELETE' });
+                    if (res.ok) { renderPosts(); return; }
+                } catch (e) {}
+            }
+            let posts = getLocalPosts();
+            posts = posts.filter(p => p.id !== id);
+            saveLocalPosts(posts);
+            renderPosts();
+        }
+
+        /* ============ Media type tabs ============ */
+        let mediaType = 'none';
+        let selectedImageFile = null; // { name, dataUrl }
+
+        function setMediaType(type) {
+            mediaType = type;
+            document.querySelectorAll('.mtype-btn').forEach(btn => {
+                const active = btn.dataset.mtype === type;
+                btn.classList.toggle('bg-brand-50', active);
+                btn.classList.toggle('hover:bg-brand-100', active);
+                btn.classList.toggle('text-brand-700', active);
+                btn.classList.toggle('border-brand-200', active);
+                btn.classList.toggle('bg-white', !active);
+                btn.classList.toggle('text-slate-500', !active);
+                btn.classList.toggle('border-slate-200', !active);
+            });
+            document.getElementById('media-image').classList.toggle('hidden', type !== 'image');
+            document.getElementById('media-video').classList.toggle('hidden', type !== 'video');
+        }
+
+        document.querySelectorAll('.mtype-btn').forEach(btn => {
+            btn.addEventListener('click', () => setMediaType(btn.dataset.mtype));
+        });
+
+        /* ==== Image upload ==== */
+        const imageFileInput = document.getElementById('image-file');
+        const imageUrlInput = document.getElementById('image-url');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePreviewSrc = document.getElementById('image-preview-src');
+
+        imageFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 3 * 1024 * 1024) {
+                alert('حجم الصورة كبير — الرجاء اختيار صورة أقل من 3 ميجابايت.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                selectedImageFile = { name: file.name, dataUrl: reader.result };
+                document.getElementById('image-file-name').textContent = file.name;
+                imageUrlInput.value = '';
+                showImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        imageUrlInput.addEventListener('input', () => {
+            const v = imageUrlInput.value.trim();
+            if (v && /^https?:\/\//i.test(v)) {
+                selectedImageFile = null;
+                document.getElementById('image-file-name').textContent = 'لا يوجد ملف مختار';
+                showImagePreview(v);
+            }
+        });
+
+        function showImagePreview(src) {
+            imagePreviewSrc.src = src;
+            imagePreview.classList.remove('hidden');
+        }
+
+        document.getElementById('clear-image').addEventListener('click', () => {
+            selectedImageFile = null;
+            imageFileInput.value = '';
+            imageUrlInput.value = '';
+            document.getElementById('image-file-name').textContent = 'لا يوجد ملف مختار';
+            imagePreview.classList.add('hidden');
+            imagePreviewSrc.src = '';
+        });
+
+        /* ==== Video input ==== */
+        const videoUrlInput = document.getElementById('video-url');
+        const videoPreview = document.getElementById('video-preview');
+        const videoPreviewSrc = document.getElementById('video-preview-src');
+
+        videoUrlInput.addEventListener('input', () => {
+            const v = videoUrlInput.value.trim();
+            if (v && /^https?:\/\//i.test(v)) {
+                videoPreviewSrc.src = v;
+                videoPreview.classList.remove('hidden');
+            } else {
+                videoPreview.classList.add('hidden');
+                videoPreviewSrc.src = '';
+            }
+        });
+
+        document.getElementById('clear-video').addEventListener('click', () => {
+            videoUrlInput.value = '';
+            videoPreview.classList.add('hidden');
+            videoPreviewSrc.src = '';
+        });
+
+        /* ============ Publish ============ */
+        const titleInput = document.getElementById('post-title');
+        const bodyInput = document.getElementById('post-body');
+
+        bodyInput.addEventListener('input', () => {
+            document.getElementById('char-count').textContent = bodyInput.value.length;
+        });
+
+        document.getElementById('post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = titleInput.value.trim();
+            const body = bodyInput.value.trim();
+            if (!title || !body) {
+                showMessage('أكمل العنوان والنص أولاً.', 'error');
+                return;
+            }
+
+            let mediaData = '';
+            let mediaUrl = '';
+
+            if (mediaType === 'image') {
+                const url = imageUrlInput.value.trim();
+                if (selectedImageFile) mediaData = selectedImageFile.dataUrl;
+                else if (url) mediaUrl = url;
+                else {
+                    showMessage('اختر صورة أو ضع رابطاً للصورة.', 'error');
+                    return;
+                }
+            } else if (mediaType === 'video') {
+                const url = videoUrlInput.value.trim();
+                if (!url) {
+                    showMessage('ضع رابط الفيديو أولاً.', 'error');
+                    return;
+                }
+                mediaUrl = url;
+            }
+
+            showMessage('نشر جارٍ...', 'info');
+
+            const post = {
+                id: 'p' + Date.now() + Math.random().toString(36).slice(2, 7),
+                title: title,
+                body: body,
+                date: new Date().toISOString(),
+                mediaType: mediaType,
+                mediaData: mediaData,   // صورة مرفوعة base64 (تحفظ محلياً)
+                mediaUrl: mediaUrl      // رابط صورة/فيديو خارجي
+            };
+
+            let savedRemotely = false;
+            if (SERVER_MODE) {
+                try {
+                    const payload = {
+                        title, body, date: post.date,
+                        mediaType: post.mediaType,
+                        mediaUrl: post.mediaUrl
+                    };
+                    const res = await serverFetch('/api/posts', {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) savedRemotely = true;
+                } catch (err) {
+                    console.error('فشل الحفظ على الخادم:', err);
+                }
+            } else if (POSTS_API) {
+                try {
+                    const payload = new URLSearchParams({
+                        adminKey: ADMIN_PASSWORD_HASH,
+                        title, body: body, date: post.date,
+                        mediaType: post.mediaType,
+                        mediaUrl: post.mediaUrl
+                    });
+                    await fetch(POSTS_API + '?action=add', { method: 'POST', mode: 'no-cors', body: payload });
+                    savedRemotely = true;
+                } catch (err) {
+                    console.error('فشل الحفظ البعيد:', err);
+                }
+            }
+
+            if (!savedRemotely || !SERVER_MODE) {
+                const posts = getLocalPosts();
+                posts.push(post);
+                saveLocalPosts(posts);
+            }
+
+            // Reset form
+            titleInput.value = '';
+            bodyInput.value = '';
+            document.getElementById('char-count').textContent = '0';
+            setMediaType('none');
+            selectedImageFile = null;
+            imageFileInput.value = '';
+            imageUrlInput.value = '';
+            imagePreview.classList.add('hidden');
+            document.getElementById('image-file-name').textContent = 'لا يوجد ملف مختار';
+            videoUrlInput.value = '';
+            videoPreview.classList.add('hidden');
+            videoPreviewSrc.src = '';
+
+            showMessage(savedRemotely ? 'تم نشر المنشور بنجاح.' : 'تم نشر المنشور محلياً.', 'success');
+            renderPosts();
+        });
+
+        function showMessage(text, type) {
+            const el = document.getElementById('publish-message');
+            el.classList.remove('hidden');
+            el.classList.remove(
+                'bg-emerald-50', 'text-emerald-700', 'bg-brand-50', 'text-brand-700',
+                'bg-rose-50', 'text-rose-600', 'border', 'border-emerald-200', 'border-brand-200', 'border-rose-200'
+            );
+            const map = {
+                success: ['bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200'],
+                info: ['bg-brand-50', 'text-brand-700', 'border', 'border-brand-200'],
+                error: ['bg-rose-50', 'text-rose-600', 'border', 'border-rose-200']
+            };
+            el.classList.add(...(map[type] || map.info));
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info';
+            el.innerHTML = `<i class="fa-solid ${icon} ml-1"></i> ${text}`;
+            setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        document.getElementById('refresh-btn').addEventListener('click', renderPosts);
+
+        /* ============ Change Password ============ */
+        const cpwForm = document.getElementById('change-password-form');
+        const cpwMessage = document.getElementById('change-password-message');
+
+        function showCpwMessage(text, type) {
+            cpwMessage.classList.remove('hidden');
+            cpwMessage.classList.remove(
+                'bg-emerald-50', 'text-emerald-700', 'bg-brand-50', 'text-brand-700',
+                'bg-rose-50', 'text-rose-600', 'border', 'border-emerald-200', 'border-brand-200', 'border-rose-200'
+            );
+            const map = {
+                success: ['bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200'],
+                info: ['bg-brand-50', 'text-brand-700', 'border', 'border-brand-200'],
+                error: ['bg-rose-50', 'text-rose-600', 'border', 'border-rose-200']
+            };
+            cpwMessage.classList.add(...(map[type] || map.info));
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info';
+            cpwMessage.innerHTML = `<i class="fa-solid ${icon} ml-1"></i> ${text}`;
+        }
+
+        cpwForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const current = document.getElementById('current-password').value;
+            const next = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            if (next !== confirm) {
+                showCpwMessage('رمز الدخول الجديد غير متطابق مع التأكيد.', 'error');
+                return;
+            }
+            if (next.length < 4) {
+                showCpwMessage('رمز الدخول قصير جداً — 4 أحرف على الأقل.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('change-password-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-2"></i> جارٍ التغيير...';
+
+            if (SERVER_MODE) {
+                try {
+                    const res = await serverFetch('/api/change-password', {
+                        method: 'POST',
+                        body: JSON.stringify({ currentPassword: current, newPassword: next })
+                    });
+                    const json = await res.json();
+                    if (res.ok) {
+                        showCpwMessage(json.message || 'تم تغيير رمز الدخول بنجاح.', 'success');
+                        setTimeout(() => {
+                            // تسجيل خروج تلقائي كما يفعل الخادم بالأمان
+                            setLoggedIn(false);
+                            sessionStorage.removeItem(TOKEN_KEY);
+                            showScreen(false);
+                        }, 1800);
+                    } else {
+                        showCpwMessage(json.error || 'فشل تغيير الرمز.', 'error');
+                    }
+                } catch (err) {
+                    showCpwMessage('الخادم غير متاح — تعذّر تغيير الرمز.', 'error');
+                }
+            } else {
+                // الوضع المحلي: التغيير الفعلي يتطلب تحديث الملفات يدوياً
+                const hash = await sha256(next);
+                localStorage.setItem('bmh_local_pwd_hash', hash);
+                showCpwMessage('الوضع المحلي — لتثبيت الرمز الجديد حدّث ADMIN_PASSWORD_HASH في admin.html وserver.js وserver.py بالقيمة الجديدة.', 'info');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-rotate ml-2"></i> تغيير رمز الدخول';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            document.getElementById('current-password').value = '';
+        });
+
+        /* ============ Change Studio Password ============ */
+        const cspwForm = document.getElementById('change-studio-password-form');
+        const cspwMessage = document.getElementById('change-studio-password-message');
+
+        function showCspwMessage(text, type) {
+            cspwMessage.classList.remove('hidden');
+            cspwMessage.classList.remove(
+                'bg-emerald-50', 'text-emerald-700', 'bg-rose-50', 'text-rose-600',
+                'border', 'border-emerald-200', 'border-rose-200'
+            );
+            const map = {
+                success: ['bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200'],
+                error: ['bg-rose-50', 'text-rose-600', 'border', 'border-rose-200']
+            };
+            cspwMessage.classList.add(...(map[type] || map.error));
+            const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+            cspwMessage.innerHTML = `<i class="fa-solid ${icon} ml-1"></i> ${text}`;
+        }
+
+        cspwForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const current = document.getElementById('current-studio-password').value;
+            const next = document.getElementById('new-studio-password').value;
+            const confirm = document.getElementById('confirm-studio-password').value;
+
+            if (next !== confirm) {
+                showCspwMessage('كلمة مرور البث الجديدة غير متطابقة مع التأكيد.', 'error');
+                return;
+            }
+            if (next.length < 4) {
+                showCspwMessage('كلمة مرور البث قصيرة جداً — 4 أحرف على الأقل.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('change-studio-password-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-2"></i> جارٍ التغيير...';
+
+            if (SERVER_MODE) {
+                try {
+                    const res = await serverFetch('/api/change-studio-password', {
+                        method: 'POST',
+                        body: JSON.stringify({ currentPassword: current, newPassword: next })
+                    });
+                    const json = await res.json();
+                    if (res.ok) {
+                        showCspwMessage(json.message || 'تم تغيير كلمة مرور البث بنجاح.', 'success');
+                    } else {
+                        showCspwMessage(json.error || 'فشل تغيير كلمة مرور البث.', 'error');
+                    }
+                } catch (err) {
+                    showCspwMessage('الخادم غير متاح — تعذّر تغيير كلمة مرور البث.', 'error');
+                }
+            } else {
+                showCspwMessage('الوضع المحلي — التغيير يتطلب تشغيل الخادم (node server.js).', 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-rotate ml-2"></i> تغيير كلمة مرور البث';
+            document.getElementById('new-studio-password').value = '';
+            document.getElementById('confirm-studio-password').value = '';
+            document.getElementById('current-studio-password').value = '';
+        });
+    </script>
+</body>
+</html>
