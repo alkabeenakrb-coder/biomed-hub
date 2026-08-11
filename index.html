@@ -165,7 +165,7 @@
         </div>
 
         <div id="workshops-container" class="grid md:grid-cols-2 gap-6">
-            <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري تحميل الورش من لوحة التحكم...</div>
+            <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري تحميل الورش من جدول البيانات...</div>
         </div>
     </section>
 
@@ -206,9 +206,10 @@
                 </a>
             </div>
 
-            <!-- أزرار منصات التواصل الاجتماعي -->
+            <!-- أزرار منصات التواصل الاجتماعي (تمت إضافة الواتساب ولينكد إن) -->
             <div class="flex items-center justify-center gap-3 pt-2 flex-wrap">
-                <a href="https://whatsapp.com/channel/0029Vb89hX6FXUuSb1Gx7D0k" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="WhatsApp">
+                <!-- الواتساب -->
+                <a href="https://whatsapp.com/channel/0029Vb89hX6FXUuSb1Gx7D0k"target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="WhatsApp">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
                 <a href="https://t.me/Biomedhubiq" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="Telegram">
@@ -217,7 +218,7 @@
                 <a href="https://www.instagram.com/biomedhubiq?igsh=OG1vY2R2Y2ZjeWVl&utm_source=qr" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="Instagram">
                     <i class="fa-brands fa-instagram"></i>
                 </a>
-                <a href="https://www.linkedin.com/company/biomedhub/" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="LinkedIn">
+                <a href="https://www.linkedin.com/company/biomedhub/"target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="LinkedIn">
                     <i class="fa-brands fa-linkedin-in"></i>
                 </a>
                 <a href="#" target="_blank" class="w-12 h-12 rounded-full border border-purple-200 flex items-center justify-center text-purple-700 hover:bg-purple-600 hover:text-white transition duration-200 text-lg shadow-sm" title="YouTube">
@@ -232,7 +233,7 @@
         </div>
     </footer>
 
-    <!-- Script to fetch data from data.json (Admin Panel) -->
+    <!-- Script to fetch data from Google Sheets CSV -->
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -242,40 +243,56 @@
         }
         menuBtn.addEventListener('click', toggleMenu);
 
-        async function fetchAdminData() {
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
+
+        async function fetchGoogleSheetData() {
             try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                renderData(data);
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                parseCSVAndRender(data);
             } catch (error) {
-                console.error('خطأ في جلب بيانات لوحة التحكم:', error);
+                console.error('خطأ في جلب البيانات:', error);
                 document.getElementById('workshops-container').innerHTML = `
                     <div class="col-span-2 text-center text-rose-500 text-xs py-4">
-                        تعذر جلب البيانات من ملف الأدمن.
+                        تعذر جلب البيانات من قوقل شيت. تأكد من إتمام النشر على الويب.
                     </div>`;
             }
         }
 
-        function renderData(data) {
+        function parseCSVAndRender(csvText) {
+            const rows = csvText.split('\n').map(row => {
+                return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'));
+            });
+
             let workshopsHtml = '';
-            
-            // إذا كان الـ data عبارة عن مصفوفة أو يحتوي على منشورات
-            const items = Array.isArray(data) ? data : (data.workshops || data.posts || []);
+            let followersCount = '2,665';
+            let workshopsCount = '5';
 
-            if (items.length === 0) {
-                document.getElementById('workshops-container').innerHTML = `
-                    <div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش مضافة حالياً.</div>`;
-                return;
-            }
+            for (let i = 1; i < rows.length; i++) {
+                const cols = rows[i];
+                if (!cols || cols.length < 2 || !cols[0]) continue;
 
-            items.forEach(item => {
-                const titleN = item.title || item.name || 'عنوان الورشة';
-                const speakerN = item.speaker || item.instructor || '';
-                const platformN = item.platform || item.details || '';
-                const detailsN = item.description || item.info || '';
-                const isArchived = item.status === 'archived' || item.archived;
+                const type = cols[0].trim();
+                const title = cols[1] || '';
+                const speaker = cols[2] || '';
+                const platform = cols[3] || '';
+                const details = cols[4] || '';
 
-                if (!isArchived) {
+                if (type === 'followers') {
+                    followersCount = title || '2,665';
+                    const followerEl = document.getElementById('followers-count');
+                    if (followerEl) followerEl.innerText = followersCount;
+                    continue;
+                }
+
+                if (type === 'workshops_count') {
+                    workshopsCount = title || '5';
+                    const workshopsCountEl = document.getElementById('workshops-count');
+                    if (workshopsCountEl) workshopsCountEl.innerText = workshopsCount;
+                    continue;
+                }
+
+                if (type === 'next') {
                     workshopsHtml += `
                     <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
                         <div>
@@ -286,12 +303,12 @@
                                 <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
                             </div>
                             <div class="space-y-3">
-                                <h3 class="text-lg font-black text-purple-900">${titleN}</h3>
-                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speakerN}</p>
+                                <h3 class="text-lg font-black text-purple-900">${title}</h3>
+                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${speaker}</p>
                                 <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                    <p>${platformN}</p>
+                                    <p>${platform}</p>
                                 </div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${detailsN}</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">${details}</p>
                             </div>
                         </div>
                         <div class="pt-6">
@@ -300,17 +317,17 @@
                             </a>
                         </div>
                     </div>`;
-                } else {
+                } else if (type === 'archived') {
                     workshopsHtml += `
                     <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speakerN}</span>
+                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${speaker}</span>
                                 <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
                             </div>
                             <div class="space-y-3">
-                                <h3 class="text-lg font-bold text-slate-800">${titleN}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${detailsN || platformN}</p>
+                                <h3 class="text-lg font-bold text-slate-800">${title}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${details || platform}</p>
                             </div>
                         </div>
                         <div class="pt-6">
@@ -320,7 +337,7 @@
                         </div>
                     </div>`;
                 }
-            });
+            }
 
             const container = document.getElementById('workshops-container');
             if (container && workshopsHtml) {
@@ -329,7 +346,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchAdminData();
+            fetchGoogleSheetData();
         });
     </script>
 </body>
