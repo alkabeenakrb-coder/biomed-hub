@@ -349,13 +349,23 @@
             fetchGoogleSheetData();
         });
     </script>
+   <div id="certificate-box" style="background: #f8f9fa; border: 2px solid #8e44ad; padding: 20px; border-radius: 10px; text-align: center; margin: 20px auto; max-width: 90%;">
+    <h3 style="color: #2c3e50; margin-bottom: 5px;">✅ شهادة موثقة رسمياً</h3>
+    <p style="color: #555; margin: 5px 0;">اسم المشارك: <span id="display-name" style="color: #8e44ad; font-weight: bold;">-</span></p>
+    <p style="color: #555; margin: 5px 0;">رقم التسلسل: <span id="display-id" style="font-weight: bold;">-</span></p>
+</div>
+
+<script>
     window.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         const studentId = urlParams.get('id');
         const studentName = urlParams.get('name');
 
         if (studentId && studentName) {
-            alert("✅ شهادة موثقة رسمياً!\n\nاسم المشارك: " + decodeURIComponent(studentName) + "\nرقم الشهادة: " + studentId + "\nمنصة BioMed Hub");
+            document.getElementById('display-name').innerText = decodeURIComponent(studentName);
+            document.getElementById('display-id').innerText = studentId;
+        } else {
+            document.getElementById('certificate-box').style.display = 'none';
         }
     });
 </script>
