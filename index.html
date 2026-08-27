@@ -349,19 +349,15 @@
             fetchGoogleSheetData();
         });
     </script>
-  window.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const studentId = urlParams.get('id');
-    const studentName = urlParams.get('name');
+    window.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get('id');
+        const studentName = urlParams.get('name');
 
-    if (studentId && studentName) {
-      // فك تشفير الاسم من الرابط وعرضه بشكل جميل
-      const decodedName = decodeURIComponent(studentName);
-      alert("✅ شهادة موثقة رسمياً!\n\nاسم المشارك: " + decodedName + "\nرقم الشهادة: " + studentId + "\nمنصة BioMed Hub");
-    } else {
-      console.log("لا توجد بيانات طالب في هذا الرابط.");
-    }
-  });
+        if (studentId && studentName) {
+            alert("✅ شهادة موثقة رسمياً!\n\nاسم المشارك: " + decodeURIComponent(studentName) + "\nرقم الشهادة: " + studentId + "\nمنصة BioMed Hub");
+        }
+    });
 </script>
 </body>
 </html>
