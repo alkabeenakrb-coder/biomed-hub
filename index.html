@@ -349,10 +349,15 @@
             fetchGoogleSheetData();
         });
     </script>
-   <div id="certificate-box" style="background: #f8f9fa; border: 2px solid #8e44ad; padding: 20px; border-radius: 10px; text-align: center; margin: 20px auto; max-width: 90%;">
-    <h3 style="color: #2c3e50; margin-bottom: 5px;">✅ شهادة موثقة رسمياً</h3>
-    <p style="color: #555; margin: 5px 0;">اسم المشارك: <span id="display-name" style="color: #8e44ad; font-weight: bold;">-</span></p>
-    <p style="color: #555; margin: 5px 0;">رقم التسلسل: <span id="display-id" style="font-weight: bold;">-</span></p>
+   <!-- نافذة التحقق المنبثقة (Popup) -->
+<div id="certificate-popup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 5px 20px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease;">
+        <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 10px;">✅ شهادة موثقة رسمياً</h3>
+        <p style="color: #555; margin: 8px 0;">اسم المشارك:</p>
+        <p id="popup-name" style="color: #8e44ad; font-size: 1.2em; font-weight: bold; margin: 5px 0;">-</p>
+        <p style="color: #555; margin: 8px 0;">رقم التسلسل: <strong id="popup-id" style="color: #333;">-</strong></p>
+        <p style="color: #999; font-size: 11px; margin-top: 15px;">ستختفي هذه النافذة خلال ثوانٍ...</p>
+    </div>
 </div>
 
 <script>
@@ -362,10 +367,17 @@
         const studentName = urlParams.get('name');
 
         if (studentId && studentName) {
-            document.getElementById('display-name').innerText = decodeURIComponent(studentName);
-            document.getElementById('display-id').innerText = studentId;
-        } else {
-            document.getElementById('certificate-box').style.display = 'none';
+            // جلب البيانات وعرض النافذة المنبثقة
+            document.getElementById('popup-name').innerText = decodeURIComponent(studentName);
+            document.getElementById('popup-id').innerText = studentId;
+            
+            const popup = document.getElementById('certificate-popup');
+            popup.style.display = 'flex'; // تظهر النافذة بوسط الشاشة وفوقها الظل
+
+            // مؤقت لـ 10 ثواني (10000 ميلي ثانية) تختفي بعدها تلقائياً
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 10000);
         }
     });
 </script>
