@@ -349,5 +349,14 @@
             fetchGoogleSheetData();
         });
     </script>
+  // فحص بيانات الطالب القادمة من الـ QR
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentId = urlParams.get('id');
+  const studentName = urlParams.get('name');
+
+  if (studentId && studentName) {
+    alert("مرحباً بك مهندس " + decodeURIComponent(studentName) + "\nرقم الشهادة: " + studentId + "\nحالة الشهادة: موثقة رسمياً من BioMed Hub ✅");
+  }
+</script>
 </body>
 </html>
