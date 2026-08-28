@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الحضور - BioMed Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        .header-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid #eaeaea;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        /* تنسيق لوجو المنصة */
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            padding: 5px;
+        }
+        .header-card h1 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #111;
+        }
+        .header-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid #eaeaea;
+        }
+        .form-group {
+            margin-bottom: 22px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+        }
+        .required {
+            color: #d93025;
+            margin-right: 4px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #6366f1;
+        }
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .radio-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- عنوان ورشة الحضور مع اللوجو -->
+    <div class="header-card">
+        <img src="M.png" alt="BioMed Hub Logo" class="logo-img">
+        <h1>تسجيل الحضور الخاص بورشة المواد الحيوية في الطب الحديث (من خواص المواد إلى الأداء السريري)</h1>
+        <p>ورشة تدريبية نتعرف خلالها على الأساسيات التي تربط بين هندسة المواد، جسم الإنسان، والتطبيقات الطبية الحديثة.</p>
+    </div>
+
+    <!-- نموذج الحضور -->
+    <div class="form-card">
+        <form id="attendanceForm">
+            
+            <div class="form-group">
+                <label><span class="required">*</span> البريد الإلكتروني</label>
+                <input type="email" name="email" placeholder="example@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> الاسم الكامل باللغة الانجليزية</label>
+                <input type="text" name="fullName" placeholder="Full Name in English" required>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> المحافظة</label>
+                <input type="text" name="city" placeholder="مثال: كربلاء" required>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> الجامعة</label>
+                <input type="text" name="university" placeholder="مثال: جامعة ذي قار" required>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> المرحلة</label>
+                <input type="text" name="stage" placeholder="مثال: الثالثة / خريج" required>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> ما هو تقييمك للمحتوى العلمي والمعرفي الذي قُدّم في الورشة؟</label>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="evaluation" value="ضعيف" required> ضعيف</label>
+                    <label class="radio-option"><input type="radio" name="evaluation" value="متوسط"> متوسط</label>
+                    <label class="radio-option"><input type="radio" name="evaluation" value="جيد"> جيد</label>
+                    <label class="radio-option"><input type="radio" name="evaluation" value="جيد جداً"> جيد جداً</label>
+                    <label class="radio-option"><input type="radio" name="evaluation" value="ممتاز"> ممتاز</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> شنو المواضيع اللي تحب نقدمها في الورش القادمة؟</label>
+                <textarea name="futureTopics" rows="3" placeholder="اكتب المقترحات هنا..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span> ما هو رأيك في BIOMEDHUB؟ <a href="https://biomedhubiq.com" target="_blank" style="color: #6366f1;">https://biomedhubiq.com</a></label>
+                <textarea name="platformFeedback" rows="3" placeholder="رأيك يهمنا..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">إرسال الحضور</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
