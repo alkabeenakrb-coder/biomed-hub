@@ -25,7 +25,6 @@
             margin-bottom: 25px;
             text-align: center;
         }
-        /* تنسيق لوجو المنصة */
         .logo-img {
             width: 80px;
             height: 80px;
@@ -119,40 +118,43 @@
 <body>
 
 <div class="container">
-    <!-- عنوان ورشة الحضور مع اللوجو -->
     <div class="header-card">
         <img src="M.png" alt="BioMed Hub Logo" class="logo-img">
         <h1>تسجيل الحضور الخاص بورشة المواد الحيوية في الطب الحديث (من خواص المواد إلى الأداء السريري)</h1>
         <p>ورشة تدريبية نتعرف خلالها على الأساسيات التي تربط بين هندسة المواد، جسم الإنسان، والتطبيقات الطبية الحديثة.</p>
     </div>
 
-    <!-- نموذج الحضور -->
     <div class="form-card">
         <form id="attendanceForm">
             
             <div class="form-group">
                 <label><span class="required">*</span> البريد الإلكتروني</label>
-                <input type="email" name="email" placeholder="example@gmail.com" required>
+                <input type="email" name="email" placeholder="example@gmail.com" required 
+                       oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label><span class="required">*</span> الاسم الكامل باللغة الانجليزية</label>
-                <input type="text" name="fullName" placeholder="Full Name in English" required>
+                <input type="text" name="fullName" placeholder="Full Name in English" required 
+                       oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label><span class="required">*</span> المحافظة</label>
-                <input type="text" name="city" placeholder="مثال: كربلاء" required>
+                <input type="text" name="city" placeholder="مثال: كربلاء" required 
+                       oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label><span class="required">*</span> الجامعة</label>
-                <input type="text" name="university" placeholder="مثال: جامعة ذي قار" required>
+                <input type="text" name="university" placeholder="مثال: جامعة ذي قار" required 
+                       oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
                 <label><span class="required">*</span> المرحلة</label>
-                <input type="text" name="stage" placeholder="مثال: الثالثة / خريج" required>
+                <input type="text" name="stage" placeholder="مثال: الثالثة / خريج" required 
+                       oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
             <div class="form-group">
@@ -168,12 +170,14 @@
 
             <div class="form-group">
                 <label><span class="required">*</span> شنو المواضيع اللي تحب نقدمها في الورش القادمة؟</label>
-                <textarea name="futureTopics" rows="3" placeholder="اكتب المقترحات هنا..." required></textarea>
+                <textarea name="futureTopics" rows="3" placeholder="اكتب المقترحات هنا..." required 
+                          oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')"></textarea>
             </div>
 
             <div class="form-group">
                 <label><span class="required">*</span> ما هو رأيك في BIOMEDHUB؟ <a href="https://biomedhubiq.com" target="_blank" style="color: #6366f1;">https://biomedhubiq.com</a></label>
-                <textarea name="platformFeedback" rows="3" placeholder="رأيك يهمنا..." required></textarea>
+                <textarea name="platformFeedback" rows="3" placeholder="رأيك يهمنا..." required 
+                          oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')"></textarea>
             </div>
 
             <button type="submit" class="submit-btn">إرسال الحضور</button>
