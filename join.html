@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل العضوية - BioMed Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .header-section p {
+            color: #666;
+            font-size: 16px;
+        }
+        /* تصميم البطاقات المميزة */
+        .benefit-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            border: 1px solid #eaeaea;
+        }
+        .benefit-card h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #111;
+        }
+        .benefit-card p {
+            margin-bottom: 0;
+            color: #555;
+            font-size: 14px;
+        }
+        /* صندوق الاستمارة */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #eaeaea;
+            margin-top: 30px;
+        }
+        .form-card h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .form-card p {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #444;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #007bff;
+        }
+        .submit-btn {
+            background-color: #111;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- القسم العلوي والعنوان -->
+    <div class="header-section">
+        <h1>تسجيل الأعضاء</h1>
+        <p>انضم إلى فريقنا وكن جزءاً من مسيرة التطوير والنجاح</p>
+    </div>
+
+    <!-- ميزات الانضمام -->
+    <div class="benefit-card">
+        <h3>اكتساب الخبرة</h3>
+        <p>عمل إلى جانب محترفين واكتسب مهارات عملية حقيقية ضمن بيئة تطورية.</p>
+    </div>
+    
+    <div class="benefit-card">
+        <h3>توسيع شبكة علاقاتك</h3>
+        <p>التقِ بنخبة من المتخصصين ورواد المجال على مدار الأنشطة والفعاليات.</p>
+    </div>
+
+    <div class="benefit-card">
+        <h3>احصل على شهادة</h3>
+        <p>استلم شهادة معتمدة تقديراً لمساهمتك وجهودك معنا.</p>
+    </div>
+
+    <!-- نموذج تقديم الطلب -->
+    <div class="form-card">
+        <h2>قَدّم طلب انضمام</h2>
+        <p>املأ النموذج أدناه. يراجع فريقنا جميع الطلبات ويتواصل مع المقبولين.</p>
+        
+        <form id="membershipForm">
+            <div class="form-group">
+                <label>الاسم الكامل *</label>
+                <input type="text" name="fullName" placeholder="اسمك الكامل" required>
+            </div>
+
+            <div class="form-group">
+                <label>البريد الإلكتروني *</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف *</label>
+                <input type="text" name="phone" placeholder="+964..." required>
+            </div>
+
+            <div class="form-group">
+                <label>واتساب</label>
+                <input type="text" name="whatsapp" placeholder="+964...">
+            </div>
+
+            <div class="form-group">
+                <label>التخصص / الكلية *</label>
+                <input type="text" name="specialty" placeholder="مثال: هندسة طب حياتي" required>
+            </div>
+
+            <button type="submit" class="submit-btn">إرسال الطلب</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
