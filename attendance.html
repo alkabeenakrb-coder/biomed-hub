@@ -113,6 +113,13 @@
         .submit-btn:hover {
             background-color: #4f46e5;
         }
+        #loadingMsg {
+            display: none;
+            text-align: center;
+            color: #6366f1;
+            margin-top: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -120,8 +127,8 @@
 <div class="container">
     <div class="header-card">
         <img src="M.png" alt="BioMed Hub Logo" class="logo-img">
-        <h1>تسجيل الحضور الخاص بورشة المواد الحيوية في الطب الحديث (من خواص المواد إلى الأداء السريري)</h1>
-        <p>ورشة تدريبية نتعرف خلالها على الأساسيات التي تربط بين هندسة المواد، جسم الإنسان، والتطبيقات الطبية الحديثة.</p>
+        <h1 id="workshopTitle">تسجيل الحضور - BioMed Hub</h1>
+        <p id="workshopDesc">يرجى ملء الحقول أدناه بدقة لإتمام عملية تسجيل الحضور والحصول على الشهادة.</p>
     </div>
 
     <div class="form-card">
@@ -134,7 +141,7 @@
             </div>
 
             <div class="form-group">
-                <label><span class="required">*</span> الاسم الكامل باللغة الانجليزية</label>
+                <label><span class="required">*</span> الاسم الكامل باللغة الانجليزية (كما سيكتب في الشهادة)</label>
                 <input type="text" name="fullName" placeholder="Full Name in English" required 
                        oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
@@ -180,10 +187,56 @@
                           oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')"></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">إرسال الحضور</button>
+            <button type="submit" class="submit-btn" id="submitBtn">إرسال الحضور</button>
+            <div id="loadingMsg">جاري إرسال البيانات وحفظها... ⏳</div>
         </form>
     </div>
 </div>
+
+<script>
+    // جلب عنوان الورشة ووصفها من الرابط إن توفرت
+    const urlParams = new URLSearchParams(window.location.search);
+    const workshopParam = urlParams.get('workshop');
+    const descParam = urlParams.get('desc');
+
+    if (workshopParam) {
+        document.getElementById('workshopTitle').innerText = decodeURIComponent(workshopParam);
+    }
+    if (descParam) {
+        document.getElementById('workshopDesc').innerText = decodeURIComponent(descParam);
+    }
+
+    // تم دمج رابط جوجل شيت الخاص بك بنجاح
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7zmqyhBWd-FUyKSD4XOEz-ruebK33es-FCLOvRGlLR62h74Zq-Ru66Adr-Wd_mqC7/exec';
+
+    const form = document.getElementById('attendanceForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingMsg = document.getElementById('loadingMsg');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        submitBtn.style.display = 'none';
+        loadingMsg.style.display = 'block';
+
+        const formData = new FormData(form);
+        formData.append('workshopName', document.getElementById('workshopTitle').innerText);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => {
+                alert('تم تسجيل حضورك بنجاح! شكراً لك 🌸');
+                form.reset();
+                submitBtn.style.display='block';
+                loadingMsg.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.');
+                submitBtn.style.display = 'block';
+                loadingMsg.style.display = 'none';
+            });
+    });
+</script>
 
 </body>
 </html>
