@@ -194,7 +194,6 @@
 </div>
 
 <script>
-    // جلب عنوان الورشة ووصفها من الرابط إن توفرت
     const urlParams = new URLSearchParams(window.location.search);
     const workshopParam = urlParams.get('workshop');
     const descParam = urlParams.get('desc');
@@ -206,8 +205,8 @@
         document.getElementById('workshopDesc').innerText = decodeURIComponent(descParam);
     }
 
-    // تم دمج رابط جوجل شيت الخاص بك بنجاح
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7zmqyhBWd-FUyKSD4XOEz-ruebK33es-FCLOvRGlLR62h74Zq-Ru66Adr-Wd_mqC7/exec';
+    // تم دمج الرابط الجديد الخاص بك هنا بدقة
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwFsfN5pTrqwzoth3AvM4pSWHLJZ5qvFc9meVOYNGSQqSelcWxPYuMGQLnKyXVR2-hV/exec';
 
     const form = document.getElementById('attendanceForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -220,21 +219,30 @@
         loadingMsg.style.display = 'block';
 
         const formData = new FormData(form);
-        formData.append('workshopName', document.getElementById('workshopTitle').innerText);
+        const dataObj = {};
+        formData.forEach((value, key) => (dataObj[key] = value));
+        dataObj['workshopName'] = document.getElementById('workshopTitle').innerText;
 
-        fetch(scriptURL, { method: 'POST', body: formData })
-            .then(response => {
-                alert('تم تسجيل حضورك بنجاح! شكراً لك 🌸');
-                form.reset();
-                submitBtn.style.display='block';
-                loadingMsg.style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert('حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.');
-                submitBtn.style.display = 'block';
-                loadingMsg.style.display = 'none';
-            });
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(dataObj)
+        })
+        .then(() => {
+            alert('تم تسجيل حضورك بنجاح! شكراً لك 🌸');
+            form.reset();
+            submitBtn.style.display = 'block';
+            loadingMsg.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error!', error);
+            alert('حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.');
+            submitBtn.style.display = 'block';
+            loadingMsg.style.display = 'none';
+        });
     });
 </script>
 
