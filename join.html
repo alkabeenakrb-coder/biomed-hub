@@ -201,13 +201,11 @@
 <body>
 
 <div class="container">
-    <!-- القسم العلوي والعنوان -->
     <div class="header-section">
         <h1>تسجيل الأعضاء</h1>
         <p>انضم إلى فريقنا في BioMed Hub وكن جزءاً من مسيرة التطوير والنجاح</p>
     </div>
 
-    <!-- ميزات الانضمام -->
     <div class="benefits-grid" id="benefitsSection">
         <div class="benefit-card">
             <div class="benefit-icon">💡</div>
@@ -228,7 +226,6 @@
         </div>
     </div>
 
-    <!-- نموذج تقديم الطلب -->
     <div class="form-card" id="formContainer">
         <h2>قَدّم طلب انضمام</h2>
         <p>املأ النموذج أدناه بدقة. يراجع فريقنا جميع الطلبات ويتواصل مع المقبولين.</p>
@@ -312,7 +309,6 @@
         </form>
     </div>
 
-    <!-- صفحة النجاح (تظهر بعد الإرسال) -->
     <div class="success-card" id="successContainer">
         <div class="success-icon">✅</div>
         <h2>تم إرسال الطلب الخاص بك بنجاح</h2>
@@ -322,19 +318,37 @@
 </div>
 
 <script>
-    // البرمجة البسيطة لإخفاء الاستمارة وإظهار صفحة النجاح عند الضغط على إرسال
+    // ضع هنا الرابط الذي نسخته من خطوة نشر الـ Web App في جوجل
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwR2LF4P-8Rh0MuuGAy0kne7WWCzL_ObuHrLGdgj-mwcVivGqPfhJZxYzEuoDkfvqyd/exec';
+
     document.getElementById('membershipForm').addEventListener('submit', function(e) {
         e.preventDefault(); // منع إعادة تحميل الصفحة الافتراضي
         
-        // إخفاء البطاقات العلوية ونموذج الاستمارة
-        document.getElementById('benefitsSection').style.display = 'none';
-        document.getElementById('formContainer').style.display = 'none';
-        
-        // إظهار صفحة النجاح
-        document.getElementById('successContainer').style.display = 'block';
-        
-        // التمرير تلقائياً إلى أعلى الصفحة بروية
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const form = document.getElementById('membershipForm');
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'جاري إرسال الطلب وحفظ البيانات... ⏳';
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                // إخفاء البطاقات العلوية ونموذج الاستمارة
+                document.getElementById('benefitsSection').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'none';
+                
+                // إظهار صفحة النجاح
+                document.getElementById('successContainer').style.display = 'block';
+                
+                // التمرير تلقائياً إلى أعلى الصفحة بروية
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'إرسال الطلب 🚀';
+            })
+            .catch(error => {
+                alert('حدث خطأ أثناء إرسال الطلب، يرجى التأكد من الاتصال بالإنترنت والمحاولة مرة أخرى.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'إرسال الطلب 🚀';
+            });
     });
 
     // دالة لإعادة الاستمارة في حال أراد المستخدم تقديم طلب جديد
