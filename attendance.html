@@ -207,12 +207,15 @@
         document.getElementById('workshopDesc').innerText = decodeURIComponent(descParam);
     }
 
-    // تم دمج الرابط الجديد الخاص بك هنا بدقة
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyiygPTwPHcQNyaB1aF3WG86ep-RDBkHBTpzgkcLVjAnEr7sJVwldCb52QuLUx6rAq-/exec';
 
     const form = document.getElementById('attendanceForm');
     const submitBtn = document.getElementById('submitBtn');
     const loadingMsg = document.getElementById('loadingMsg');
+    
+    // ربط الحاوية الرئيسية للاستمارة وبطاقة النجاح
+    const mainContainer = document.querySelector('.container'); 
+    const successCard = document.getElementById('successCard'); 
 
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -234,10 +237,10 @@
             body: new URLSearchParams(dataObj)
         })
         .then(() => {
-            alert('تم تسجيل حضورك بنجاح! شكراً لك 🌸');
-            form.reset();
-            submitBtn.style.display = 'block';
-            loadingMsg.style.display = 'none';
+            // الخطوة الثانية: إخفاء استمارة الحضور وإظهار بطاقة النجاح بسلاسة
+            mainContainer.style.display = 'none';
+            successCard.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         })
         .catch(error => {
             console.error('Error!', error);
@@ -283,6 +286,21 @@
 
         <p style="color: #94a3b8; font-size: 11px; margin-top: 25px; padding-top: 15px; border-top: 1px solid #f3e8ff;">BioMed Hub &copy; 2026</p>
     </div>
+     <!-- شاشة النجاح (تكون مخفية افتراضياً) -->
+<div id="successCard" class="container" style="display: none; text-align: center; margin-top: 40px;">
+    <div class="form-card" style="padding: 40px 20px;">
+        <div style="font-size: 60px; color: #10b981; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2 style="color: #111; font-size: 24px; margin-bottom: 10px;">تم تسجيل حضورك بنجاح!</h2>
+        <p style="color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 30px;">
+            شكراً لك لإكمال الورشة معنا 🌸. تم حفظ بياناتك واستلام ردودك بنجاح. يمكنك ترقب إصدار الشهادات قريباً.
+        </p>
+        <a href="https://biomedhubiq.com" class="submit-btn" style="text-decoration: none; display: inline-block; background-color: #10b981;">
+            العودة إلى موقع Biomed Hub
+        </a>
+    </div>
+</div>
 </footer>
 </body>
 </html>
