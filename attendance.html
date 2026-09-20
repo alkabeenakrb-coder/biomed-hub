@@ -396,24 +396,9 @@
 
 <script>
 
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const workshopParam = urlParams.get('workshop');
-
-    const descParam = urlParams.get('desc');
-
-
-
-    if (workshopParam) {
-
-        document.getElementById('workshopTitle').innerText = decodeURIComponent(workshopParam);
-
-    }
-
-    if (descParam) {
-
-        document.getElementById('workshopDesc').innerText = decodeURIComponent(descParam);
-
+    const savedWorkshopTitle = localStorage.getItem('workshop_title_key');
+    if (savedWorkshopTitle) {
+        document.getElementById('workshopTitle').innerText = savedWorkshopTitle;
     }
 
 
