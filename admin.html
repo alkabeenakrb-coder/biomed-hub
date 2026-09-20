@@ -3,58 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الورش - BioMed Hub</title>
+    <title>لوحة التحكم الشاملة - BioMed Hub</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; padding: 50px 20px; text-align: center; }
-        .card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #eaeaea; display: inline-block; width: 100%; max-width: 450px; box-sizing: border-box; }
-        h2 { color: #581c87; margin-bottom: 20px; }
-        input { width: 100%; padding: 14px; margin: 15px 0; font-size: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #6366f1; }
-        button { background-color: #6366f1; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; padding: 30px 15px; margin: 0; color: #333; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #eaeaea; margin-bottom: 20px; }
+        h2 { color: #581c87; margin-top: 0; font-size: 20px; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 15px 0; font-size: 14px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #6366f1; }
+        button { background-color: #6366f1; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
         button:hover { background-color: #4f46e5; }
-        #msg { margin-top: 15px; font-weight: bold; font-size: 14px; }
+        .btn-danger { background-color: #ef4444; margin-top: 5px; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .msg { margin-top: 10px; color: green; font-weight: bold; font-size: 13px; text-align: center; }
         .hidden { display: none; }
+        .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
+        .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
+        .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
     </style>
 </head>
 <body>
 
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div class="card" id="loginCard">
-        <h2>تسجيل الدخول للإدارة</h2>
-        <p style="color: #666; font-size: 13px; margin-bottom: 10px;">أدخل رمز المرور للوصول إلى لوحة التحكم.</p>
-        <input type="password" id="passwordInput" placeholder="أدخل رمز المرور...">
-        <button onclick="checkPassword()">دخول</button>
-        <p id="loginMsg" style="color: red; margin-top: 15px;"></p>
-    </div>
+    <div class="container">
+        <!-- 1. شاشة تسجيل الدخول -->
+        <div class="card" id="loginCard">
+            <h2>تسجيل الدخول للإدارة</h2>
+            <p style="color: #666; font-size: 13px;">أدخل رمز المرور للوصول إلى لوحة التحكم.</p>
+            <input type="password" id="passwordInput" placeholder="أدخل رمز المرور...">
+            <button onclick="checkPassword()">دخول</button>
+            <p id="loginMsg" style="color: red; margin-top: 10px; text-align: center;"></p>
+        </div>
 
-    <!-- 2. لوحة التحكم (مخفية لحين إدخال الرمز الصحيح) -->
-    <div class="card hidden" id="adminCard">
-        <h2>تغيير عنوان الورشة</h2>
-        <p style="color: #666; font-size: 13px; margin-bottom: 10px;">اكتب عنوان الورشة الجديد ليظهر مباشرة في استمارة الحضور.</p>
-        <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني...">
-        <button onclick="saveNewTitle()">حفظ العنوان</button>
-        <p id="msg" style="color: green;"></p>
+        <!-- 2. لوحة التحكم الرئيسية (مخفية لحين الدخول) -->
+        <div id="adminCard" class="hidden">
+            
+            <!-- قسم ورشة الحضور الحالية -->
+            <div class="card">
+                <h2>عنوان ورشة الحضور الحالية</h2>
+                <label>عنوان الورشة الذي يظهر في الاستمارة:</label>
+                <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني...">
+                <button onclick="saveNewTitle()">حفظ عنوان ورشة الحضور</button>
+                <p id="msgTitle" class="msg"></p>
+            </div>
+
+            <!-- قسم إضافة ورشة جديدة أو أرشيف -->
+            <div class="card">
+                <h2>إدارة الورش والأسئلة (بديل جوجل شيت)</h2>
+                
+                <label>نوع الحالة:</label>
+                <select id="wType">
+                    <option value="next">ورشة جديدة / قادمة (Next)</option>
+                    <option value="archived">أرشيف (Archived)</option>
+                </select>
+
+                <label>عنوان الورشة (title):</label>
+                <input type="text" id="wTitle" placeholder="عنوان الورشة...">
+
+                <label>المحاضر (speaker):</label>
+                <input type="text" id="wSpeaker" placeholder="تقديم المهندس...">
+
+                <label>التفاصيل (details):</label>
+                <textarea id="wDetails" rows="2" placeholder="نبذة مختصرة عن الورشة..."></textarea>
+
+                <label>المنصة / الوقت (platform):</label>
+                <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
+
+                <label>رابط الورشة أو الانضمام (link):</label>
+                <input type="text" id="wLink" placeholder="https://t.me/...">
+
+                <button onclick="addNewWorkshop()">إضافة الورشة للقائمة</button>
+                <p id="msgWorkshop" class="msg"></p>
+            </div>
+
+            <!-- قسم عرض الورش المحفوظة -->
+            <div class="card">
+                <h2>الورش المضافة حالياً</h2>
+                <div id="workshopsList"></div>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        // *** ضع رمز المرور الخاص بك هنا بين القوسين ***
+        // *** ضع رمز المرور الخاص بك هنا ***
         const secretPassword = "biomed2026"; 
 
         function checkPassword() {
             const enteredPass = document.getElementById('passwordInput').value;
             if (enteredPass === secretPassword) {
-                // إذا كان الرمز صحيحاً، أخفِ شاشة الدخول وأظهر لوحة التحكم
                 document.getElementById('loginCard').classList.add('hidden');
                 document.getElementById('adminCard').classList.remove('hidden');
-                
-                // جلب العنوان الحالي في المربع عند فتح اللوحة
-                const savedTitle = localStorage.getItem('workshop_title_key');
-                if (savedTitle) {
-                    document.getElementById('titleInput').value = savedTitle;
-                }
+                loadAdminData();
             } else {
                 document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
             }
+        }
+
+        function loadAdminData() {
+            // جلب عنوان ورشة الحضور
+            const savedTitle = localStorage.getItem('workshop_title_key');
+            if (savedTitle) {
+                document.getElementById('titleInput').value = savedTitle;
+            }
+            renderWorkshops();
         }
 
         function saveNewTitle() {
@@ -63,15 +115,80 @@
                 alert('الرجاء كتابة العنوان أولاً!');
                 return;
             }
-
-            // حفظ العنوان في الذاكرة المشتركة
             localStorage.setItem('workshop_title_key', newTitle);
+            const msg = document.getElementById('msgTitle');
+            msg.innerText = 'تم حفظ عنوان ورشة الحضور بنجاح! 🎉';
+            setTimeout(() => msg.innerText = '', 3000);
+        }
+
+        // جلب الورش من التخزين المحلي
+        function getWorkshops() {
+            let list = localStorage.getItem('biomed_workshops_list');
+            return list ? JSON.parse(list) : [];
+        }
+
+        function addNewWorkshop() {
+            const type = document.getElementById('wType').value;
+            const title = document.getElementById('wTitle').value;
+            const speaker = document.getElementById('wSpeaker').value;
+            const details = document.getElementById('wDetails').value;
+            const platform = document.getElementById('wPlatform').value;
+            const link = document.getElementById('wLink').value;
+
+            if (!title.trim()) {
+                alert('الرجاء كتابة عنوان الورشة على الأقل!');
+                return;
+            }
+
+            const newW = { id: Date.now(), type, title, speaker, details, platform, link };
+            let workshops = getWorkshops();
+            workshops.unshift.push ? workshops.unshift(newW) : workshops.push(newW);
             
-            const msgElem = document.getElementById('msg');
-            msgElem.innerText = 'تم تغيير العنوان بنجاح! 🎉';
-            setTimeout(() => {
-                msgElem.innerText = '';
-            }, 3000);
+            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
+
+            // تفريغ الحقول
+            document.getElementById('wTitle').value = '';
+            document.getElementById('wSpeaker').value = '';
+            document.getElementById('wDetails').value = '';
+            document.getElementById('wPlatform').value = '';
+            document.getElementById('wLink').value = '';
+
+            const msg = document.getElementById('msgWorkshop');
+            msg.innerText = 'تمت إضافة الورشة بنجاح! ✅';
+            setTimeout(() => msg.innerText = '', 3000);
+
+            renderWorkshops();
+        }
+
+        function deleteWorkshop(id) {
+            let workshops = getWorkshops();
+            workshops = workshops.filter(w => w.id !== id);
+            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
+            renderWorkshops();
+        }
+
+        function renderWorkshops() {
+            const container = document.getElementById('workshopsList');
+            let workshops = getWorkshops();
+
+            if (workshops.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد ورش مضافة محلياً بعد.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            workshops.forEach(w => {
+                container.innerHTML += `
+                    <div class="workshop-item">
+                        <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; background: ${w.type === 'next' ? '#dcfce7' : '#f3f4f6'}; color: ${w.type === 'next' ? '#166534' : '#374151'}; border-radius: 4px;">${w.type === 'next' ? 'ورشة جديدة' : 'أرشيف'}</span></h4>
+                        <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
+                        <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
+                        <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
+                        <p><strong>الرابط:</strong> ${w.link ? `<a href="${w.link}" target="_blank">${w.link}</a>` : 'لا يوجد'}</p>
+                        <button class="btn-danger" onclick="deleteWorkshop(${w.id})">حذف هذه الورشة</button>
+                    </div>
+                `;
+            });
         }
     </script>
 
