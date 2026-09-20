@@ -12,27 +12,50 @@
         input:focus { border-color: #6366f1; }
         button { background-color: #6366f1; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
         button:hover { background-color: #4f46e5; }
-        #msg { margin-top: 15px; color: green; font-weight: bold; font-size: 14px; }
+        #msg { margin-top: 15px; font-weight: bold; font-size: 14px; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="card">
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div class="card" id="loginCard">
+        <h2>تسجيل الدخول للإدارة</h2>
+        <p style="color: #666; font-size: 13px; margin-bottom: 10px;">أدخل رمز المرور للوصول إلى لوحة التحكم.</p>
+        <input type="password" id="passwordInput" placeholder="أدخل رمز المرور...">
+        <button onclick="checkPassword()">دخول</button>
+        <p id="loginMsg" style="color: red; margin-top: 15px;"></p>
+    </div>
+
+    <!-- 2. لوحة التحكم (مخفية لحين إدخال الرمز الصحيح) -->
+    <div class="card hidden" id="adminCard">
         <h2>تغيير عنوان الورشة</h2>
         <p style="color: #666; font-size: 13px; margin-bottom: 10px;">اكتب عنوان الورشة الجديد ليظهر مباشرة في استمارة الحضور.</p>
         <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني...">
         <button onclick="saveNewTitle()">حفظ العنوان</button>
-        <p id="msg"></p>
+        <p id="msg" style="color: green;"></p>
     </div>
 
     <script>
-        // إظهار العنوان الحالي في المربع عند فتح الصفحة إذا وجد
-        window.onload = function() {
-            const savedTitle = localStorage.getItem('workshop_title_key');
-            if (savedTitle) {
-                document.getElementById('titleInput').value = savedTitle;
+        // *** ضع رمز المرور الخاص بك هنا بين القوسين ***
+        const secretPassword = "biomed2026"; 
+
+        function checkPassword() {
+            const enteredPass = document.getElementById('passwordInput').value;
+            if (enteredPass === secretPassword) {
+                // إذا كان الرمز صحيحاً، أخفِ شاشة الدخول وأظهر لوحة التحكم
+                document.getElementById('loginCard').classList.add('hidden');
+                document.getElementById('adminCard').classList.remove('hidden');
+                
+                // جلب العنوان الحالي في المربع عند فتح اللوحة
+                const savedTitle = localStorage.getItem('workshop_title_key');
+                if (savedTitle) {
+                    document.getElementById('titleInput').value = savedTitle;
+                }
+            } else {
+                document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
             }
-        };
+        }
 
         function saveNewTitle() {
             const newTitle = document.getElementById('titleInput').value;
