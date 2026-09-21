@@ -282,6 +282,64 @@
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
         async function fetchGoogleSheetData() {
+            async function fetchGoogleSheetData() {
+    
+    // أضف هذا الجزء هنا:
+    let localWorkshopsHtml = '';
+    const localWorkshops = localStorage.getItem('biomed_workshops_list');
+    if (localWorkshops) {
+        const workshops = JSON.parse(localWorkshops);
+        workshops.forEach(w => {
+            if (w.type === 'next') {
+                localWorkshopsHtml += `
+                <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                            </span>
+                            <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
+                            <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
+                            <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                                <p>${w.platform || 'غير محدد'}</p>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                            سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                        </a>
+                    </div>
+                </div>`;
+            } else if (w.type === 'archived') {
+                localWorkshopsHtml += `
+                <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${w.speaker || 'أرشيف'}</span>
+                            <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-bold text-slate-800">${w.title}</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">${w.details || w.platform || ''}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        ${w.link ? `<a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                        <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
+                            انتهت الورشة بنجاح
+                        </div>
+                    </div>
+                </div>`;
+            }
+        });
+    }
+
+    try {
             try {
                 const response = await fetch(csvUrl);
                 const data = await response.text();
@@ -377,8 +435,7 @@
 
             const container = document.getElementById('workshops-container');
             if (container && workshopsHtml) {
-                container.innerHTML = workshopsHtml;
-            }
+container.innerHTML = localWorkshopsHtml + workshopsHtml;            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
