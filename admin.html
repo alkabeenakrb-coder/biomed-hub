@@ -58,7 +58,7 @@
                 <input type="hidden" id="editId" value="">
 
                 <label>نوع الحالة:</label>
-                <select id="wType">
+                <select id="wType" onchange="toggleLinkField()">
                     <option value="next">ورشة جديدة / قادمة (Next)</option>
                     <option value="archived">أرشيف (Archived)</option>
                 </select>
@@ -75,8 +75,11 @@
                 <label>المنصة / الوقت (platform):</label>
                 <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
 
-                <label>رابط الورشة أو الانضمام (link):</label>
-                <input type="text" id="wLink" placeholder="https://t.me/...">
+                <!-- حقل الرابط مع حاوية خاصة لإخفائه وإظهاره بسلاسة -->
+                <div id="linkContainer">
+                    <label>رابط الورشة أو الانضمام (link):</label>
+                    <input type="text" id="wLink" placeholder="https://t.me/...">
+                </div>
 
                 <button id="submitBtn" onclick="saveWorkshop()">إضافة الورشة للقائمة</button>
                 <button id="cancelBtn" class="btn-cancel hidden" onclick="resetForm()" style="margin-top: 8px;">إلغاء التعديل</button>
@@ -127,6 +130,18 @@
             setTimeout(() => msg.innerText = '', 3000);
         }
 
+        // دالة لإخفاء أو إظهار حقل الرابط بناءً على نوع الحالة المختار
+        function toggleLinkField() {
+            const type = document.getElementById('wType').value;
+            const linkContainer = document.getElementById('linkContainer');
+            if (type === 'archived') {
+                linkContainer.classList.add('hidden');
+                document.getElementById('wLink').value = ''; // تفريغ الرابط إذا تم تحويله لأرشيف
+            } else {
+                linkContainer.classList.remove('hidden');
+            }
+        }
+
         function getWorkshops() {
             let list = localStorage.getItem('biomed_workshops_list');
             return list ? JSON.parse(list) : [];
@@ -139,7 +154,8 @@
             const speaker = document.getElementById('wSpeaker').value;
             const details = document.getElementById('wDetails').value;
             const platform = document.getElementById('wPlatform').value;
-            const link = document.getElementById('wLink').value;
+            // إذا كانت أرشيف، نجعل الرابط فارغاً تلقائياً
+            const link = type === 'archived' ? '' : document.getElementById('wLink').value;
 
             if (!title.trim()) {
                 alert('الرجاء كتابة عنوان الورشة على الأقل!');
@@ -149,7 +165,6 @@
             let workshops = getWorkshops();
 
             if (editId) {
-                // حالة التعديل على ورشة موجودة
                 workshops = workshops.map(w => {
                     if (w.id == editId) {
                         return { id: Number(editId), type, title, speaker, details, platform, link };
@@ -158,7 +173,6 @@
                 });
                 document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
             } else {
-                // حالة إضافة ورشة جديدة
                 const newW = { id: Date.now(), type, title, speaker, details, platform, link };
                 workshops.unshift(newW);
                 document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
@@ -176,7 +190,6 @@
             const w = workshops.find(item => item.id === id);
             if (!w) return;
 
-            // تعبئة الحقول ببيانات الورشة المراد تعديلها
             document.getElementById('editId').value = w.id;
             document.getElementById('wType').value = w.type;
             document.getElementById('wTitle').value = w.title;
@@ -185,13 +198,14 @@
             document.getElementById('wPlatform').value = w.platform || '';
             document.getElementById('wLink').value = w.link || '';
 
-            // تغيير مظهر الأزرار والعنوان ليدل على وضع التعديل
+            // تحديث إظهار/إخفاء حقل الرابط بناءً على بيانات الورشة المراد تعديلها
+            toggleLinkField();
+
             document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
             document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
             document.getElementById('submitBtn').style.backgroundColor = '#3b82f6';
             document.getElementById('cancelBtn').classList.remove('hidden');
 
-            // الانتقال بسلاسة نحو نموذج التعديل في الأعلى
             window.scrollTo({ top: 200, behavior: 'smooth' });
         }
 
@@ -203,6 +217,7 @@
             document.getElementById('wDetails').value = '';
             document.getElementById('wPlatform').value = '';
             document.getElementById('wLink').value = '';
+            toggleLinkField();
 
             document.getElementById('formTitleText').innerText = 'إضافة ورشة جديدة / أرشيف';
             document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
@@ -235,7 +250,7 @@
                         <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
                         <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
                         <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
-                        <p><strong>الرابط:</strong> ${w.link ? `<a href="${w.link}" target="_blank">${w.link}</a>` : 'لا يوجد'}</p>
+                        ${w.link ? `<p><strong>الرابط:</strong> <a href="${w.link}" target="_blank">${w.link}</a></p>` : ''}
                         <button class="btn-edit" onclick="editWorkshop(${w.id})">تعديل الورشة</button>
                         <button class="btn-danger" onclick="deleteWorkshop(${w.id})">حذف هذه الورشة</button>
                     </div>
