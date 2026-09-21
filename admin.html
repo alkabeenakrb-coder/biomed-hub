@@ -75,7 +75,6 @@
                 <label>المنصة / الوقت (platform):</label>
                 <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
 
-                <!-- حقل الرابط مع حاوية خاصة لإخفائه وإظهاره بسلاسة -->
                 <div id="linkContainer">
                     <label>رابط الورشة أو الانضمام (link):</label>
                     <input type="text" id="wLink" placeholder="https://t.me/...">
@@ -89,14 +88,38 @@
             <!-- قسم عرض الورش المحفوظة -->
             <div class="card">
                 <h2>الورش المضافة حالياً</h2>
-                <div id="workshopsList"></div>
+                <div id="workshopsList">جاري جلب الورش...</div>
             </div>
 
         </div>
     </div>
 
-    <script>
-        // *** رمز المرور الخاص بك ***
+    <!-- ربط Firebase و Firestore بالأكواد البرمجية -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // جعل الدوال متاحة للاستخدام العام في الـ HTML
+        window.checkPassword = checkPassword;
+        window.saveNewTitle = saveNewTitle;
+        window.toggleLinkField = toggleLinkField;
+        window.saveWorkshop = saveWorkshop;
+        window.editWorkshop = editWorkshop;
+        window.resetForm = resetForm;
+        window.deleteWorkshop = deleteWorkshop;
+
         const secretPassword = "biomed2026"; 
 
         function checkPassword() {
@@ -110,51 +133,54 @@
             }
         }
 
-        function loadAdminData() {
-            const savedTitle = localStorage.getItem('workshop_title_key');
-            if (savedTitle) {
-                document.getElementById('titleInput').value = savedTitle;
+        async function loadAdminData() {
+            // جلب عنوان الورشة الحالي من Firestore
+            try {
+                const titleDocRef = doc(db, "settings", "current_workshop_title");
+                const titleSnap = await getDoc(titleDocRef);
+                if (titleSnap.exists()) {
+                    document.getElementById('titleInput').value = titleSnap.data().title || '';
+                }
+            } catch (error) {
+                console.error("خطأ في جلب العنوان:", error);
             }
             renderWorkshops();
         }
 
-        function saveNewTitle() {
+        async function saveNewTitle() {
             const newTitle = document.getElementById('titleInput').value;
             if (!newTitle.trim()) {
                 alert('الرجاء كتابة العنوان أولاً!');
                 return;
             }
-            localStorage.setItem('workshop_title_key', newTitle);
-            const msg = document.getElementById('msgTitle');
-            msg.innerText = 'تم حفظ عنوان ورشة الحضور بنجاح! 🎉';
-            setTimeout(() => msg.innerText = '', 3000);
+            try {
+                await setDoc(doc(db, "settings", "current_workshop_title"), { title: newTitle });
+                const msg = document.getElementById('msgTitle');
+                msg.innerText = 'تم حفظ عنوان ورشة الحضور بنجاح! 🎉';
+                setTimeout(() => msg.innerText = '', 3000);
+            } catch (error) {
+                alert('حدث خطأ أثناء الحفظ: ' + error.message);
+            }
         }
 
-        // دالة لإخفاء أو إظهار حقل الرابط بناءً على نوع الحالة المختار
         function toggleLinkField() {
             const type = document.getElementById('wType').value;
             const linkContainer = document.getElementById('linkContainer');
             if (type === 'archived') {
                 linkContainer.classList.add('hidden');
-                document.getElementById('wLink').value = ''; // تفريغ الرابط إذا تم تحويله لأرشيف
+                document.getElementById('wLink').value = ''; 
             } else {
                 linkContainer.classList.remove('hidden');
             }
         }
 
-        function getWorkshops() {
-            let list = localStorage.getItem('biomed_workshops_list');
-            return list ? JSON.parse(list) : [];
-        }
-
-        function saveWorkshop() {
+        async function saveWorkshop() {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('wType').value;
             const title = document.getElementById('wTitle').value;
             const speaker = document.getElementById('wSpeaker').value;
             const details = document.getElementById('wDetails').value;
             const platform = document.getElementById('wPlatform').value;
-            // إذا كانت أرشيف، نجعل الرابط فارغاً تلقائياً
             const link = type === 'archived' ? '' : document.getElementById('wLink').value;
 
             if (!title.trim()) {
@@ -162,32 +188,32 @@
                 return;
             }
 
-            let workshops = getWorkshops();
+            try {
+                if (editId) {
+                    // تحديث ورشة موجودة مسبقاً في Firestore
+                    const workshopRef = doc(db, "workshops", editId);
+                    await updateDoc(workshopRef, { type, title, speaker, details, platform, link });
+                    document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
+                } else {
+                    // إضافة ورشة جديدة لـ Firestore
+                    await addDoc(collection(db, "workshops"), {
+                        type, title, speaker, details, platform, link, createdAt: Date.now()
+                    });
+                    document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
+                }
 
-            if (editId) {
-                workshops = workshops.map(w => {
-                    if (w.id == editId) {
-                        return { id: Number(editId), type, title, speaker, details, platform, link };
-                    }
-                    return w;
-                });
-                document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
-            } else {
-                const newW = { id: Date.now(), type, title, speaker, details, platform, link };
-                workshops.unshift(newW);
-                document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
+                resetForm();
+                setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
+                renderWorkshops();
+            } catch (error) {
+                alert('حدث خطأ أثناء الحفظ: ' + error.message);
             }
-
-            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
-            
-            resetForm();
-            setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
-            renderWorkshops();
         }
 
-        function editWorkshop(id) {
-            let workshops = getWorkshops();
-            const w = workshops.find(item => item.id === id);
+        window.editWorkshopLocalData = []; // تخزين مؤقت للورش لتسهيل التعديل
+
+        window.editWorkshop = function(id) {
+            const w = window.editWorkshopLocalData.find(item => item.id === id);
             if (!w) return;
 
             document.getElementById('editId').value = w.id;
@@ -198,7 +224,6 @@
             document.getElementById('wPlatform').value = w.platform || '';
             document.getElementById('wLink').value = w.link || '';
 
-            // تحديث إظهار/إخفاء حقل الرابط بناءً على بيانات الورشة المراد تعديلها
             toggleLinkField();
 
             document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
@@ -225,57 +250,55 @@
             document.getElementById('cancelBtn').classList.add('hidden');
         }
 
-        function deleteWorkshop(id) {
+        window.deleteWorkshop = async function(id) {
             if (!confirm('هل أنت متأكد من حذف هذه الورشة؟')) return;
-            let workshops = getWorkshops();
-            workshops = workshops.filter(w => w.id !== id);
-            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
-            renderWorkshops();
+            try {
+                await deleteDoc(doc(db, "workshops", id));
+                renderWorkshops();
+            } catch (error) {
+                alert('حدث خطأ أثناء الحذف: ' + error.message);
+            }
         }
 
-        function renderWorkshops() {
+        async function renderWorkshops() {
             const container = document.getElementById('workshopsList');
-            let workshops = getWorkshops();
+            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل الورش...</p>';
 
-            if (workshops.length === 0) {
-                container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد ورش مضافة محلياً بعد.</p>';
-                return;
+            try {
+                const querySnapshot = await getDocs(collection(db, "workshops"));
+                window.editWorkshopLocalData = [];
+                
+                querySnapshot.forEach((docSnap) => {
+                    window.editWorkshopLocalData.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // ترتيب الورش تنازلياً حسب الأحدث
+                window.editWorkshopLocalData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                if (window.editWorkshopLocalData.length === 0) {
+                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد ورش مضافة في قاعدة البيانات بعد.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                window.editWorkshopLocalData.forEach(w => {
+                    container.innerHTML += `
+                        <div class="workshop-item">
+                            <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; background: ${w.type === 'next' ? '#dcfce7' : '#f3f4f6'}; color: ${w.type === 'next' ? '#166534' : '#374151'}; border-radius: 4px;">${w.type === 'next' ? 'ورشة جديدة' : 'أرشيف'}</span></h4>
+                            <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
+                            <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
+                            <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
+                            ${w.link ? `<p><strong>الرابط:</strong> <a href="${w.link}" target="_blank">${w.link}</a></p>` : ''}
+                            <button class="btn-edit" onclick="editWorkshop('${w.id}')">تعديل الورشة</button>
+                            <button class="btn-danger" onclick="deleteWorkshop('${w.id}')">حذف هذه الورشة</button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">حدث خطأ في جلب الورش من قاعدة البيانات.</p>';
+                console.error(error);
             }
-
-            container.innerHTML = '';
-            workshops.forEach(w => {
-                container.innerHTML += `
-                    <div class="workshop-item">
-                        <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; background: ${w.type === 'next' ? '#dcfce7' : '#f3f4f6'}; color: ${w.type === 'next' ? '#166534' : '#374151'}; border-radius: 4px;">${w.type === 'next' ? 'ورشة جديدة' : 'أرشيف'}</span></h4>
-                        <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
-                        <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
-                        <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
-                        ${w.link ? `<p><strong>الرابط:</strong> <a href="${w.link}" target="_blank">${w.link}</a></p>` : ''}
-                        <button class="btn-edit" onclick="editWorkshop(${w.id})">تعديل الورشة</button>
-                        <button class="btn-danger" onclick="deleteWorkshop(${w.id})">حذف هذه الورشة</button>
-                    </div>
-                `;
-            });
         }
     </script>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
-    authDomain: "biomed-hub.firebaseapp.com",
-    projectId: "biomed-hub",
-    storageBucket: "biomed-hub.firebasestorage.app",
-    messagingSenderId: "780975186763",
-    appId: "1:780975186763:web:36411ce118e70749d37ece"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
 </body>
 </html>
