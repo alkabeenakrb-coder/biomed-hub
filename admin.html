@@ -14,8 +14,12 @@
         input:focus, select:focus, textarea:focus { border-color: #6366f1; }
         button { background-color: #6366f1; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
         button:hover { background-color: #4f46e5; }
+        .btn-edit { background-color: #3b82f6; margin-top: 5px; }
+        .btn-edit:hover { background-color: #2563eb; }
         .btn-danger { background-color: #ef4444; margin-top: 5px; }
         .btn-danger:hover { background-color: #dc2626; }
+        .btn-cancel { background-color: #6b7280; margin-top: 5px; }
+        .btn-cancel:hover { background-color: #4b5563; }
         .msg { margin-top: 10px; color: green; font-weight: bold; font-size: 13px; text-align: center; }
         .hidden { display: none; }
         .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
@@ -47,10 +51,12 @@
                 <p id="msgTitle" class="msg"></p>
             </div>
 
-            <!-- قسم إضافة ورشة جديدة أو أرشيف -->
+            <!-- قسم إضافة / تعديل ورشة أو أرشيف -->
             <div class="card">
-                <h2>إدارة الورش والأسئلة (بديل جوجل شيت)</h2>
+                <h2 id="formTitleText">إضافة ورشة جديدة / أرشيف</h2>
                 
+                <input type="hidden" id="editId" value="">
+
                 <label>نوع الحالة:</label>
                 <select id="wType">
                     <option value="next">ورشة جديدة / قادمة (Next)</option>
@@ -72,7 +78,8 @@
                 <label>رابط الورشة أو الانضمام (link):</label>
                 <input type="text" id="wLink" placeholder="https://t.me/...">
 
-                <button onclick="addNewWorkshop()">إضافة الورشة للقائمة</button>
+                <button id="submitBtn" onclick="saveWorkshop()">إضافة الورشة للقائمة</button>
+                <button id="cancelBtn" class="btn-cancel hidden" onclick="resetForm()" style="margin-top: 8px;">إلغاء التعديل</button>
                 <p id="msgWorkshop" class="msg"></p>
             </div>
 
@@ -86,7 +93,7 @@
     </div>
 
     <script>
-        // *** ضع رمز المرور الخاص بك هنا ***
+        // *** رمز المرور الخاص بك ***
         const secretPassword = "biomed2026"; 
 
         function checkPassword() {
@@ -101,7 +108,6 @@
         }
 
         function loadAdminData() {
-            // جلب عنوان ورشة الحضور
             const savedTitle = localStorage.getItem('workshop_title_key');
             if (savedTitle) {
                 document.getElementById('titleInput').value = savedTitle;
@@ -121,13 +127,13 @@
             setTimeout(() => msg.innerText = '', 3000);
         }
 
-        // جلب الورش من التخزين المحلي
         function getWorkshops() {
             let list = localStorage.getItem('biomed_workshops_list');
             return list ? JSON.parse(list) : [];
         }
 
-        function addNewWorkshop() {
+        function saveWorkshop() {
+            const editId = document.getElementById('editId').value;
             const type = document.getElementById('wType').value;
             const title = document.getElementById('wTitle').value;
             const speaker = document.getElementById('wSpeaker').value;
@@ -140,27 +146,72 @@
                 return;
             }
 
-            const newW = { id: Date.now(), type, title, speaker, details, platform, link };
             let workshops = getWorkshops();
-            workshops.unshift.push ? workshops.unshift(newW) : workshops.push(newW);
-            
-            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
 
-            // تفريغ الحقول
+            if (editId) {
+                // حالة التعديل على ورشة موجودة
+                workshops = workshops.map(w => {
+                    if (w.id == editId) {
+                        return { id: Number(editId), type, title, speaker, details, platform, link };
+                    }
+                    return w;
+                });
+                document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
+            } else {
+                // حالة إضافة ورشة جديدة
+                const newW = { id: Date.now(), type, title, speaker, details, platform, link };
+                workshops.unshift(newW);
+                document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
+            }
+
+            localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
+            
+            resetForm();
+            setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
+            renderWorkshops();
+        }
+
+        function editWorkshop(id) {
+            let workshops = getWorkshops();
+            const w = workshops.find(item => item.id === id);
+            if (!w) return;
+
+            // تعبئة الحقول ببيانات الورشة المراد تعديلها
+            document.getElementById('editId').value = w.id;
+            document.getElementById('wType').value = w.type;
+            document.getElementById('wTitle').value = w.title;
+            document.getElementById('wSpeaker').value = w.speaker || '';
+            document.getElementById('wDetails').value = w.details || '';
+            document.getElementById('wPlatform').value = w.platform || '';
+            document.getElementById('wLink').value = w.link || '';
+
+            // تغيير مظهر الأزرار والعنوان ليدل على وضع التعديل
+            document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
+            document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('submitBtn').style.backgroundColor = '#3b82f6';
+            document.getElementById('cancelBtn').classList.remove('hidden');
+
+            // الانتقال بسلاسة نحو نموذج التعديل في الأعلى
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('wType').value = 'next';
             document.getElementById('wTitle').value = '';
             document.getElementById('wSpeaker').value = '';
             document.getElementById('wDetails').value = '';
             document.getElementById('wPlatform').value = '';
             document.getElementById('wLink').value = '';
 
-            const msg = document.getElementById('msgWorkshop');
-            msg.innerText = 'تمت إضافة الورشة بنجاح! ✅';
-            setTimeout(() => msg.innerText = '', 3000);
-
-            renderWorkshops();
+            document.getElementById('formTitleText').innerText = 'إضافة ورشة جديدة / أرشيف';
+            document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
+            document.getElementById('submitBtn').style.backgroundColor = '#6366f1';
+            document.getElementById('cancelBtn').classList.add('hidden');
         }
 
         function deleteWorkshop(id) {
+            if (!confirm('هل أنت متأكد من حذف هذه الورشة؟')) return;
             let workshops = getWorkshops();
             workshops = workshops.filter(w => w.id !== id);
             localStorage.setItem('biomed_workshops_list', JSON.stringify(workshops));
@@ -185,6 +236,7 @@
                         <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
                         <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
                         <p><strong>الرابط:</strong> ${w.link ? `<a href="${w.link}" target="_blank">${w.link}</a>` : 'لا يوجد'}</p>
+                        <button class="btn-edit" onclick="editWorkshop(${w.id})">تعديل الورشة</button>
                         <button class="btn-danger" onclick="deleteWorkshop(${w.id})">حذف هذه الورشة</button>
                     </div>
                 `;
