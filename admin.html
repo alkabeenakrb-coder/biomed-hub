@@ -42,12 +42,10 @@
         <!-- 2. لوحة التحكم الرئيسية (مخفية لحين الدخول) -->
         <div id="adminCard" class="hidden">
             
-            <!-- زر تسجيل الخروج -->
             <div style="text-align: left; margin-bottom: 10px;">
                 <button onclick="logoutAdmin()" style="background-color: #6b7280; width: auto; padding: 6px 15px; font-size: 12px;">تسجيل الخروج 🚪</button>
             </div>
 
-            <!-- قسم ورشة الحضور الحالية -->
             <div class="card">
                 <h2>عنوان ورشة الحضور الحالية</h2>
                 <label>عنوان الورشة الذي يظهر في الاستمارة:</label>
@@ -56,7 +54,6 @@
                 <p id="msgTitle" class="msg"></p>
             </div>
 
-            <!-- قسم إضافة / تعديل ورشة أو أرشيف -->
             <div class="card">
                 <h2 id="formTitleText">إضافة ورشة جديدة / أرشيف</h2>
                 
@@ -90,7 +87,6 @@
                 <p id="msgWorkshop" class="msg"></p>
             </div>
 
-            <!-- قسم عرض الورش المحفوظة -->
             <div class="card">
                 <h2>الورش المضافة حالياً</h2>
                 <div id="workshopsList">جاري جلب الورش...</div>
@@ -99,7 +95,6 @@
         </div>
     </div>
 
-    <!-- برمجة الصفحة ومنطق الاتصال بـ Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -113,10 +108,14 @@
             appId: "1:780975186763:web:36411ce118e70749d37ece"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let db = null;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase init error:", e);
+        }
 
-        // ربط الدوال بالنافذة العامة لتعمل مع الأزرار
         window.checkPassword = checkPassword;
         window.logoutAdmin = logoutAdmin;
         window.saveNewTitle = saveNewTitle;
@@ -128,14 +127,12 @@
 
         const secretPassword = "biomed2026"; 
 
-        // التحقق التلقائي إذا مسجل دخول مسبقاً
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('biomed_admin_logged') === 'true') {
-                document.getElementById('loginCard').classList.add('hidden');
-                document.getElementById('adminCard').classList.remove('hidden');
-                loadAdminData();
-            }
-        });
+        // التحقق الفوري عند فتح الصفحة
+        if (localStorage.getItem('biomed_admin_logged') === 'true') {
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('adminCard').classList.remove('hidden');
+            if (db) loadAdminData();
+        }
 
         function checkPassword() {
             const enteredPass = document.getElementById('passwordInput').value;
@@ -143,7 +140,11 @@
                 localStorage.setItem('biomed_admin_logged', 'true');
                 document.getElementById('loginCard').classList.add('hidden');
                 document.getElementById('adminCard').classList.remove('hidden');
-                loadAdminData();
+                if (db) {
+                    loadAdminData();
+                } else {
+                    document.getElementById('workshopsList').innerHTML = '<p style="color: red; text-align: center;">تعذر الاتصال بقاعدة البيانات.</p>';
+                }
             } else {
                 document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
             }
@@ -162,12 +163,13 @@
                     document.getElementById('titleInput').value = titleSnap.data().title || '';
                 }
             } catch (error) {
-                console.log("تنبيه الاتصال:", error);
+                console.log("خطأ في جلب العنوان:", error);
             }
             renderWorkshops();
         }
 
         async function saveNewTitle() {
+            if (!db) { alert('قاعدة البيانات غير متصلة'); return; }
             const newTitle = document.getElementById('titleInput').value;
             if (!newTitle.trim()) {
                 alert('الرجاء كتابة العنوان أولاً!');
@@ -195,6 +197,7 @@
         }
 
         async function saveWorkshop() {
+            if (!db) { alert('قاعدة البيانات غير متصلة'); return; }
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('wType').value;
             const title = document.getElementById('wTitle').value;
@@ -269,6 +272,7 @@
         }
 
         window.deleteWorkshop = async function(id) {
+            if (!db) { alert('قاعدة البيانات غير متصلة'); return; }
             if (!confirm('هل أنت متأكد من حذف هذه الورشة؟')) return;
             try {
                 await deleteDoc(doc(db, "workshops", id));
@@ -293,7 +297,7 @@
                 window.editWorkshopLocalData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                 if (window.editWorkshopLocalData.length === 0) {
-                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد ورش مضافة في قاعدة البيانات بعد.</p>';
+                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد الورش مضافة في قاعدة البيانات بعد.</p>';
                     return;
                 }
 
