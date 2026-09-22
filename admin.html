@@ -123,12 +123,15 @@
         const secretPassword = "biomed2026"; 
 
         function checkPassword() {
+            alert("تم الضغط على زر دخول!"); // للتاكد من ان الزر يعمل
             const enteredPass = document.getElementById('passwordInput').value;
             if (enteredPass === secretPassword) {
+                alert("كلمة المرور صحيحة، سيتم فتح اللوحة");
                 document.getElementById('loginCard').classList.add('hidden');
                 document.getElementById('adminCard').classList.remove('hidden');
                 loadAdminData();
             } else {
+                alert("كلمة المرور خطأ!");
                 document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
             }
         }
