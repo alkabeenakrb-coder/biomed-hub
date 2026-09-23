@@ -454,6 +454,78 @@
             }
         });
     </script>
-   
+   <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadWebsiteWorkshops() {
+            const nextContainer = document.getElementById('nextWorkshopsContainer');
+            const archivedContainer = document.getElementById('archivedWorkshopsContainer');
+
+            if (nextContainer) nextContainer.innerHTML = '<p style="text-align: center; color: #888;">جاري التحميل...</p>';
+            if (archivedContainer) archivedContainer.innerHTML = '<p style="text-align: center; color: #888;">جاري التحميل...</p>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "workshops"));
+                let workshops = [];
+                
+                querySnapshot.forEach((docSnap) => {
+                    workshops.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                workshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                if (nextContainer) nextContainer.innerHTML = '';
+                if (archivedContainer) archivedContainer.innerHTML = '';
+
+                let nextCount = 0;
+                let archiveCount = 0;
+
+                workshops.forEach(w => {
+                    const htmlCard = `
+                        <div style="background: white; border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <h3 style="color: #581c87; margin-top: 0; margin-bottom: 8px; font-size: 18px;">${w.title}</h3>
+                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
+                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
+                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>المنصة / الوقت:</strong> ${w.platform || 'غير محدد'}</p>
+                            ${w.link ? `<div style="margin-top: 12px;"><a href="${w.link}" target="_blank" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; display: inline-block; font-weight: bold;">رابط الورشة / الانضمام</a></div>` : ''}
+                        </div>
+                    `;
+
+                    if (w.type === 'next' && nextContainer) {
+                        nextContainer.innerHTML += htmlCard;
+                        nextCount++;
+                    } else if (w.type === 'archived' && archivedContainer) {
+                        archivedContainer.innerHTML += htmlCard;
+                        archiveCount++;
+                    }
+                });
+
+                if (nextCount === 0 && nextContainer) {
+                    nextContainer.innerHTML = '<p style="text-align: center; color: #888; font-size: 14px;">لا توجد ورش جديدة حالياً.</p>';
+                }
+                if (archiveCount === 0 && archivedContainer) {
+                    archivedContainer.innerHTML = '<p style="text-align: center; color: #888; font-size: 14px;">لا توجد ورش في الأرشيف حالياً.</p>';
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        loadWebsiteWorkshops();
+    </script>
 </body>
 </html>
