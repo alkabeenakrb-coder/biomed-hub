@@ -454,8 +454,7 @@
             }
         });
     </script>
-  <!-- سكريبت جلب الورش المدمج (من لوحة الإدارة Firebase ومن Google Sheets معاً) -->
-<!-- سكريبت جلب الورش المعتمد (من لوحة الإدارة Firebase فقط) -->
+ <!-- سكريبت جلب الورش المدمج (Firebase + Google Sheets معاً بدون تعارض) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -472,12 +471,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function loadWorkshopsFromFirebase() {
+        // رابط الـ CSV الخاص بجداول جوجل الخاص بك
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
+
+        async function loadAllWorkshopsTogether() {
             const container = document.getElementById('workshops-container');
             if (!container) return;
 
             let allWorkshops = [];
 
+            // 1. جلب الورش من Firebase
             try {
                 const querySnapshot = await getDocs(collection(db, "workshops"));
                 querySnapshot.forEach((docSnap) => {
@@ -487,11 +490,59 @@
                 console.error("خطأ في جلب بيانات Firebase:", error);
             }
 
+            // 2. جلب الورش من Google Sheets (CSV) ودمجها مباشرة
+            try {
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                const rows = data.split('\n').map(row => {
+                    return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'));
+                });
+
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (!cols || cols.length < 2 || !cols[0]) continue;
+
+                    const type = cols[0].trim();
+                    const title = cols[1] || '';
+                    const speaker = cols[2] || '';
+                    const platform = cols[3] || '';
+                    const details = cols[4] || '';
+
+                    // تحديث العدادات إذا وجدت في الجدول
+                    if (type === 'followers') {
+                        const followerEl = document.getElementById('followers-count');
+                        if (followerEl) followerEl.innerText = title || '2,665';
+                        continue;
+                    }
+                    if (type === 'workshops_count') {
+                        const workshopsCountEl = document.getElementById('workshops-count');
+                        if (workshopsCountEl) workshopsCountEl.innerText = title || '5';
+                        continue;
+                    }
+
+                    // إضافة ورش جوجل شيت للقائمة المشتركة
+                    if (type === 'next' || type === 'archived') {
+                        allWorkshops.push({
+                            type: type,
+                            title: title,
+                            speaker: speaker,
+                            platform: platform,
+                            details: details,
+                            link: type === 'next' ? 'https://t.me/BioMedHubA' : ''
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('خطأ في جلب بيانات قوقل شيت:', error);
+            }
+
+            // 3. التحقق مما إذا كانت القائمة فارغة
             if (allWorkshops.length === 0) {
                 container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
                 return;
             }
 
+            // 4. توليد العرض النهائي مرة واحدة وبدون تداخل
             let htmlContent = '';
 
             allWorkshops.forEach(w => {
@@ -546,7 +597,7 @@
             container.innerHTML = htmlContent;
         }
 
-        loadWorkshopsFromFirebase();
+        loadAllWorkshopsTogether();
     </script>
 </body>
 </html>
