@@ -454,35 +454,6 @@
             }
         });
     </script>
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
-        authDomain: "biomed-hub.firebaseapp.com",
-        projectId: "biomed-hub",
-        storageBucket: "biomed-hub.firebasestorage.app",
-        messagingSenderId: "780975186763",
-        appId: "1:780975186763:web:36411ce118e70749d37ece"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function fetchCurrentWorkshopTitle() {
-        try {
-            const titleDocRef = doc(db, "settings", "current_workshop_title");
-            const titleSnap = await getDoc(titleDocRef);
-            if (titleSnap.exists() && titleSnap.data().title) {
-                document.getElementById('workshopTitle').innerText = titleSnap.data().title;
-            }
-        } catch (error) {
-            console.log("Error loading workshop title from Firebase:", error);
-        }
-    }
-
-    fetchCurrentWorkshopTitle();
-</script>
+   
 </body>
 </html>
