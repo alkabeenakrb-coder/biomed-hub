@@ -454,78 +454,117 @@
             }
         });
     </script>
-   <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  <!-- سكريبت جلب الورش المدمج (من لوحة الإدارة Firebase ومن Google Sheets معاً) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
-            authDomain: "biomed-hub.firebaseapp.com",
-            projectId: "biomed-hub",
-            storageBucket: "biomed-hub.firebasestorage.app",
-            messagingSenderId: "780975186763",
-            appId: "1:780975186763:web:36411ce118e70749d37ece"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+        authDomain: "biomed-hub.firebaseapp.com",
+        projectId: "biomed-hub",
+        storageBucket: "biomed-hub.firebasestorage.app",
+        messagingSenderId: "780975186763",
+        appId: "1:780975186763:web:36411ce118e70749d37ece"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        async function loadWebsiteWorkshops() {
-            const nextContainer = document.getElementById('nextWorkshopsContainer');
-            const archivedContainer = document.getElementById('archivedWorkshopsContainer');
+    // [مهم]: ضع رابط الـ Web App أو الـ API الخاص بـ Google Sheets هنا إذا كنت تريد استخدامه أيضاً، أو اتركه فارغاً إذا كان الاعتماد فقط على لوحة التحكم
+    const SHEET_URL = ''; 
 
-            if (nextContainer) nextContainer.innerHTML = '<p style="text-align: center; color: #888;">جاري التحميل...</p>';
-            if (archivedContainer) archivedContainer.innerHTML = '<p style="text-align: center; color: #888;">جاري التحميل...</p>';
+    async function loadWorkshopsBothWays() {
+        const container = document.getElementById('workshops-container');
+        if (!container) return;
 
-            try {
-                const querySnapshot = await getDocs(collection(db, "workshops"));
-                let workshops = [];
-                
-                querySnapshot.forEach((docSnap) => {
-                    workshops.push({ id: docSnap.id, ...docSnap.data() });
-                });
+        let allWorkshops = [];
 
-                workshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                if (nextContainer) nextContainer.innerHTML = '';
-                if (archivedContainer) archivedContainer.innerHTML = '';
-
-                let nextCount = 0;
-                let archiveCount = 0;
-
-                workshops.forEach(w => {
-                    const htmlCard = `
-                        <div style="background: white; border: 1px solid #e5e7eb; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                            <h3 style="color: #581c87; margin-top: 0; margin-bottom: 8px; font-size: 18px;">${w.title}</h3>
-                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
-                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
-                            <p style="margin: 5px 0; color: #4b5563; font-size: 14px;"><strong>المنصة / الوقت:</strong> ${w.platform || 'غير محدد'}</p>
-                            ${w.link ? `<div style="margin-top: 12px;"><a href="${w.link}" target="_blank" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; display: inline-block; font-weight: bold;">رابط الورشة / الانضمام</a></div>` : ''}
-                        </div>
-                    `;
-
-                    if (w.type === 'next' && nextContainer) {
-                        nextContainer.innerHTML += htmlCard;
-                        nextCount++;
-                    } else if (w.type === 'archived' && archivedContainer) {
-                        archivedContainer.innerHTML += htmlCard;
-                        archiveCount++;
-                    }
-                });
-
-                if (nextCount === 0 && nextContainer) {
-                    nextContainer.innerHTML = '<p style="text-align: center; color: #888; font-size: 14px;">لا توجد ورش جديدة حالياً.</p>';
-                }
-                if (archiveCount === 0 && archivedContainer) {
-                    archivedContainer.innerHTML = '<p style="text-align: center; color: #888; font-size: 14px;">لا توجد ورش في الأرشيف حالياً.</p>';
-                }
-
-            } catch (error) {
-                console.error("Error:", error);
-            }
+        // 1. جلب الورش من لوحة التحكم (Firebase)
+        try {
+            const querySnapshot = await getDocs(collection(db, "workshops"));
+            querySnapshot.forEach((docSnap) => {
+                allWorkshops.push({ id: docSnap.id, ...docSnap.data() });
+            });
+        } catch (error) {
+            console.error("خطأ في جلب بيانات Firebase:", error);
         }
 
-        loadWebsiteWorkshops();
-    </script>
+        // 2. جلب الورش من Google Sheets (إذا كان هناك رابط مضاف)
+        try {
+            if (SHEET_URL && SHEET_URL.trim() !== '') {
+                const response = await fetch(SHEET_URL);
+                const sheetData = await response.json();
+                if (Array.isArray(sheetData)) {
+                    sheetData.forEach((item, index) => {
+                        allWorkshops.push({ id: 'sheet-' + index, ...item });
+                    });
+                }
+            }
+        } catch (error) {
+            console.log("جداول جوجل غير مفعلة أو حدث خطأ في جلبها:", error);
+        }
+
+        if (allWorkshops.length === 0) {
+            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
+            return;
+        }
+
+        let htmlContent = '';
+
+        allWorkshops.forEach(w => {
+            if (w.type === 'next') {
+                htmlContent += `
+                <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                            </span>
+                            <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
+                            <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
+                            <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                                <p>${w.platform || 'غير محدد'}</p>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                            سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                        </a>
+                    </div>
+                </div>`;
+            } else {
+                htmlContent += `
+                <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${w.speaker || 'أرشيف'}</span>
+                            <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-bold text-slate-800">${w.title}</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">${w.details || w.platform || ''}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        ${w.link ? `<a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                        <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
+                            انتهت الورشة بنجاح
+                        </div>
+                    </div>
+                </div>`;
+            }
+        });
+
+        container.innerHTML = htmlContent;
+    }
+
+    loadWorkshopsBothWays();
+</script>
 </body>
 </html>
