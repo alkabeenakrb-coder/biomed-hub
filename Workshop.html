@@ -78,7 +78,7 @@
             color: #d93025;
             margin-right: 4px;
         }
-        .form-group input, .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
@@ -88,26 +88,8 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        .form-group input:focus, .form-group textarea:focus {
+        .form-group input:focus {
             border-color: #6366f1;
-        }
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 8px;
-        }
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-        .radio-option input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
         }
         .submit-btn {
             background-color: #6366f1;
@@ -183,29 +165,6 @@
                        oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
-            <div class="form-group">
-                <label><span class="required">*</span> كيف تقيّم التنظيم والبيئة الحضورية للورشة؟</label>
-                <div class="radio-group">
-                    <label class="radio-option"><input type="radio" name="evaluation" value="ضعيف" required> ضعيف</label>
-                    <label class="radio-option"><input type="radio" name="evaluation" value="متوسط"> متوسط</label>
-                    <label class="radio-option"><input type="radio" name="evaluation" value="جيد"> جيد</label>
-                    <label class="radio-option"><input type="radio" name="evaluation" value="جيد جداً"> جيد جداً</label>
-                    <label class="radio-option"><input type="radio" name="evaluation" value="ممتاز"> ممتاز</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label><span class="required">*</span> ما هي مقترحاتك للورش الحضورية القادمة؟</label>
-                <textarea name="futureTopics" rows="3" placeholder="اكتب مقترحاتك هنا..." required 
-                          oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label><span class="required">*</span> ما هو رأيك في منصة وفعاليات BIOMEDHUB؟ <a href="https://biomedhubiq.com" target="_blank" style="color: #6366f1;">https://biomedhubiq.com</a></label>
-                <textarea name="platformFeedback" rows="3" placeholder="رأيك يهمنا..." required 
-                          oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')"></textarea>
-            </div>
-
             <button type="submit" class="submit-btn" id="submitBtn">تسجيل الحضور الحضوري</button>
             <div id="loadingMsg">جاري إرسال البيانات وحفظها... ⏳</div>
         </form>
@@ -219,7 +178,7 @@
         document.getElementById('workshopTitle').innerText = 'استمارة حضور ورشة: ' + savedWorkshopTitle;
     }
 
-    // ضع رابط الـ Google Apps Script الجديد الخاص بالشيت الحضورية هنا بين العلامتين:
+    // ضع رابط الـ Google Apps Script الخاص بالشيت الحضورية هنا بين العلامتين:
     const scriptURL = 'ضع_رابط_الشيت_الحضورية_الجديد_هنا';
 
     const form = document.getElementById('attendanceForm');
