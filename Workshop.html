@@ -121,7 +121,7 @@
 <div class="container">
     <div class="header-card">
         <img src="M.png" alt="BioMed Hub Logo" class="logo-img">
-        <div><span class="badge">ورشة حضورية (مباشرة)</span></div>
+        <div><span class="badge">ورشة حضورية </span></div>
         <h1 id="workshopTitle">استمارة تسجيل الحضور للورشة الحضورية</h1>
         <p id="workshopDesc">يرجى ملء الحقول أدناه بدقة لتأكيد حضورك الفعلي في القاعة واستلام شهادة المشاركة.</p>
     </div>
@@ -160,8 +160,8 @@
             </div>
 
             <div class="form-group">
-                <label><span class="required">*</span> المرحلة الدراسية أو التخصص الوظيفي</label>
-                <input type="text" name="stage" placeholder="مثال: المرحلة الرابعة / مهندس أجهزة طبية" required 
+                <label><span class="required">*</span> المرحلة الدراسية أو سنة التخرج </label>
+                <input type="text" name="stage" placeholder="مثال: المرحلة الرابعة / " required 
                        oninvalid="this.setCustomValidity('يرجى ملء هذا الحقل لإتمام الخطوة بنجاح 📋')" oninput="this.setCustomValidity('')">
             </div>
 
@@ -206,7 +206,7 @@
             body: new URLSearchParams(dataObj)
         })
         .then(() => {
-            alert('تم تسجيل حضورك الحضوري بنجاح! شكراً لحضورك 🌸');
+            alert('تم تسجيل حضورك الحضوري بنجاح! شكراً  🌸');
             form.reset();
             submitBtn.style.display = 'block';
             loadingMsg.style.display = 'none';
