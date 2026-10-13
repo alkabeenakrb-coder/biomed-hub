@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المنشورات - BioMed Hub</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; padding: 30px 15px; margin: 0; color: #333; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #eaeaea; margin-bottom: 20px; }
+        h2 { color: #581c87; margin-top: 0; font-size: 20px; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 15px 0; font-size: 14px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #6366f1; }
+        button { background-color: #6366f1; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        button:hover { background-color: #4f46e5; }
+        .btn-edit { background-color: #3b82f6; margin-top: 5px; }
+        .btn-edit:hover { background-color: #2563eb; }
+        .btn-danger { background-color: #ef4444; margin-top: 5px; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-cancel { background-color: #6b7280; margin-top: 5px; }
+        .btn-cancel:hover { background-color: #4b5563; }
+        .msg { margin-top: 10px; color: green; font-weight: bold; font-size: 13px; text-align: center; }
+        .hidden { display: none; }
+        .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
+        .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
+        .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
+        .post-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; }
+        .post-item h4 { margin: 0 0 5px 0; color: #581c87; }
+        .post-item p { margin: 3px 0 8px; font-size: 13px; color: #555; white-space: pre-wrap; }
+        .post-item img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 10px; margin: 6px 0; }
+        #postImgPreview { max-height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="loginCard">
+            <h2>تسجيل الدخول للإدارة</h2>
+            <p style="color: #666; font-size: 13px;">أدخل رمز المرور للوصول إلى إدارة المنشورات.</p>
+            <input type="password" id="passwordInput" placeholder="أدخل رمز المرور...">
+            <button id="loginBtn">دخول</button>
+            <p id="loginMsg" style="color: red; margin-top: 10px; text-align: center;"></p>
+        </div>
+
+        <div id="adminCard" class="hidden">
+            <div style="text-align: left; margin-bottom: 10px;">
+                <button id="logoutBtn" style="background-color: #6b7280; width: auto; padding: 6px 15px; font-size: 12px;">تسجيل الخروج 🚪</button>
+            </div>
+
+            <div class="card">
+                <h2 id="postFormTitle">نشر منشور جديد</h2>
+                <input type="hidden" id="postEditId" value="">
+
+                <label>عنوان المنشور:</label>
+                <input type="text" id="postTitle" maxlength="120" placeholder="عنوان المنشور...">
+
+                <label>وصف المنشور:</label>
+                <textarea id="postBody" rows="4" maxlength="2000" placeholder="اكتب وصف المنشور هنا..."></textarea>
+
+                <label>صورة المنشور (اختياري):</label>
+                <input type="file" id="postImage" accept="image/*">
+                <img id="postImgPreview" class="hidden" alt="معاينة">
+
+                <button id="postSubmitBtn">نشر المنشور</button>
+                <button id="postCancelBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
+                <p id="msgPost" class="msg"></p>
+            </div>
+
+            <div class="card">
+                <h2>المنشورات الحالية</h2>
+                <div id="postsList">جاري جلب المنشورات...</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        let db = null, storage = null;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            storage = getStorage(app);
+        } catch (e) { console.error("Firebase error:", e); }
+
+        const secretPassword = "biomed2026";
+
+        function showAdmin() {
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('adminCard').classList.remove('hidden');
+            if (db) renderPosts();
+        }
+        if (localStorage.getItem('biomed_admin_logged') === 'true') showAdmin();
+
+        function checkPassword() {
+            if (document.getElementById('passwordInput').value === secretPassword) {
+                localStorage.setItem('biomed_admin_logged', 'true');
+                showAdmin();
+            } else {
+                document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
+            }
+        }
+        document.getElementById('loginBtn').addEventListener('click', checkPassword);
+        document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('biomed_admin_logged');
+            location.reload();
+        });
+
+        /* ================= المنشورات ================= */
+        let localPosts = [];
+        let postImageBlob = null;
+
+        const esc = (t) => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        // تصغير الصورة قبل الرفع (أقصى عرض 1600px) لتوفير المساحة
+        function resizeImage(file, maxW = 1600, quality = 0.85) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const url = URL.createObjectURL(file);
+                img.onload = () => {
+                    const scale = Math.min(1, maxW / img.width);
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(img.width * scale);
+                    c.height = Math.round(img.height * scale);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    URL.revokeObjectURL(url);
+                    c.toBlob(b => b ? resolve(b) : reject(new Error('فشل معالجة الصورة')), 'image/jpeg', quality);
+                };
+                img.onerror = () => reject(new Error('الملف ليس صورة صالحة'));
+                img.src = url;
+            });
+        }
+
+        document.getElementById('postImage').addEventListener('change', async (e) => {
+            const f = e.target.files[0];
+            const prev = document.getElementById('postImgPreview');
+            postImageBlob = null;
+            if (!f) { prev.classList.add('hidden'); return; }
+            try {
+                postImageBlob = await resizeImage(f);
+                prev.src = URL.createObjectURL(postImageBlob);
+                prev.classList.remove('hidden');
+            } catch (err) {
+                alert(err.message);
+                e.target.value = '';
+                prev.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('postSubmitBtn').addEventListener('click', savePost);
+        document.getElementById('postCancelBtn').addEventListener('click', resetPostForm);
+
+        async function savePost() {
+            if (!db) return;
+            const btn = document.getElementById('postSubmitBtn');
+            const editId = document.getElementById('postEditId').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const body = document.getElementById('postBody').value.trim();
+            if (!title || !body) { alert('اكتب عنوان المنشور ووصفه أولاً!'); return; }
+
+            btn.disabled = true;
+            const oldText = btn.innerText;
+            btn.innerText = 'جاري النشر...';
+            try {
+                let imageUrl = null, imagePath = null;
+                if (postImageBlob) {
+                    imagePath = `posts/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+                    const r = ref(storage, imagePath);
+                    await uploadBytes(r, postImageBlob, { contentType: 'image/jpeg' });
+                    imageUrl = await getDownloadURL(r);
+                }
+
+                if (editId) {
+                    const data = { title, body };
+                    if (imageUrl) {
+                        data.imageUrl = imageUrl; data.imagePath = imagePath;
+                        const old = localPosts.find(p => p.id === editId);
+                        if (old && old.imagePath) { try { await deleteObject(ref(storage, old.imagePath)); } catch (e) {} }
+                    }
+                    await updateDoc(doc(db, "posts", editId), data);
+                    document.getElementById('msgPost').innerText = 'تم تعديل المنشور بنجاح! ✅';
+                } else {
+                    await addDoc(collection(db, "posts"), {
+                        title, body,
+                        imageUrl: imageUrl || '', imagePath: imagePath || '',
+                        createdAt: Date.now()
+                    });
+                    document.getElementById('msgPost').innerText = 'تم نشر المنشور بنجاح! 🎉';
+                }
+                resetPostForm();
+                setTimeout(() => document.getElementById('msgPost').innerText = '', 3000);
+                renderPosts();
+            } catch (error) {
+                alert('خطأ أثناء النشر: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                if (!document.getElementById('postEditId').value) btn.innerText = 'نشر المنشور'; else btn.innerText = oldText;
+            }
+        }
+
+        function resetPostForm() {
+            document.getElementById('postEditId').value = '';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postBody').value = '';
+            document.getElementById('postImage').value = '';
+            document.getElementById('postImgPreview').classList.add('hidden');
+            postImageBlob = null;
+            document.getElementById('postFormTitle').innerText = 'نشر منشور جديد';
+            document.getElementById('postSubmitBtn').innerText = 'نشر المنشور';
+            document.getElementById('postSubmitBtn').style.backgroundColor = '#6366f1';
+            document.getElementById('postCancelBtn').classList.add('hidden');
+        }
+
+        window.editPost = function(id) {
+            const p = localPosts.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('postEditId').value = p.id;
+            document.getElementById('postTitle').value = p.title || '';
+            document.getElementById('postBody').value = p.body || '';
+            document.getElementById('postImage').value = '';
+            postImageBlob = null;
+            const prev = document.getElementById('postImgPreview');
+            if (p.imageUrl) { prev.src = p.imageUrl; prev.classList.remove('hidden'); } else { prev.classList.add('hidden'); }
+            document.getElementById('postFormTitle').innerText = 'تعديل المنشور (اختر صورة جديدة فقط إذا تريد تغييرها)';
+            document.getElementById('postSubmitBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('postSubmitBtn').style.backgroundColor = '#3b82f6';
+            document.getElementById('postCancelBtn').classList.remove('hidden');
+            document.getElementById('postFormTitle').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.deletePost = async function(id) {
+            if (!db) return;
+            if (!confirm('هل أنت متأكد من حذف هذا المنشور؟')) return;
+            try {
+                const p = localPosts.find(x => x.id === id);
+                await deleteDoc(doc(db, "posts", id));
+                if (p && p.imagePath) { try { await deleteObject(ref(storage, p.imagePath)); } catch (e) {} }
+                renderPosts();
+            } catch (error) {
+                alert('خطأ أثناء الحذف: ' + error.message);
+            }
+        }
+
+        async function renderPosts() {
+            const container = document.getElementById('postsList');
+            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل المنشورات...</p>';
+            try {
+                const snap = await getDocs(collection(db, "posts"));
+                localPosts = [];
+                snap.forEach(d => localPosts.push({ id: d.id, ...d.data() }));
+                localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                if (!localPosts.length) {
+                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد منشورات بعد.</p>';
+                    return;
+                }
+                container.innerHTML = localPosts.map(p => `
+                    <div class="post-item">
+                        <h4>${esc(p.title)}</h4>
+                        ${p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="">` : ''}
+                        <p>${esc(p.body)}</p>
+                        <p style="font-size:11px;color:#999;">${p.createdAt ? new Date(p.createdAt).toLocaleString('ar-IQ') : ''}</p>
+                        <button class="btn-edit" onclick="editPost('${esc(p.id)}')">تعديل المنشور</button>
+                        <button class="btn-danger" onclick="deletePost('${esc(p.id)}')">حذف هذا المنشور</button>
+                    </div>`).join('');
+            } catch (error) {
+                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض المنشورات.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
