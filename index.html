@@ -197,10 +197,26 @@
 
     <!-- Workshops Section -->
     <section id="workshops" class="py-14 px-6 max-w-5xl mx-auto">
-        <div class="text-center mb-10 space-y-2">
+        <div class="text-center mb-8 space-y-2">
             <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">الأنشطة والفعاليات</span>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">الورش التدريبية</h2>
             <p class="text-slate-500 text-xs">احجز مقعدك في الورشة القادمة أو استعرض الورش التي تم تقديمها سابقاً</p>
+        </div>
+
+        <!-- أزرار فلترة الورش -->
+        <div id="workshops-filter-bar" class="flex items-center justify-center gap-2 flex-wrap mb-8">
+            <button type="button" data-filter="all" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm">
+                الكل
+            </button>
+            <button type="button" data-filter="next" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                أونلاين
+            </button>
+            <button type="button" data-filter="in-person" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                حضوري
+            </button>
+            <button type="button" data-filter="archived" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                أرشيف
+            </button>
         </div>
 
         <div id="workshops-container" class="grid md:grid-cols-2 gap-6">
@@ -312,7 +328,7 @@
         });
     </script>
 
-    <!-- سكريبت جلب الورش المدمج ومرتب من الأحدث للأقدم -->
+    <!-- سكريبت جلب الورش المدمج ومرتب من الأحدث للأقدم مع الفلترة -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -330,6 +346,98 @@
         const db = getFirestore(app);
 
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
+
+        let allWorkshopsCache = [];
+        let activeWorkshopFilter = 'all';
+
+        function renderWorkshopsList(filterType = 'all') {
+            const container = document.getElementById('workshops-container');
+            if (!container) return;
+
+            const filtered = filterType === 'all'
+                ? allWorkshopsCache
+                : allWorkshopsCache.filter(w => w.type === filterType);
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش ضمن هذا التصنيف حالياً.</div>';
+                return;
+            }
+
+            let htmlContent = '';
+
+            filtered.forEach(w => {
+                if (w.type === 'next' || w.type === 'in-person') {
+                    const modeLabel = w.type === 'in-person'
+                        ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري'
+                        : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+
+                    htmlContent += `
+                    <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                                </span>
+                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
+                            </div>
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
+                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
+                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
+                                    <p>${w.platform || 'غير محدد'}</p>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                                سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>`;
+                } else {
+                    htmlContent += `
+                    <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${w.speaker || 'أرشيف'}</span>
+                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                            </div>
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-bold text-slate-800">${w.title}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${w.details || w.platform || ''}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            ${w.link ? `<a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
+                                انتهت الورشة بنجاح
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            container.innerHTML = htmlContent;
+        }
+
+        function setupFilterButtons() {
+            const buttons = document.querySelectorAll('.workshop-filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeWorkshopFilter = btn.dataset.filter || 'all';
+
+                    buttons.forEach(b => {
+                        const isActive = b.dataset.filter === activeWorkshopFilter;
+                        b.className = isActive
+                            ? 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm'
+                            : 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100';
+                    });
+
+                    renderWorkshopsList(activeWorkshopFilter);
+                });
+            });
+        }
 
         async function loadAllWorkshopsTogether() {
             const container = document.getElementById('workshops-container');
@@ -393,69 +501,15 @@
                 console.error('خطأ في جلب بيانات قوقل شيت:', error);
             }
 
-            const allWorkshops = [...firebaseWorkshops, ...sheetWorkshops];
+            allWorkshopsCache = [...firebaseWorkshops, ...sheetWorkshops];
 
-            if (allWorkshops.length === 0) {
+            if (allWorkshopsCache.length === 0) {
                 container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
                 return;
             }
 
-            let htmlContent = '';
-
-            allWorkshops.forEach(w => {
-                if (w.type === 'next' || w.type === 'in-person') {
-                    const modeLabel = w.type === 'in-person'
-                        ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري'
-                        : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
-
-                    htmlContent += `
-                    <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
-                                </span>
-                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
-                            </div>
-                            <div class="space-y-3">
-                                <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
-                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
-                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                    <p>${w.platform || 'غير محدد'}</p>
-                                </div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                                سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
-                            </a>
-                        </div>
-                    </div>`;
-                } else {
-                    htmlContent += `
-                    <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${w.speaker || 'أرشيف'}</span>
-                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
-                            </div>
-                            <div class="space-y-3">
-                                <h3 class="text-lg font-bold text-slate-800">${w.title}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${w.details || w.platform || ''}</p>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            ${w.link ? `<a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
-                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
-                                انتهت الورشة بنجاح
-                            </div>
-                        </div>
-                    </div>`;
-                }
-            });
-
-            container.innerHTML = htmlContent;
+            setupFilterButtons();
+            renderWorkshopsList(activeWorkshopFilter);
         }
 
         loadAllWorkshopsTogether();
