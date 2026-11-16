@@ -131,7 +131,7 @@
         </div>
     </section>
 
-    <!-- Services (فوك قسم كيف تبدأ) -->
+    <!-- Services -->
     <section id="services" class="py-14 bg-purple-50/60 border-y border-purple-100 px-6">
         <div class="max-w-5xl mx-auto">
             <h2 class="text-2xl font-extrabold text-purple-900 text-center mb-8">ماذا نقدم في BioMed Hub؟</h2>
@@ -350,6 +350,32 @@
         let allWorkshopsCache = [];
         let activeWorkshopFilter = 'all';
 
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        function buildInPersonMetaHtml(w) {
+            const gov = (w.governorate || '').trim();
+            const loc = (w.location || '').trim();
+            const dt = (w.dateTime || '').trim();
+
+            const venueParts = [gov, loc].filter(Boolean).join(' - ');
+            const lines = [];
+
+            if (venueParts) {
+                lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(venueParts)}</p>`);
+            }
+            if (dt) {
+                lines.push(`<p><i class="fa-regular fa-calendar-days text-purple-600 ml-1"></i> <strong>التاريخ والوقت:</strong> ${esc(dt)}</p>`);
+            }
+            if (!lines.length && w.platform) {
+                lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(w.platform)}</p>`);
+            }
+            if (!lines.length) {
+                lines.push(`<p>غير محدد</p>`);
+            }
+
+            return lines.join('');
+        }
+
         function renderWorkshopsList(filterType = 'all') {
             const container = document.getElementById('workshops-container');
             if (!container) return;
@@ -367,9 +393,14 @@
 
             filtered.forEach(w => {
                 if (w.type === 'next' || w.type === 'in-person') {
-                    const modeLabel = w.type === 'in-person'
+                    const isInPerson = w.type === 'in-person';
+                    const modeLabel = isInPerson
                         ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري'
                         : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+
+                    const metaBoxContent = isInPerson
+                        ? buildInPersonMetaHtml(w)
+                        : `<p>${esc(w.platform || 'غير محدد')}</p>`;
 
                     htmlContent += `
                     <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
@@ -381,16 +412,16 @@
                                 <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
                             </div>
                             <div class="space-y-3">
-                                <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
-                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
-                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                    <p>${w.platform || 'غير محدد'}</p>
+                                <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
+                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
+                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">
+                                    ${metaBoxContent}
                                 </div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
                             </div>
                         </div>
                         <div class="pt-6">
-                            <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                            <a href="${esc(w.link || 'https://t.me/BioMedHubA')}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
                                 سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
                             </a>
                         </div>
@@ -400,16 +431,16 @@
                     <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${w.speaker || 'أرشيف'}</span>
+                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${esc(w.speaker || 'أرشيف')}</span>
                                 <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
                             </div>
                             <div class="space-y-3">
-                                <h3 class="text-lg font-bold text-slate-800">${w.title}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${w.details || w.platform || ''}</p>
+                                <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${esc(w.details || w.platform || '')}</p>
                             </div>
                         </div>
                         <div class="pt-6">
-                            ${w.link ? `<a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                            ${w.link ? `<a href="${esc(w.link)}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
                             <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
                                 انتهت الورشة بنجاح
                             </div>
