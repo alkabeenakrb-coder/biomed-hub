@@ -62,6 +62,7 @@
                 <label>نوع الحالة:</label>
                 <select id="wType">
                     <option value="next">ورشة جديدة / قادمة (Next)</option>
+                    <option value="in-person">حضوري (In-Person)</option>
                     <option value="archived">أرشيف (Archived)</option>
                 </select>
 
@@ -293,11 +294,24 @@
                     return;
                 }
 
+                const typeLabels = {
+                    'next': 'ورشة جديدة',
+                    'in-person': 'حضوري',
+                    'archived': 'أرشيف'
+                };
+                const typeColors = {
+                    'next': 'background: #dcfce7; color: #166534;',
+                    'in-person': 'background: #ede9fe; color: #5b21b6;',
+                    'archived': 'background: #f3f4f6; color: #374151;'
+                };
+
                 container.innerHTML = '';
                 localWorkshops.forEach(w => {
+                    const badgeStyle = typeColors[w.type] || typeColors.archived;
+                    const badgeText = typeLabels[w.type] || 'أرشيف';
                     container.innerHTML += `
                         <div class="workshop-item">
-                            <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; background: ${w.type === 'next' ? '#dcfce7' : '#f3f4f6'}; color: ${w.type === 'next' ? '#166534' : '#374151'}; border-radius: 4px;">${w.type === 'next' ? 'ورشة جديدة' : 'أرشيف'}</span></h4>
+                            <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
                             <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
                             <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
                             <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
