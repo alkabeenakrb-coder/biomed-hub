@@ -403,7 +403,11 @@
             let htmlContent = '';
 
             allWorkshops.forEach(w => {
-                if (w.type === 'next') {
+                if (w.type === 'next' || w.type === 'in-person') {
+                    const modeLabel = w.type === 'in-person'
+                        ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري'
+                        : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+
                     htmlContent += `
                     <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
                         <div>
@@ -411,7 +415,7 @@
                                 <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
                                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
                                 </span>
-                                <span class="text-slate-400 text-xs font-medium"><i class="fa-regular fa-clock ml-1"></i> أونلاين</span>
+                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
                             </div>
                             <div class="space-y-3">
                                 <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
@@ -426,35 +430,6 @@
                             <a href="${w.link || 'https://t.me/BioMedHubA'}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
                                 سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
                             </a>
-                        </div>
-                    </div>`;
-                } else if (w.type === 'in-person') {
-                    htmlContent += `
-                    <div class="bg-white rounded-3xl border border-purple-200 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-400 transition">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot"></i> حضوري
-                                </span>
-                                <span class="text-slate-400 text-xs font-medium"><i class="fa-solid fa-building ml-1"></i> ورشة حضورية</span>
-                            </div>
-                            <div class="space-y-3">
-                                <h3 class="text-lg font-black text-purple-900">${w.title}</h3>
-                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${w.speaker || 'غير محدد'}</p>
-                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1">
-                                    <p>${w.platform || 'غير محدد'}</p>
-                                </div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${w.details || ''}</p>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            ${w.link ? `
-                            <a href="${w.link}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                                سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
-                            </a>` : `
-                            <div class="w-full text-center bg-purple-50 text-purple-700 text-xs font-bold py-3 rounded-xl border border-purple-200 select-none">
-                                ورشة حضورية
-                            </div>`}
                         </div>
                     </div>`;
                 } else {
