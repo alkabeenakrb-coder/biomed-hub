@@ -75,8 +75,23 @@
                 <label>التفاصيل (details):</label>
                 <textarea id="wDetails" rows="2" placeholder="نبذة مختصرة عن الورشة..."></textarea>
 
-                <label>المنصة / الوقت (platform):</label>
-                <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
+                <!-- حقول الورشة الحضورية -->
+                <div id="inPersonContainer" class="hidden">
+                    <label>المحافظة:</label>
+                    <input type="text" id="wGovernorate" placeholder="مثال: كربلاء المقدسة / بغداد / نينوى...">
+
+                    <label>موقع الورشة:</label>
+                    <input type="text" id="wLocation" placeholder="مثال: نقابة المهندسين - فرع بابل / دائرة الرعاية العلمية...">
+
+                    <label>تاريخ ووقت الورشة:</label>
+                    <input type="text" id="wDateTime" placeholder="مثال: السبت 22/11/2026 - الساعة 10:00 صباحاً">
+                </div>
+
+                <!-- حقل الورشة الأونلاين / الأرشيف -->
+                <div id="platformContainer">
+                    <label>المنصة / الوقت (platform):</label>
+                    <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
+                </div>
 
                 <div id="linkContainer">
                     <label>رابط الورشة أو الانضمام (link):</label>
@@ -138,7 +153,7 @@
             location.reload();
         });
         document.getElementById('saveTitleBtn').addEventListener('click', saveNewTitle);
-        document.getElementById('wType').addEventListener('change', toggleLinkField);
+        document.getElementById('wType').addEventListener('change', toggleTypeFields);
         document.getElementById('submitBtn').addEventListener('click', saveWorkshop);
         document.getElementById('cancelBtn').addEventListener('click', resetForm);
 
@@ -164,6 +179,7 @@
             } catch (error) {
                 console.log("Error loading title:", error);
             }
+            toggleTypeFields();
             renderWorkshops();
         }
 
@@ -184,14 +200,25 @@
             }
         }
 
-        function toggleLinkField() {
+        function toggleTypeFields() {
             const type = document.getElementById('wType').value;
             const linkContainer = document.getElementById('linkContainer');
+            const inPersonContainer = document.getElementById('inPersonContainer');
+            const platformContainer = document.getElementById('platformContainer');
+
             if (type === 'archived') {
                 linkContainer.classList.add('hidden');
                 document.getElementById('wLink').value = '';
             } else {
                 linkContainer.classList.remove('hidden');
+            }
+
+            if (type === 'in-person') {
+                inPersonContainer.classList.remove('hidden');
+                platformContainer.classList.add('hidden');
+            } else {
+                inPersonContainer.classList.add('hidden');
+                platformContainer.classList.remove('hidden');
             }
         }
 
@@ -202,7 +229,15 @@
             const title = document.getElementById('wTitle').value;
             const speaker = document.getElementById('wSpeaker').value;
             const details = document.getElementById('wDetails').value;
-            const platform = document.getElementById('wPlatform').value;
+
+            const governorate = type === 'in-person' ? document.getElementById('wGovernorate').value : '';
+            const location = type === 'in-person' ? document.getElementById('wLocation').value : '';
+            const dateTime = type === 'in-person' ? document.getElementById('wDateTime').value : '';
+
+            const platform = type === 'in-person'
+                ? [governorate, location].filter(Boolean).join(' - ')
+                : document.getElementById('wPlatform').value;
+
             const link = type === 'archived' ? '' : document.getElementById('wLink').value;
 
             if (!title.trim()) {
@@ -210,13 +245,16 @@
                 return;
             }
 
+            const payload = { type, title, speaker, details, governorate, location, dateTime, platform, link };
+
             try {
                 if (editId) {
-                    await updateDoc(doc(db, "workshops", editId), { type, title, speaker, details, platform, link });
+                    await updateDoc(doc(db, "workshops", editId), payload);
                     document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
                 } else {
                     await addDoc(collection(db, "workshops"), {
-                        type, title, speaker, details, platform, link, createdAt: Date.now()
+                        ...payload,
+                        createdAt: Date.now()
                     });
                     document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
                 }
@@ -237,10 +275,13 @@
             document.getElementById('wTitle').value = w.title;
             document.getElementById('wSpeaker').value = w.speaker || '';
             document.getElementById('wDetails').value = w.details || '';
+            document.getElementById('wGovernorate').value = w.governorate || '';
+            document.getElementById('wLocation').value = w.location || '';
+            document.getElementById('wDateTime').value = w.dateTime || '';
             document.getElementById('wPlatform').value = w.platform || '';
             document.getElementById('wLink').value = w.link || '';
 
-            toggleLinkField();
+            toggleTypeFields();
 
             document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
             document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
@@ -255,9 +296,12 @@
             document.getElementById('wTitle').value = '';
             document.getElementById('wSpeaker').value = '';
             document.getElementById('wDetails').value = '';
+            document.getElementById('wGovernorate').value = '';
+            document.getElementById('wLocation').value = '';
+            document.getElementById('wDateTime').value = '';
             document.getElementById('wPlatform').value = '';
             document.getElementById('wLink').value = '';
-            toggleLinkField();
+            toggleTypeFields();
 
             document.getElementById('formTitleText').innerText = 'إضافة ورشة جديدة / أرشيف';
             document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
@@ -309,12 +353,18 @@
                 localWorkshops.forEach(w => {
                     const badgeStyle = typeColors[w.type] || typeColors.archived;
                     const badgeText = typeLabels[w.type] || 'أرشيف';
+                    const venueText = [w.governorate, w.location].filter(Boolean).join(' - ') || w.platform || 'غير محدد';
+
                     container.innerHTML += `
                         <div class="workshop-item">
                             <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
                             <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
                             <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
-                            <p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>
+                            ${w.type === 'in-person'
+                                ? `<p><strong>موقع الورشة:</strong> ${venueText}</p>
+                                   <p><strong>التاريخ والوقت:</strong> ${w.dateTime || 'غير محدد'}</p>`
+                                : `<p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>`
+                            }
                             ${w.link ? `<p><strong>الرابط:</strong> <a href="${w.link}" target="_blank">${w.link}</a></p>` : ''}
                             <button class="btn-edit" onclick="editWorkshop('${w.id}')">تعديل الورشة</button>
                             <button class="btn-danger" onclick="deleteWorkshop('${w.id}')">حذف هذه الورشة</button>
