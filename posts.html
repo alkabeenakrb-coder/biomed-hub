@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تغطية الفعاليات | BioMed Hub</title>
     <link rel="icon" type="image/png" href="M.png">
+    <!-- تطبيق الوضع الداكن فوراً قبل الرسم لتجنب الوميض -->
+    <script>
+        (function () {
+            try {
+                const saved = localStorage.getItem('bmh_theme_mode');
+                const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved === 'dark' || (!saved && sysDark)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome للأيقونات -->
@@ -31,6 +43,53 @@
     </script>
     <style>
         body { font-family: 'Tajawal', sans-serif; }
+
+        /* الوضع الداكن */
+        html.dark {
+            color-scheme: dark;
+        }
+        html.dark body {
+            background-color: #090612;
+            color: #e2e8f0;
+        }
+
+        /* تثبيت خلفية اللوغو بيضاء حتى تبرز بالوضع الداكن */
+        html.dark nav img[alt="BioMed Hub"] {
+            background-color: #ffffff !important;
+            padding: 4px;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        html.dark nav,
+        html.dark footer,
+        html.dark main > div.bg-white,
+        html.dark main > div > a.bg-white,
+        html.dark #all-posts-container article,
+        html.dark #all-posts-container > div.bg-white,
+        html.dark #guest-notif-modal > div {
+            background-color: #120d24 !important;
+            border-color: rgba(167, 139, 250, 0.18) !important;
+        }
+
+        html.dark #posts-search-input {
+            background-color: rgba(30, 18, 56, 0.75) !important;
+            border-color: rgba(167, 139, 250, 0.25) !important;
+            color: #f3e8ff !important;
+        }
+        html.dark #posts-search-input::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        html.dark h1,
+        html.dark h2,
+        html.dark h3 {
+            color: #f3e8ff !important;
+        }
+        html.dark p,
+        html.dark a:not([class*="bg-purple-600"]):not([class*="bg-white"]) {
+            color: #cbd5e1;
+        }
     </style>
 </head>
 <body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
@@ -51,6 +110,12 @@
                 <a href="index.html#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
                 <a href="posts.html" class="text-purple-700 font-extrabold text-xs">تغطية الفعاليات</a>
                 <a href="index.html#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
+
+                <!-- زر تبديل الوضع الداكن / الفاتح -->
+                <button id="theme-toggle-btn" type="button" aria-label="تبديل الوضع الداكن" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-purple-600"></i>
+                    <span id="theme-toggle-text">داكن</span>
+                </button>
 
                 <!-- زر الإشعارات -->
                 <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
@@ -83,6 +148,11 @@
             <a href="index.html#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
             <a href="posts.html" onclick="toggleMenu()" class="block text-purple-700 font-extrabold text-sm">تغطية الفعاليات</a>
             <a href="index.html#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <button id="mobile-theme-toggle-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i id="mobile-theme-toggle-icon" class="fa-solid fa-moon text-purple-600"></i>
+                <span id="mobile-theme-toggle-text">الوضع الداكن</span>
+            </button>
 
             <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-bell text-purple-600"></i>
@@ -182,6 +252,49 @@
             <i class="fa-solid fa-chevron-left"></i>
         </button>
     </div>
+
+    <!-- سكريبت تبديل الوضع الداكن (مشترك بنفس مفتاح index.html) -->
+    <script>
+        (function () {
+            const STORAGE_KEY = 'bmh_theme_mode';
+            const root = document.documentElement;
+            const btn = document.getElementById('theme-toggle-btn');
+            const icon = document.getElementById('theme-toggle-icon');
+            const label = document.getElementById('theme-toggle-text');
+            const mBtn = document.getElementById('mobile-theme-toggle-btn');
+            const mIcon = document.getElementById('mobile-theme-toggle-icon');
+            const mLabel = document.getElementById('mobile-theme-toggle-text');
+
+            function syncUI(isDark) {
+                if (icon) icon.className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-purple-600';
+                if (label) label.innerText = isDark ? 'فاتح' : 'داكن';
+                if (mIcon) mIcon.className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-purple-600';
+                if (mLabel) mLabel.innerText = isDark ? 'الوضع الأصلي' : 'الوضع الداكن';
+            }
+
+            syncUI(root.classList.contains('dark'));
+
+            function toggleTheme() {
+                const nextDark = !root.classList.contains('dark');
+                root.classList.toggle('dark', nextDark);
+                try {
+                    localStorage.setItem(STORAGE_KEY, nextDark ? 'dark' : 'light');
+                } catch (e) {}
+                syncUI(nextDark);
+            }
+
+            if (btn) btn.addEventListener('click', toggleTheme);
+            if (mBtn) mBtn.addEventListener('click', toggleTheme);
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === STORAGE_KEY) {
+                    const isDark = e.newValue === 'dark';
+                    root.classList.toggle('dark', isDark);
+                    syncUI(isDark);
+                }
+            });
+        })();
+    </script>
 
     <!-- Script قائمة الموبايل -->
     <script>
