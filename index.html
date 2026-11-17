@@ -247,6 +247,30 @@
                 </form>
             </div>
 
+            <!-- قسم الإشعارات داخل حساب العضو -->
+            <div id="member-notifications-box" class="space-y-3 rounded-2xl border border-purple-100 bg-purple-50/30 p-4">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-extrabold text-purple-900">
+                            <i class="fa-solid fa-bell text-purple-600 ml-1"></i>
+                            الإشعارات
+                        </h3>
+                        <span id="notifications-unread-badge" class="text-[11px] bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full font-bold">
+                            0 جديد
+                        </span>
+                    </div>
+                    <button id="mark-all-read-btn" type="button" class="text-[11px] text-purple-700 hover:underline font-bold">
+                        تحديد الكل كمقروء
+                    </button>
+                </div>
+
+                <div id="user-notifications-list" class="space-y-2.5">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-400">
+                        جاري تحميل الإشعارات...
+                    </div>
+                </div>
+            </div>
+
             <!-- قسم فرعي داخل الحساب لعرض الشهادات إن وجدت -->
             <div class="space-y-3">
                 <div class="flex items-center justify-between">
@@ -613,7 +637,7 @@
         });
     </script>
 
-    <!-- سكريبت حساب العضو العام (Auth + Profile + قسم فرعي للشهادات إن وجدت) -->
+    <!-- سكريبت حساب العضو العام (Auth + Profile + Notifications + Certificates) -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import {
@@ -628,7 +652,15 @@
             getFirestore,
             doc,
             getDoc,
-            setDoc
+            setDoc,
+            collection,
+            query,
+            orderBy,
+            limit,
+            getDocs,
+            updateDoc,
+            addDoc,
+            writeBatch
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -644,6 +676,50 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // بانر ترحيب للزائر الذي يدخل الموقع لأول مرة (مرة واحدة فقط)
+        (function initFirstVisitWelcome() {
+            const VISIT_KEY = 'bmh_first_visit_v1';
+            if (localStorage.getItem(VISIT_KEY)) return;
+
+            const showBanner = () => {
+                if (document.getElementById('bmh-welcome-toast')) return;
+
+                const banner = document.createElement('div');
+                banner.id = 'bmh-welcome-toast';
+                banner.className = 'fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 sm:max-w-sm z-50 bg-white border border-purple-200 shadow-xl rounded-2xl p-4 text-right';
+                banner.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                                <h4 class="text-xs font-extrabold text-purple-900">أهلاً وسهلاً بيك في BioMed Hub</h4>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                منصة طلاب وخريجي الهندسة الطبية الحيوية في العراق. سجل دخولك أو أنشئ حساباً لمتابعة ملفك، شهاداتك، وإشعاراتك.
+                            </p>
+                        </div>
+                        <button id="bmh-close-welcome" type="button" aria-label="إغلاق"
+                            class="text-slate-400 hover:text-slate-700 text-xs font-bold px-1.5 py-0.5">
+                            ✕
+                        </button>
+                    </div>
+                `;
+
+                document.body.appendChild(banner);
+                localStorage.setItem(VISIT_KEY, '1');
+
+                document.getElementById('bmh-close-welcome')?.addEventListener('click', () => {
+                    banner.remove();
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showBanner);
+            } else {
+                showBanner();
+            }
+        })();
+
         // رابط CSV الخاص بورقة All_Certificates
         const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
 
@@ -651,6 +727,148 @@
 
         let isRegisterMode = false;
         let currentUser = null;
+
+        // إشعار ترحيبي تلقائي عند إنشاء حساب جديد لأول مرة
+        async function createWelcomeNotification(uid) {
+            if (!uid) return;
+            try {
+                await addDoc(collection(db, 'members', uid, 'notifications'), {
+                    title: 'أهلاً وسهلاً بيك في BioMed Hub',
+                    body: 'تم إنشاء حسابك بنجاح. تقدر من هنا تراجع بياناتك الشخصية، تتابع شهاداتك، وتوصلك إشعارات الورش والفعاليات.',
+                    read: false,
+                    createdAt: Date.now()
+                });
+            } catch (err) {
+                console.error('Error creating welcome notification:', err);
+            }
+        }
+
+        // تحميل إشعارات العضو + الإشعارات العامة
+        async function loadUserNotifications(user) {
+            const listEl = document.getElementById('user-notifications-list');
+            const badgeEl = document.getElementById('notifications-unread-badge');
+            const markAllBtn = document.getElementById('mark-all-read-btn');
+            if (!listEl || !badgeEl || !user) return;
+
+            try {
+                const items = [];
+
+                // 1) إشعارات خاصة بالعضو
+                const userNotifRef = collection(db, 'members', user.uid, 'notifications');
+                const userSnap = await getDocs(query(userNotifRef, orderBy('createdAt', 'desc'), limit(15)));
+                userSnap.forEach(d => {
+                    items.push({
+                        id: d.id,
+                        source: 'user',
+                        docRef: d.ref,
+                        ...d.data()
+                    });
+                });
+
+                // 2) إشعارات عامة للمنصة (من لوحة الأدمن)
+                const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
+                const readKey = `bmh_read_ann_${user.uid}`;
+                const readMap = JSON.parse(localStorage.getItem(readKey) || '{}');
+
+                publicSnap.forEach(d => {
+                    const data = d.data();
+                    items.push({
+                        id: d.id,
+                        source: 'public',
+                        title: data.title || 'إشعار من BioMed Hub',
+                        body: data.body || '',
+                        link: data.link || '',
+                        createdAt: data.createdAt || 0,
+                        read: !!readMap[d.id]
+                    });
+                });
+
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                const unreadCount = items.filter(n => !n.read).length;
+                badgeEl.innerText = `${unreadCount} جديد`;
+
+                if (!items.length) {
+                    listEl.innerHTML = `
+                        <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">
+                            لا توجد إشعارات جديدة حالياً.
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = items.map(n => {
+                    const dateStr = n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-IQ') : '';
+                    const unreadClass = n.read
+                        ? 'bg-white border-slate-100'
+                        : 'bg-purple-50 border-purple-200';
+
+                    return `
+                        <div data-notif-id="${esc(n.id)}" data-source="${esc(n.source)}"
+                             class="notif-card rounded-2xl border p-3.5 transition flex items-start justify-between gap-3 cursor-pointer ${unreadClass}">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    ${!n.read ? '<span class="w-2 h-2 rounded-full bg-purple-600 shrink-0"></span>' : ''}
+                                    <h4 class="text-xs font-extrabold text-purple-900">${esc(n.title || 'إشعار')}</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">${esc(n.body || '')}</p>
+                                ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] font-bold text-purple-700 hover:underline pt-0.5">فتح الرابط <i class="fa-solid fa-arrow-left mr-1"></i></a>` : ''}
+                            </div>
+                            <span class="text-[10px] text-slate-400 shrink-0">${esc(dateStr)}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                listEl.querySelectorAll('.notif-card').forEach(card => {
+                    card.addEventListener('click', async (e) => {
+                        if (e.target.closest('a')) return;
+                        const notifId = card.dataset.notifId;
+                        const source = card.dataset.source;
+                        const target = items.find(x => x.id === notifId && x.source === source);
+                        if (!target || target.read) return;
+
+                        target.read = true;
+                        if (source === 'user' && target.docRef) {
+                            await updateDoc(target.docRef, { read: true });
+                        } else if (source === 'public') {
+                            readMap[notifId] = true;
+                            localStorage.setItem(readKey, JSON.stringify(readMap));
+                        }
+                        loadUserNotifications(user);
+                    });
+                });
+
+                if (markAllBtn) {
+                    markAllBtn.onclick = async () => {
+                        const batch = writeBatch(db);
+                        let hasUserUpdates = false;
+
+                        items.forEach(item => {
+                            if (item.read) return;
+                            if (item.source === 'user' && item.docRef) {
+                                batch.update(item.docRef, { read: true });
+                                hasUserUpdates = true;
+                            } else if (item.source === 'public') {
+                                readMap[item.id] = true;
+                            }
+                        });
+
+                        localStorage.setItem(readKey, JSON.stringify(readMap));
+                        if (hasUserUpdates) {
+                            await batch.commit();
+                        }
+                        loadUserNotifications(user);
+                    };
+                }
+            } catch (err) {
+                console.error('Error loading notifications:', err);
+                listEl.innerHTML = `
+                    <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">
+                        لا توجد إشعارات حالياً.
+                    </div>
+                `;
+            }
+        }
 
         const authModal = document.getElementById('auth-modal');
         const authForm = document.getElementById('auth-form');
@@ -667,7 +885,6 @@
         const regPhone = document.getElementById('reg-phone');
         const profilePhone = document.getElementById('profile-phone');
 
-        // تنظيف رقم الهاتف ليقبل أرقاماً فقط و + في البداية
         function sanitizePhone(raw) {
             let s = String(raw || '').trim();
             if (s.startsWith('+')) {
@@ -678,7 +895,6 @@
             return s;
         }
 
-        // التحقق من صحة رقم الهاتف العراقي (مثل 07XXXXXXXXX أو +9647XXXXXXXXX)
         function isValidIraqiPhone(phone) {
             const clean = sanitizePhone(phone);
             return /^07\d{9}$/.test(clean) || /^\+9647\d{9}$/.test(clean);
@@ -831,7 +1047,6 @@
             cityEl.innerText = data.city || '-';
         }
 
-        // تحميل بيانات البروفايل العام من Firestore
         async function loadUserProfile(user) {
             setEditPanelOpen(false);
 
@@ -918,7 +1133,6 @@
             }
         });
 
-        // معالجة الدخول وإنشاء الحساب العام
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             authErrorMsg.classList.add('hidden');
@@ -974,6 +1188,8 @@
                         updatedAt: Date.now()
                     }, { merge: true });
 
+                    await createWelcomeNotification(cred.user.uid);
+
                     closeAuthModal();
                     setTimeout(scrollToAccount, 300);
                 } catch (err) {
@@ -990,7 +1206,6 @@
                 return;
             }
 
-            // وضع تسجيل الدخول
             authSubmitBtn.disabled = true;
             authSubmitBtn.innerText = 'جاري الدخول...';
 
@@ -1013,7 +1228,6 @@
             }
         });
 
-        // استعادة رمز السر
         document.getElementById('forgot-password-btn').addEventListener('click', async () => {
             authErrorMsg.classList.add('hidden');
             authSuccessMsg.classList.add('hidden');
@@ -1047,7 +1261,6 @@
             return { viewUrl: url, downloadUrl: url };
         }
 
-        // قسم فرعي داخل الحساب: قراءة الشهادات المرتبطة بالإيميل إن وجدت
         async function loadUserCertificates(userEmail) {
             const container = document.getElementById('user-certificates-list');
             const badge = document.getElementById('certs-count-badge');
@@ -1136,7 +1349,6 @@
             }
         }
 
-        // مراقبة حالة تسجيل الدخول
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             const accountSection = document.getElementById('member-account-section');
@@ -1160,6 +1372,7 @@
                 mobileLogoutBtn.classList.remove('hidden');
 
                 await loadUserProfile(user);
+                loadUserNotifications(user);
                 loadUserCertificates(user.email);
             } else {
                 accountSection.classList.add('hidden');
