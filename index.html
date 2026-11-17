@@ -54,22 +54,22 @@
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
 
-                <!-- زر الإشعارات بصف تسجيل الدخول / حسابي (يظهر للكل) -->
+                <!-- زر الإشعارات بصف تسجيل الدخول / حسابي -->
                 <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                     <i class="fa-solid fa-bell text-purple-600"></i>
                     <span>الإشعارات</span>
                     <span id="nav-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
                 </button>
 
-                <!-- أزرار حساب العضو العام -->
+                <!-- أزرار حساب العضو -->
                 <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
                     <i class="fa-solid fa-user"></i>
                     <span>تسجيل الدخول</span>
                 </button>
-                <button id="nav-account-btn" type="button" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                <a href="account.html" id="nav-account-btn" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
                     <i class="fa-solid fa-user-check"></i>
                     <span>حسابي</span>
-                </button>
+                </a>
                 <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
@@ -88,7 +88,6 @@
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
             <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
 
-            <!-- زر الإشعارات بقائمة الموبايل بصف تسجيل الدخول / حسابي -->
             <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-bell text-purple-600"></i>
                 <span>الإشعارات</span>
@@ -99,10 +98,10 @@
                 <i class="fa-solid fa-user"></i>
                 <span>تسجيل الدخول</span>
             </button>
-            <button id="mobile-account-btn" type="button" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+            <a href="account.html" id="mobile-account-btn" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-user-check"></i>
                 <span>حسابي</span>
-            </button>
+            </a>
             <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
                 تسجيل الخروج
             </button>
@@ -134,171 +133,10 @@
             <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
                 استعرض الورش
             </a>
-            <button id="hero-account-btn" type="button" class="bg-white hover:bg-purple-50 text-purple-900 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
+            <a href="account.html" id="hero-account-btn" class="bg-white hover:bg-purple-50 text-purple-900 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
                 <i class="fa-solid fa-user-gear text-purple-600"></i>
                 <span>حسابي في المنصة</span>
-            </button>
-        </div>
-    </section>
-
-    <!-- لوحة حساب العضو العامة (تظهر تلقائياً عند تسجيل الدخول) -->
-    <section id="member-account-section" class="hidden py-10 px-6 max-w-4xl mx-auto">
-        <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
-            <!-- رأس الحساب -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-black text-lg shrink-0">
-                        <i class="fa-solid fa-user-graduate"></i>
-                    </div>
-                    <div>
-                        <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block mb-1">
-                            حساب عضو في BioMed Hub
-                        </span>
-                        <h2 id="account-display-name" class="text-xl font-black text-purple-900">حسابي</h2>
-                        <p id="logged-user-email" class="text-xs text-slate-500 mt-0.5"></p>
-                    </div>
-                </div>
-
-                <!-- أزرار الإجراءات: تعديل البيانات الشخصية فوق طلب العضوية الرسمية -->
-                <div class="flex flex-col sm:items-end gap-2">
-                    <button id="toggle-edit-profile-btn" type="button" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-pen"></i>
-                        <span>تعديل البيانات الشخصية</span>
-                    </button>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <a href="https://biomedhubiq.com/join.html" target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                            <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
-                        </a>
-                        <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-rotate"></i>
-                            <span>تحديث الشهادات</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ملخص بيانات العضو -->
-            <div id="profile-summary-box" class="bg-purple-50/40 rounded-2xl border border-purple-100 p-4">
-                <div id="profile-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div>
-                        <span class="text-slate-400 block text-[11px]">الجامعة / المعهد</span>
-                        <strong id="summary-university" class="text-slate-800">-</strong>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 block text-[11px]">التحصيل الدراسي</span>
-                        <strong id="summary-education" class="text-slate-800">-</strong>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 block text-[11px]">رقم الهاتف</span>
-                        <strong id="summary-phone" dir="ltr" class="text-slate-800 inline-block">-</strong>
-                    </div>
-                    <div>
-                        <span class="text-slate-400 block text-[11px]">المحافظة</span>
-                        <strong id="summary-city" class="text-slate-800">-</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- نموذج تعديل البيانات الشخصية -->
-            <div id="profile-edit-panel" class="hidden bg-purple-50/60 rounded-2xl border border-purple-200 p-5 space-y-4">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <h3 class="text-sm font-extrabold text-purple-900">
-                        <i class="fa-solid fa-id-card text-purple-600 ml-1"></i>
-                        تعديل البيانات الشخصية
-                    </h3>
-                    <span id="profile-save-status" class="text-xs font-bold text-emerald-700 hidden"></span>
-                </div>
-
-                <form id="profile-form" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
-                        <input type="text" id="profile-name" placeholder="مثال: مجتبى ميثم"
-                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / المعهد</label>
-                        <input type="text" id="profile-university" placeholder="مثال: جامعة ذي قار"
-                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">رقم الهاتف</label>
-                        <input type="tel" id="profile-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
-                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs text-left">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">التحصيل الدراسي</label>
-                        <select id="profile-education" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
-                            <option value="">اختر الحالة</option>
-                            <option value="طالب">طالب</option>
-                            <option value="خريج">خريج</option>
-                        </select>
-                    </div>
-                    <div id="profile-stage-wrapper" class="hidden">
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">المرحلة الدراسية</label>
-                        <select id="profile-stage" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
-                            <option value="">اختر المرحلة</option>
-                            <option value="المرحلة الأولى">المرحلة الأولى</option>
-                            <option value="المرحلة الثانية">المرحلة الثانية</option>
-                            <option value="المرحلة الثالثة">المرحلة الثالثة</option>
-                            <option value="المرحلة الرابعة">المرحلة الرابعة</option>
-                            <option value="المرحلة الخامسة">المرحلة الخامسة</option>
-                            <option value="المرحلة السادسة">المرحلة السادسة</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">المحافظة</label>
-                        <input type="text" id="profile-city" placeholder="مثال: كربلاء"
-                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
-                    </div>
-                    <div class="sm:col-span-2 md:col-span-3 flex items-center justify-end gap-2">
-                        <button id="cancel-edit-profile-btn" type="button" class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">
-                            إلغاء
-                        </button>
-                        <button id="save-profile-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                            حفظ البيانات
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- قسم الإشعارات داخل حساب العضو -->
-            <div id="member-notifications-box" class="space-y-3 rounded-2xl border border-purple-100 bg-purple-50/30 p-4">
-                <div class="flex items-center justify-between gap-2 flex-wrap">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-extrabold text-purple-900">
-                            <i class="fa-solid fa-bell text-purple-600 ml-1"></i>
-                            الإشعارات
-                        </h3>
-                        <span id="notifications-unread-badge" class="text-[11px] bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full font-bold">
-                            0 جديد
-                        </span>
-                    </div>
-                    <button id="mark-all-read-btn" type="button" class="text-[11px] text-purple-700 hover:underline font-bold">
-                        تحديد الكل كمقروء
-                    </button>
-                </div>
-
-                <div id="user-notifications-list" class="space-y-2.5">
-                    <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-400">
-                        جاري تحميل الإشعارات...
-                    </div>
-                </div>
-            </div>
-
-            <!-- قسم فرعي داخل الحساب لعرض الشهادات إن وجدت -->
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-extrabold text-purple-900">
-                        <i class="fa-solid fa-certificate text-purple-600 ml-1"></i>
-                        شهاداتي المرتبطة بالحساب
-                    </h3>
-                    <span id="certs-count-badge" class="text-[11px] bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-full font-bold">0</span>
-                </div>
-
-                <div id="user-certificates-list" class="grid sm:grid-cols-2 gap-4">
-                    <div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>
-                </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -410,7 +248,7 @@
         </div>
     </section>
 
-    <!-- Posts Section: تغطية المعارض والمؤتمرات والورش -->
+    <!-- Posts Section -->
     <section id="posts" class="py-14 px-6 max-w-4xl mx-auto">
         <div class="text-center mb-10 space-y-2">
             <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">تغطية الفعاليات</span>
@@ -430,7 +268,6 @@
             <p class="text-slate-500 text-xs">احجز مقعدك في الورشة القادمة أو استعرض الورش التي تم تقديمها سابقاً</p>
         </div>
 
-        <!-- أزرار فلترة الورش -->
         <div id="workshops-filter-bar" class="flex items-center justify-center gap-2 flex-wrap mb-8">
             <button type="button" data-filter="all" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm">
                 الكل
@@ -504,146 +341,19 @@
                 <button id="guest-notif-close" type="button" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold transition">
                     إغلاق
                 </button>
-                <button id="guest-notif-login" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                <a href="account.html" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm text-center">
                     تسجيل الدخول
-                </button>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول / إنشاء حساب عام للعضو -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5 my-8">
-            <button id="close-auth-modal" type="button" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
-                &times;
-            </button>
-
-            <div class="text-center space-y-1">
-                <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl mb-2">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <h3 id="auth-modal-title" class="text-xl font-black text-purple-900">تسجيل الدخول إلى حسابك</h3>
-                <p id="auth-modal-subtitle" class="text-xs text-slate-500">ادخل إلى حسابك في BioMed Hub لمتابعة ملفك وشهاداتك إن وجدت.</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 bg-purple-50 p-1 rounded-xl">
-                <button id="tab-login" type="button" class="py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition">
-                    تسجيل الدخول
-                </button>
-                <button id="tab-register" type="button" class="py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition">
-                    إنشاء حساب جديد
-                </button>
-            </div>
-
-            <form id="auth-form" class="space-y-3">
-                <div id="register-extra-fields" class="hidden space-y-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
-                        <input type="text" id="reg-name" placeholder="مثال: مجتبى ميثم"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
-                    </div>
-
-                    <div class="grid sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة / المعهد *</label>
-                            <input type="text" id="reg-university" placeholder="مثال: جامعة ذي قار"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف *</label>
-                            <input type="tel" id="reg-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
-                        </div>
-                    </div>
-
-                    <div class="grid sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">التحصيل الدراسي *</label>
-                            <select id="reg-education" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
-                                <option value="">اختر الحالة</option>
-                                <option value="طالب">طالب</option>
-                                <option value="خريج">خريج</option>
-                            </select>
-                        </div>
-                        <div id="reg-stage-box" class="hidden">
-                            <label class="block text-xs font-bold text-slate-700 mb-1">المرحلة الدراسية *</label>
-                            <select id="reg-stage" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
-                                <option value="">اختر المرحلة</option>
-                                <option value="المرحلة الأولى">المرحلة الأولى</option>
-                                <option value="المرحلة الثانية">المرحلة الثانية</option>
-                                <option value="المرحلة الثالثة">المرحلة الثالثة</option>
-                                <option value="المرحلة الرابعة">المرحلة الرابعة</option>
-                                <option value="المرحلة الخامسة">المرحلة الخامسة</option>
-                                <option value="المرحلة السادسة">المرحلة السادسة</option>
-                            </select>
-                        </div>
-                        <div id="reg-city-box">
-                            <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
-                            <input type="text" id="reg-city" placeholder="مثال: كربلاء"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
-                    <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
-                </div>
-
-                <div class="grid sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">رمز السر (كلمة المرور) *</label>
-                        <input type="password" id="auth-password" required minlength="6" dir="ltr" placeholder="••••••••"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
-                    </div>
-                    <div id="confirm-password-box" class="hidden">
-                        <label class="block text-xs font-bold text-slate-700 mb-1">تأكيد رمز السر *</label>
-                        <input type="password" id="auth-password-confirm" minlength="6" dir="ltr" placeholder="••••••••"
-                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
-                    </div>
-                </div>
-
-                <p id="auth-error-msg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 py-2 px-3 rounded-xl"></p>
-                <p id="auth-success-msg" class="hidden text-xs text-emerald-700 font-bold text-center bg-emerald-50 py-2 px-3 rounded-xl"></p>
-
-                <button id="auth-submit-btn" type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
-                    تسجيل الدخول
-                </button>
-            </form>
-
-            <div class="text-center">
-                <button id="forgot-password-btn" type="button" class="text-xs text-purple-700 hover:underline font-bold">
-                    نسيت رمز السر؟
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة عرض الصورة كاملة مع أزرار التنقل (Lightbox) -->
-    <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 10000; justify-content: center; align-items: center; padding: 20px; user-select: none;">
-        <!-- زر الإغلاق -->
-        <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 22px; cursor: pointer; z-index: 10002;">
+    <!-- نافذة عرض الصورة كاملة (Lightbox) -->
+    <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 10000; justify-content: center; align-items: center; padding: 20px;">
+        <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 20px; cursor: pointer;">
             &times;
         </button>
-
-        <!-- عداد الصور -->
-        <div id="lightbox-counter" style="position: fixed; top: 22px; right: 20px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 9999px; font-size: 13px; font-weight: bold; z-index: 10002;">
-            1 / 1
-        </div>
-
-        <!-- زر الصورة السابقة (يمين في العربي) -->
-        <button id="lightbox-prev" type="button" aria-label="السابق" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
-        <!-- الصورة المعروضة -->
-        <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6); transition: opacity 0.15s ease;">
-
-        <!-- زر الصورة التالية (يسار في العربي) -->
-        <button id="lightbox-next" type="button" aria-label="التالي" style="position: fixed; left: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+        <img id="lightbox-img" src="" alt="" style="max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6);">
     </div>
 
     <!-- نافذة التحقق المنبثقة (Popup) -->
@@ -661,10 +371,7 @@
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-
-        function toggleMenu() {
-            mobileMenu.classList.toggle('hidden');
-        }
+        function toggleMenu() { mobileMenu.classList.toggle('hidden'); }
         menuBtn.addEventListener('click', toggleMenu);
     </script>
 
@@ -678,42 +385,18 @@
             if (studentId && studentName) {
                 document.getElementById('popup-name').innerText = decodeURIComponent(studentName);
                 document.getElementById('popup-id').innerText = studentId;
-                
                 const popup = document.getElementById('certificate-popup');
                 popup.style.display = 'flex';
-
-                setTimeout(function() {
-                    popup.style.display = 'none';
-                }, 10000);
+                setTimeout(() => { popup.style.display = 'none'; }, 10000);
             }
         });
     </script>
 
-    <!-- سكريبت حساب العضو العام (Auth + Profile + Notifications + Certificates) -->
+    <!-- سكريبت حالة الجلسة وعداد الإشعارات بالشريط العلوي -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import {
-            getAuth,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            sendPasswordResetEmail,
-            signOut,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            setDoc,
-            collection,
-            query,
-            orderBy,
-            limit,
-            getDocs,
-            updateDoc,
-            addDoc,
-            writeBatch
-        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -728,14 +411,14 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // بانر ترحيب للزائر الذي يدخل الموقع لأول مرة (مرة واحدة فقط)
+        let currentUser = null;
+
+        // بانر ترحيب للزائر لأول مرة
         (function initFirstVisitWelcome() {
             const VISIT_KEY = 'bmh_first_visit_v1';
             if (localStorage.getItem(VISIT_KEY)) return;
-
             const showBanner = () => {
                 if (document.getElementById('bmh-welcome-toast')) return;
-
                 const banner = document.createElement('div');
                 banner.id = 'bmh-welcome-toast';
                 banner.className = 'fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 sm:max-w-sm z-50 bg-white border border-purple-200 shadow-xl rounded-2xl p-4 text-right';
@@ -750,79 +433,49 @@
                                 منصة طلاب وخريجي الهندسة الطبية الحيوية في العراق. سجل دخولك أو أنشئ حساباً لمتابعة ملفك، شهاداتك، وإشعاراتك.
                             </p>
                         </div>
-                        <button id="bmh-close-welcome" type="button" aria-label="إغلاق"
-                            class="text-slate-400 hover:text-slate-700 text-xs font-bold px-1.5 py-0.5">
-                            ✕
-                        </button>
+                        <button id="bmh-close-welcome" type="button" aria-label="إغلاق" class="text-slate-400 hover:text-slate-700 text-xs font-bold px-1.5 py-0.5">✕</button>
                     </div>
                 `;
-
                 document.body.appendChild(banner);
                 localStorage.setItem(VISIT_KEY, '1');
-
-                document.getElementById('bmh-close-welcome')?.addEventListener('click', () => {
-                    banner.remove();
-                });
+                document.getElementById('bmh-close-welcome')?.addEventListener('click', () => banner.remove());
             };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', showBanner);
-            } else {
-                showBanner();
-            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBanner);
+            else showBanner();
         })();
 
-        const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
-
-        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-        let isRegisterMode = false;
-        let currentUser = null;
-
-        // نافذة تنبيه الزائر غير المسجل عند الضغط على الإشعارات
         const guestNotifModal = document.getElementById('guest-notif-modal');
-        const guestNotifClose = document.getElementById('guest-notif-close');
-        const guestNotifLogin = document.getElementById('guest-notif-login');
-
-        function openGuestNotifModal() {
-            if (guestNotifModal) guestNotifModal.classList.remove('hidden');
-        }
-        function closeGuestNotifModal() {
-            if (guestNotifModal) guestNotifModal.classList.add('hidden');
-        }
-
-        guestNotifClose?.addEventListener('click', closeGuestNotifModal);
+        document.getElementById('guest-notif-close')?.addEventListener('click', () => guestNotifModal?.classList.add('hidden'));
         guestNotifModal?.addEventListener('click', (e) => {
-            if (e.target === guestNotifModal) closeGuestNotifModal();
-        });
-        guestNotifLogin?.addEventListener('click', () => {
-            closeGuestNotifModal();
-            openAuthModal(false);
+            if (e.target === guestNotifModal) guestNotifModal.classList.add('hidden');
         });
 
-        function handleNavNotificationsClick() {
+        function handleNotifClick() {
             if (!currentUser) {
-                openGuestNotifModal();
+                guestNotifModal?.classList.remove('hidden');
                 return;
             }
-            const accountSec = document.getElementById('member-account-section');
-            const notifBox = document.getElementById('member-notifications-box');
-            if (accountSec) accountSec.classList.remove('hidden');
-            if (notifBox) {
-                notifBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            window.location.href = 'account.html#notifications';
         }
 
-        document.getElementById('nav-notifications-btn')?.addEventListener('click', handleNavNotificationsClick);
+        document.getElementById('nav-notifications-btn')?.addEventListener('click', handleNotifClick);
         document.getElementById('mobile-notifications-btn')?.addEventListener('click', () => {
             document.getElementById('mobile-menu')?.classList.add('hidden');
-            handleNavNotificationsClick();
+            handleNotifClick();
         });
 
+        document.getElementById('nav-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+        document.getElementById('mobile-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+
+        const handleLogout = async () => {
+            await signOut(auth);
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+        };
+        document.getElementById('nav-logout-btn')?.addEventListener('click', handleLogout);
+        document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);
+
         function updateNavNotifCounter(unreadCount) {
-            const navBadge = document.getElementById('nav-notif-count');
-            const mobileBadge = document.getElementById('mobile-notif-count');
-            [navBadge, mobileBadge].forEach(el => {
+            [document.getElementById('nav-notif-count'), document.getElementById('mobile-notif-count')].forEach(el => {
                 if (!el) return;
                 if (unreadCount > 0) {
                     el.innerText = String(unreadCount);
@@ -833,660 +486,40 @@
             });
         }
 
-        async function createWelcomeNotification(uid) {
-            if (!uid) return;
+        async function syncUnreadCount(user) {
             try {
-                await addDoc(collection(db, 'members', uid, 'notifications'), {
-                    title: 'أهلاً وسهلاً بيك في BioMed Hub',
-                    body: 'تم إنشاء حسابك بنجاح. تقدر من هنا تراجع بياناتك الشخصية، تتابع شهاداتك، وتوصلك إشعارات الورش والفعاليات.',
-                    read: false,
-                    createdAt: Date.now()
-                });
-            } catch (err) {
-                console.error('Error creating welcome notification:', err);
-            }
-        }
-
-        async function loadUserNotifications(user) {
-            const listEl = document.getElementById('user-notifications-list');
-            const badgeEl = document.getElementById('notifications-unread-badge');
-            const markAllBtn = document.getElementById('mark-all-read-btn');
-            if (!listEl || !badgeEl || !user) return;
-
-            try {
-                const items = [];
-
-                const userNotifRef = collection(db, 'members', user.uid, 'notifications');
-                const userSnap = await getDocs(query(userNotifRef, orderBy('createdAt', 'desc'), limit(15)));
-                userSnap.forEach(d => {
-                    items.push({
-                        id: d.id,
-                        source: 'user',
-                        docRef: d.ref,
-                        ...d.data()
-                    });
-                });
+                let unread = 0;
+                const userSnap = await getDocs(query(collection(db, 'members', user.uid, 'notifications'), orderBy('createdAt', 'desc'), limit(15)));
+                userSnap.forEach(d => { if (!d.data().read) unread++; });
 
                 const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
-                const readKey = `bmh_read_ann_${user.uid}`;
-                const readMap = JSON.parse(localStorage.getItem(readKey) || '{}');
+                const readMap = JSON.parse(localStorage.getItem(`bmh_read_ann_${user.uid}`) || '{}');
+                publicSnap.forEach(d => { if (!readMap[d.id]) unread++; });
 
-                publicSnap.forEach(d => {
-                    const data = d.data();
-                    items.push({
-                        id: d.id,
-                        source: 'public',
-                        title: data.title || 'إشعار من BioMed Hub',
-                        body: data.body || '',
-                        link: data.link || '',
-                        createdAt: data.createdAt || 0,
-                        read: !!readMap[d.id]
-                    });
-                });
-
-                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                const unreadCount = items.filter(n => !n.read).length;
-                badgeEl.innerText = `${unreadCount} جديد`;
-                updateNavNotifCounter(unreadCount);
-
-                if (!items.length) {
-                    listEl.innerHTML = `
-                        <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">
-                            لا توجد إشعارات جديدة حالياً.
-                        </div>
-                    `;
-                    return;
-                }
-
-                listEl.innerHTML = items.map(n => {
-                    const dateStr = n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-IQ') : '';
-                    const unreadClass = n.read
-                        ? 'bg-white border-slate-100'
-                        : 'bg-purple-50 border-purple-200';
-
-                    return `
-                        <div data-notif-id="${esc(n.id)}" data-source="${esc(n.source)}"
-                             class="notif-card rounded-2xl border p-3.5 transition flex items-start justify-between gap-3 cursor-pointer ${unreadClass}">
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2">
-                                    ${!n.read ? '<span class="w-2 h-2 rounded-full bg-purple-600 shrink-0"></span>' : ''}
-                                    <h4 class="text-xs font-extrabold text-purple-900">${esc(n.title || 'إشعار')}</h4>
-                                </div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${esc(n.body || '')}</p>
-                                ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] font-bold text-purple-700 hover:underline pt-0.5">فتح الرابط <i class="fa-solid fa-arrow-left mr-1"></i></a>` : ''}
-                            </div>
-                            <span class="text-[10px] text-slate-400 shrink-0">${esc(dateStr)}</span>
-                        </div>
-                    `;
-                }).join('');
-
-                listEl.querySelectorAll('.notif-card').forEach(card => {
-                    card.addEventListener('click', async (e) => {
-                        if (e.target.closest('a')) return;
-                        const notifId = card.dataset.notifId;
-                        const source = card.dataset.source;
-                        const target = items.find(x => x.id === notifId && x.source === source);
-                        if (!target || target.read) return;
-
-                        target.read = true;
-                        if (source === 'user' && target.docRef) {
-                            await updateDoc(target.docRef, { read: true });
-                        } else if (source === 'public') {
-                            readMap[notifId] = true;
-                            localStorage.setItem(readKey, JSON.stringify(readMap));
-                        }
-                        loadUserNotifications(user);
-                    });
-                });
-
-                if (markAllBtn) {
-                    markAllBtn.onclick = async () => {
-                        const batch = writeBatch(db);
-                        let hasUserUpdates = false;
-
-                        items.forEach(item => {
-                            if (item.read) return;
-                            if (item.source === 'user' && item.docRef) {
-                                batch.update(item.docRef, { read: true });
-                                hasUserUpdates = true;
-                            } else if (item.source === 'public') {
-                                readMap[item.id] = true;
-                            }
-                        });
-
-                        localStorage.setItem(readKey, JSON.stringify(readMap));
-                        if (hasUserUpdates) {
-                            await batch.commit();
-                        }
-                        loadUserNotifications(user);
-                    };
-                }
-            } catch (err) {
-                console.error('Error loading notifications:', err);
-                listEl.innerHTML = `
-                    <div class="bg-white rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">
-                        لا توجد إشعارات حالياً.
-                    </div>
-                `;
-            }
-        }
-
-        const authModal = document.getElementById('auth-modal');
-        const authForm = document.getElementById('auth-form');
-        const authErrorMsg = document.getElementById('auth-error-msg');
-        const authSuccessMsg = document.getElementById('auth-success-msg');
-        const tabLogin = document.getElementById('tab-login');
-        const tabRegister = document.getElementById('tab-register');
-        const registerExtraFields = document.getElementById('register-extra-fields');
-        const confirmPasswordBox = document.getElementById('confirm-password-box');
-        const authModalTitle = document.getElementById('auth-modal-title');
-        const authModalSubtitle = document.getElementById('auth-modal-subtitle');
-        const authSubmitBtn = document.getElementById('auth-submit-btn');
-
-        const regPhone = document.getElementById('reg-phone');
-        const profilePhone = document.getElementById('profile-phone');
-
-        function sanitizePhone(raw) {
-            let s = String(raw || '').trim();
-            if (s.startsWith('+')) {
-                s = '+' + s.slice(1).replace(/\D/g, '');
-            } else {
-                s = s.replace(/\D/g, '');
-            }
-            return s;
-        }
-
-        function isValidIraqiPhone(phone) {
-            const clean = sanitizePhone(phone);
-            return /^07\d{9}$/.test(clean) || /^\+9647\d{9}$/.test(clean);
-        }
-
-        [regPhone, profilePhone].forEach(inp => {
-            if (!inp) return;
-            inp.addEventListener('input', () => {
-                inp.value = sanitizePhone(inp.value);
-            });
-        });
-
-        const regEducation = document.getElementById('reg-education');
-        const regStageBox = document.getElementById('reg-stage-box');
-        const regStage = document.getElementById('reg-stage');
-
-        const profileEducation = document.getElementById('profile-education');
-        const profileStageWrapper = document.getElementById('profile-stage-wrapper');
-        const profileStage = document.getElementById('profile-stage');
-
-        const toggleEditProfileBtn = document.getElementById('toggle-edit-profile-btn');
-        const cancelEditProfileBtn = document.getElementById('cancel-edit-profile-btn');
-        const profileEditPanel = document.getElementById('profile-edit-panel');
-
-        function setEditPanelOpen(open) {
-            if (!profileEditPanel) return;
-            if (open) {
-                profileEditPanel.classList.remove('hidden');
-            } else {
-                profileEditPanel.classList.add('hidden');
-                document.getElementById('profile-save-status').classList.add('hidden');
-            }
-        }
-
-        toggleEditProfileBtn.addEventListener('click', () => {
-            const isHidden = profileEditPanel.classList.contains('hidden');
-            setEditPanelOpen(isHidden);
-        });
-
-        cancelEditProfileBtn.addEventListener('click', () => setEditPanelOpen(false));
-
-        function toggleStageField(selectEl, wrapperEl, inputEl) {
-            if (!selectEl || !wrapperEl) return;
-            if (selectEl.value === 'طالب') {
-                wrapperEl.classList.remove('hidden');
-            } else {
-                wrapperEl.classList.add('hidden');
-                if (inputEl) inputEl.value = '';
-            }
-        }
-
-        regEducation.addEventListener('change', () => toggleStageField(regEducation, regStageBox, regStage));
-        profileEducation.addEventListener('change', () => toggleStageField(profileEducation, profileStageWrapper, profileStage));
-
-        function setAuthMode(registerMode) {
-            isRegisterMode = registerMode;
-            authErrorMsg.classList.add('hidden');
-            authSuccessMsg.classList.add('hidden');
-
-            if (isRegisterMode) {
-                tabRegister.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
-                tabLogin.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
-                registerExtraFields.classList.remove('hidden');
-                confirmPasswordBox.classList.remove('hidden');
-                authModalTitle.innerText = 'إنشاء حساب جديد في BioMed Hub';
-                authModalSubtitle.innerText = 'أدخل بياناتك الأساسية لإنشاء حسابك في المنصة.';
-                authSubmitBtn.innerText = 'إنشاء الحساب';
-            } else {
-                tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
-                tabRegister.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
-                registerExtraFields.classList.add('hidden');
-                confirmPasswordBox.classList.add('hidden');
-                authModalTitle.innerText = 'تسجيل الدخول إلى حسابك';
-                authModalSubtitle.innerText = 'ادخل إلى حسابك في BioMed Hub لمتابعة ملفك وشهاداتك إن وجدت.';
-                authSubmitBtn.innerText = 'تسجيل الدخول';
-            }
-        }
-
-        function openAuthModal(defaultRegister = false) {
-            setAuthMode(defaultRegister);
-            authModal.classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            authModal.classList.add('hidden');
-        }
-
-        function scrollToAccount() {
-            const sec = document.getElementById('member-account-section');
-            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        tabLogin.addEventListener('click', () => setAuthMode(false));
-        tabRegister.addEventListener('click', () => setAuthMode(true));
-        document.getElementById('close-auth-modal').addEventListener('click', closeAuthModal);
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) closeAuthModal();
-        });
-
-        document.getElementById('nav-auth-btn').addEventListener('click', () => openAuthModal(false));
-        document.getElementById('mobile-auth-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.add('hidden');
-            openAuthModal(false);
-        });
-
-        document.getElementById('hero-account-btn').addEventListener('click', () => {
-            if (currentUser) {
-                scrollToAccount();
-            } else {
-                openAuthModal(false);
-            }
-        });
-
-        document.getElementById('nav-account-btn').addEventListener('click', scrollToAccount);
-        document.getElementById('mobile-account-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.add('hidden');
-            scrollToAccount();
-        });
-
-        const handleLogout = async () => {
-            await signOut(auth);
-            document.getElementById('mobile-menu').classList.add('hidden');
-        };
-        document.getElementById('nav-logout-btn').addEventListener('click', handleLogout);
-        document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
-
-        document.getElementById('refresh-certs-btn').addEventListener('click', () => {
-            if (currentUser && currentUser.email) {
-                loadUserCertificates(currentUser.email);
-            }
-        });
-
-        function renderProfileSummary(data) {
-            const displayNameEl = document.getElementById('account-display-name');
-            const uniEl = document.getElementById('summary-university');
-            const eduEl = document.getElementById('summary-education');
-            const phoneEl = document.getElementById('summary-phone');
-            const cityEl = document.getElementById('summary-city');
-
-            displayNameEl.innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
-            uniEl.innerText = data.university || '-';
-
-            if (data.education === 'طالب' && data.stage) {
-                eduEl.innerText = `طالب (${data.stage})`;
-            } else {
-                eduEl.innerText = data.education || '-';
-            }
-
-            phoneEl.innerText = data.phone || '-';
-            cityEl.innerText = data.city || '-';
-        }
-
-        async function loadUserProfile(user) {
-            setEditPanelOpen(false);
-
-            const nameInput = document.getElementById('profile-name');
-            const uniInput = document.getElementById('profile-university');
-            const phoneInput = document.getElementById('profile-phone');
-            const cityInput = document.getElementById('profile-city');
-
-            try {
-                const snap = await getDoc(doc(db, 'members', user.uid));
-                if (snap.exists()) {
-                    const data = snap.data();
-                    nameInput.value = data.fullName || '';
-                    uniInput.value = data.university || '';
-                    phoneInput.value = data.phone || '';
-                    profileEducation.value = data.education || '';
-                    toggleStageField(profileEducation, profileStageWrapper, profileStage);
-                    profileStage.value = data.stage || '';
-                    cityInput.value = data.city || '';
-                    renderProfileSummary(data);
-                } else {
-                    renderProfileSummary({});
-                }
+                updateNavNotifCounter(unread);
             } catch (e) {
-                console.error('Error loading profile:', e);
-                renderProfileSummary({});
-            }
-        }
-
-        document.getElementById('profile-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            const saveBtn = document.getElementById('save-profile-btn');
-            const statusEl = document.getElementById('profile-save-status');
-            const fullName = document.getElementById('profile-name').value.trim();
-            const university = document.getElementById('profile-university').value.trim();
-            const phone = sanitizePhone(document.getElementById('profile-phone').value);
-            const education = profileEducation.value;
-            const stage = education === 'طالب' ? profileStage.value : '';
-            const city = document.getElementById('profile-city').value.trim();
-
-            if (phone && !isValidIraqiPhone(phone)) {
-                statusEl.className = 'text-xs font-bold text-red-600';
-                statusEl.innerText = 'يرجى كتابة رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX)';
-                statusEl.classList.remove('hidden');
-                return;
-            }
-
-            saveBtn.disabled = true;
-            saveBtn.innerText = 'جاري الحفظ...';
-            statusEl.classList.add('hidden');
-
-            try {
-                const updatedData = {
-                    email: currentUser.email,
-                    fullName,
-                    university,
-                    phone,
-                    education,
-                    stage,
-                    city,
-                    updatedAt: Date.now()
-                };
-
-                await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
-
-                renderProfileSummary(updatedData);
-                statusEl.className = 'text-xs font-bold text-emerald-700';
-                statusEl.innerText = 'تم حفظ بيانات الحساب بنجاح';
-                statusEl.classList.remove('hidden');
-
-                setTimeout(() => {
-                    setEditPanelOpen(false);
-                }, 900);
-            } catch (err) {
-                console.error('Error saving profile:', err);
-                statusEl.className = 'text-xs font-bold text-red-600';
-                statusEl.innerText = 'تعذر حفظ البيانات، حاول مرة أخرى';
-                statusEl.classList.remove('hidden');
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerText = 'حفظ البيانات';
-            }
-        });
-
-        authForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            authErrorMsg.classList.add('hidden');
-            authSuccessMsg.classList.add('hidden');
-
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value;
-
-            if (isRegisterMode) {
-                const fullName = document.getElementById('reg-name').value.trim();
-                const university = document.getElementById('reg-university').value.trim();
-                const phone = sanitizePhone(document.getElementById('reg-phone').value);
-                const education = regEducation.value;
-                const stage = regStage.value;
-                const city = document.getElementById('reg-city').value.trim();
-                const confirmPass = document.getElementById('auth-password-confirm').value;
-
-                if (!fullName || !university || !phone || !education) {
-                    authErrorMsg.innerText = 'يرجى ملء الاسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
-                    authErrorMsg.classList.remove('hidden');
-                    return;
-                }
-                if (!isValidIraqiPhone(phone)) {
-                    authErrorMsg.innerText = 'يرجى إدخال رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX).';
-                    authErrorMsg.classList.remove('hidden');
-                    return;
-                }
-                if (education === 'طالب' && !stage) {
-                    authErrorMsg.innerText = 'يرجى اختيار المرحلة الدراسية.';
-                    authErrorMsg.classList.remove('hidden');
-                    return;
-                }
-                if (password !== confirmPass) {
-                    authErrorMsg.innerText = 'رمز السر وتأكيد رمز السر غير متطابقين.';
-                    authErrorMsg.classList.remove('hidden');
-                    return;
-                }
-
-                authSubmitBtn.disabled = true;
-                authSubmitBtn.innerText = 'جاري إنشاء الحساب...';
-
-                try {
-                    const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    await setDoc(doc(db, 'members', cred.user.uid), {
-                        email: cred.user.email,
-                        fullName,
-                        university,
-                        phone,
-                        education,
-                        stage: education === 'طالب' ? stage : '',
-                        city,
-                        createdAt: Date.now(),
-                        updatedAt: Date.now()
-                    }, { merge: true });
-
-                    await createWelcomeNotification(cred.user.uid);
-
-                    closeAuthModal();
-                    setTimeout(scrollToAccount, 300);
-                } catch (err) {
-                    let msg = 'حدث خطأ أثناء إنشاء الحساب، حاول مرة أخرى.';
-                    if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
-                    else if (err.code === 'auth/weak-password') msg = 'رمز السر يجب أن يكون 6 أحرف على الأقل.';
-                    else if (err.code === 'auth/invalid-email') msg = 'صيغة البريد الإلكتروني غير صحيحة.';
-                    authErrorMsg.innerText = msg;
-                    authErrorMsg.classList.remove('hidden');
-                } finally {
-                    authSubmitBtn.disabled = false;
-                    setAuthMode(isRegisterMode);
-                }
-                return;
-            }
-
-            authSubmitBtn.disabled = true;
-            authSubmitBtn.innerText = 'جاري الدخول...';
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                closeAuthModal();
-                setTimeout(scrollToAccount, 300);
-            } catch (err) {
-                let msg = 'حدث خطأ أثناء تسجيل الدخول.';
-                if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                    msg = 'البريد الإلكتروني أو رمز السر غير صحيح.';
-                } else if (err.code === 'auth/invalid-email') {
-                    msg = 'صيغة البريد الإلكتروني غير صحيحة.';
-                }
-                authErrorMsg.innerText = msg;
-                authErrorMsg.classList.remove('hidden');
-            } finally {
-                authSubmitBtn.disabled = false;
-                setAuthMode(isRegisterMode);
-            }
-        });
-
-        document.getElementById('forgot-password-btn').addEventListener('click', async () => {
-            authErrorMsg.classList.add('hidden');
-            authSuccessMsg.classList.add('hidden');
-            const email = document.getElementById('auth-email').value.trim();
-            if (!email) {
-                authErrorMsg.innerText = 'اكتب بريدك الإلكتروني أولاً ثم اضغط على نسيت رمز السر.';
-                authErrorMsg.classList.remove('hidden');
-                return;
-            }
-            try {
-                await sendPasswordResetEmail(auth, email);
-                authSuccessMsg.innerText = 'تم إرسال رابط إعادة تعيين رمز السر إلى بريدك الإلكتروني.';
-                authSuccessMsg.classList.remove('hidden');
-            } catch (err) {
-                authErrorMsg.innerText = 'تعذر إرسال الرابط، تأكد من صحة البريد الإلكتروني.';
-                authErrorMsg.classList.remove('hidden');
-            }
-        });
-
-        function buildDriveLinks(rawUrl) {
-            const url = String(rawUrl || '').trim();
-            if (!url) return { viewUrl: '', downloadUrl: '' };
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                const fileId = match[1];
-                return {
-                    viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
-                    downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`
-                };
-            }
-            return { viewUrl: url, downloadUrl: url };
-        }
-
-        async function loadUserCertificates(userEmail) {
-            const container = document.getElementById('user-certificates-list');
-            const badge = document.getElementById('certs-count-badge');
-            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>';
-
-            const targetEmail = String(userEmail || '').trim().toLowerCase();
-
-            try {
-                const response = await fetch(CERT_CSV_URL + '&t=' + Date.now());
-                const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/).map(row =>
-                    row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'))
-                );
-
-                const matchedCerts = [];
-                for (let i = 1; i < rows.length; i++) {
-                    const cols = rows[i];
-                    if (!cols || cols.length < 2) continue;
-
-                    const rowEmail = (cols[1] || '').trim().toLowerCase();
-                    if (rowEmail && rowEmail === targetEmail) {
-                        matchedCerts.push({
-                            name: cols[0] || '',
-                            email: cols[1] || '',
-                            date: cols[2] || '',
-                            workshop: cols[3] || '',
-                            serialId: cols[4] || '',
-                            lecturer: cols[5] || '',
-                            certLink: cols[6] || ''
-                        });
-                    }
-                }
-
-                badge.innerText = String(matchedCerts.length);
-
-                if (matchedCerts.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-2 bg-slate-50 rounded-2xl border border-slate-100 p-5 text-center">
-                            <p class="text-xs text-slate-500">لا توجد شهادات مسجلة حالياً لهذا البريد الإلكتروني.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = matchedCerts.reverse().map(cert => {
-                    const links = buildDriveLinks(cert.certLink);
-                    const verifyUrl = `https://biomedhubiq.com/?id=${encodeURIComponent(cert.serialId)}&name=${encodeURIComponent(cert.name)}`;
-
-                    return `
-                    <div class="bg-white rounded-2xl border border-purple-100 p-5 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-1 rounded-full">
-                                    ${esc(cert.serialId || 'موثقة')}
-                                </span>
-                                <span class="text-[11px] text-slate-400">
-                                    <i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}
-                                </span>
-                            </div>
-                            <h4 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h4>
-                            <p class="text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
-                            ${cert.lecturer ? `<p class="text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
-                        </div>
-
-                        <div class="pt-2 flex items-center gap-2">
-                            ${links.downloadUrl ? `
-                                <a href="${esc(links.downloadUrl)}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
-                                    <i class="fa-solid fa-download ml-1"></i> تحميل الشهادة PDF
-                                </a>
-                                <a href="${esc(links.viewUrl)}" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs font-bold py-2.5 px-3 rounded-xl transition" title="معاينة الشهادة">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                            ` : `
-                                <a href="${esc(verifyUrl)}" target="_blank" class="flex-1 text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">
-                                    عرض التوثيق
-                                </a>
-                            `}
-                        </div>
-                    </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                console.error('Error loading certificates:', error);
-                container.innerHTML = '<div class="col-span-2 text-center text-red-500 py-4 text-xs">تعذر تحميل الشهادات حالياً، حاول تحديث القائمة.</div>';
+                console.error('Error syncing unread count:', e);
             }
         }
 
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
-            const accountSection = document.getElementById('member-account-section');
-            const navAuthBtn = document.getElementById('nav-auth-btn');
-            const navAccountBtn = document.getElementById('nav-account-btn');
-            const navLogoutBtn = document.getElementById('nav-logout-btn');
-            const mobileAuthBtn = document.getElementById('mobile-auth-btn');
-            const mobileAccountBtn = document.getElementById('mobile-account-btn');
-            const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-
             if (user) {
-                accountSection.classList.remove('hidden');
-                document.getElementById('logged-user-email').innerText = user.email;
-
-                navAuthBtn.classList.add('hidden');
-                navAccountBtn.classList.remove('hidden');
-                navLogoutBtn.classList.remove('hidden');
-
-                mobileAuthBtn.classList.add('hidden');
-                mobileAccountBtn.classList.remove('hidden');
-                mobileLogoutBtn.classList.remove('hidden');
-
-                await loadUserProfile(user);
-                loadUserNotifications(user);
-                loadUserCertificates(user.email);
+                document.getElementById('nav-auth-btn')?.classList.add('hidden');
+                document.getElementById('nav-account-btn')?.classList.remove('hidden');
+                document.getElementById('nav-logout-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.add('hidden');
+                document.getElementById('mobile-account-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.remove('hidden');
+                syncUnreadCount(user);
             } else {
-                accountSection.classList.add('hidden');
                 updateNavNotifCounter(0);
-
-                navAuthBtn.classList.remove('hidden');
-                navAccountBtn.classList.add('hidden');
-                navLogoutBtn.classList.add('hidden');
-
-                mobileAuthBtn.classList.remove('hidden');
-                mobileAccountBtn.classList.add('hidden');
-                mobileLogoutBtn.classList.add('hidden');
+                document.getElementById('nav-auth-btn')?.classList.remove('hidden');
+                document.getElementById('nav-account-btn')?.classList.add('hidden');
+                document.getElementById('nav-logout-btn')?.classList.add('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-account-btn')?.classList.add('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.add('hidden');
             }
         });
     </script>
@@ -1507,64 +540,39 @@
 
         const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
         let allWorkshopsCache = [];
         let activeWorkshopFilter = 'all';
-
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         function buildInPersonMetaHtml(w) {
             const gov = (w.governorate || '').trim();
             const loc = (w.location || '').trim();
             const dt = (w.dateTime || '').trim();
-
             const venueParts = [gov, loc].filter(Boolean).join(' - ');
             const lines = [];
-
-            if (venueParts) {
-                lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(venueParts)}</p>`);
-            }
-            if (dt) {
-                lines.push(`<p><i class="fa-regular fa-calendar-days text-purple-600 ml-1"></i> <strong>التاريخ والوقت:</strong> ${esc(dt)}</p>`);
-            }
-            if (!lines.length && w.platform) {
-                lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(w.platform)}</p>`);
-            }
-            if (!lines.length) {
-                lines.push(`<p>غير محدد</p>`);
-            }
-
+            if (venueParts) lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(venueParts)}</p>`);
+            if (dt) lines.push(`<p><i class="fa-regular fa-calendar-days text-purple-600 ml-1"></i> <strong>التاريخ والوقت:</strong> ${esc(dt)}</p>`);
+            if (!lines.length && w.platform) lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(w.platform)}</p>`);
+            if (!lines.length) lines.push(`<p>غير محدد</p>`);
             return lines.join('');
         }
 
         function renderWorkshopsList(filterType = 'all') {
             const container = document.getElementById('workshops-container');
             if (!container) return;
-
-            const filtered = filterType === 'all'
-                ? allWorkshopsCache
-                : allWorkshopsCache.filter(w => w.type === filterType);
-
+            const filtered = filterType === 'all' ? allWorkshopsCache : allWorkshopsCache.filter(w => w.type === filterType);
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش ضمن هذا التصنيف حالياً.</div>';
                 return;
             }
-
             let htmlContent = '';
-
             filtered.forEach(w => {
                 if (w.type === 'next' || w.type === 'in-person') {
                     const isInPerson = w.type === 'in-person';
-                    const modeLabel = isInPerson
-                        ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري'
-                        : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
-
-                    const metaBoxContent = isInPerson
-                        ? buildInPersonMetaHtml(w)
-                        : `<p>${esc(w.platform || 'غير محدد')}</p>`;
-
+                    const modeLabel = isInPerson ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري' : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+                    const metaBoxContent = isInPerson ? buildInPersonMetaHtml(w) : `<p>${esc(w.platform || 'غير محدد')}</p>`;
                     htmlContent += `
                     <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
                         <div>
@@ -1577,9 +585,7 @@
                             <div class="space-y-3">
                                 <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
                                 <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
-                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">
-                                    ${metaBoxContent}
-                                </div>
+                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
                                 <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
                             </div>
                         </div>
@@ -1604,14 +610,11 @@
                         </div>
                         <div class="pt-6">
                             ${w.link ? `<a href="${esc(w.link)}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
-                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">
-                                انتهت الورشة بنجاح
-                            </div>
+                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">انتهت الورشة بنجاح</div>
                         </div>
                     </div>`;
                 }
             });
-
             container.innerHTML = htmlContent;
         }
 
@@ -1620,14 +623,12 @@
             buttons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     activeWorkshopFilter = btn.dataset.filter || 'all';
-
                     buttons.forEach(b => {
                         const isActive = b.dataset.filter === activeWorkshopFilter;
                         b.className = isActive
                             ? 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm'
                             : 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100';
                     });
-
                     renderWorkshopsList(activeWorkshopFilter);
                 });
             });
@@ -1636,37 +637,23 @@
         async function loadAllWorkshopsTogether() {
             const container = document.getElementById('workshops-container');
             if (!container) return;
-
             let firebaseWorkshops = [];
             let sheetWorkshops = [];
-
             try {
                 const querySnapshot = await getDocs(collection(db, "workshops"));
-                querySnapshot.forEach((docSnap) => {
-                    firebaseWorkshops.push({ id: docSnap.id, ...docSnap.data() });
-                });
+                querySnapshot.forEach((docSnap) => firebaseWorkshops.push({ id: docSnap.id, ...docSnap.data() }));
                 firebaseWorkshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-            } catch (error) {
-                console.error("خطأ في جلب بيانات Firebase:", error);
-            }
+            } catch (error) { console.error("خطأ في جلب بيانات Firebase:", error); }
 
             try {
                 const response = await fetch(csvUrl);
                 const data = await response.text();
-                const rows = data.split('\n').map(row => {
-                    return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'));
-                });
-
+                const rows = data.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1')));
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
                     if (!cols || cols.length < 2 || !cols[0]) continue;
-
                     const type = cols[0].trim();
                     const title = cols[1] || '';
-                    const speaker = cols[2] || '';
-                    const platform = cols[3] || '';
-                    const details = cols[4] || '';
-
                     if (type === 'followers') {
                         const followerEl = document.getElementById('followers-count');
                         if (followerEl) followerEl.innerText = title || '2,665';
@@ -1677,37 +664,31 @@
                         if (workshopsCountEl) workshopsCountEl.innerText = title || '5';
                         continue;
                     }
-
                     if (type === 'next' || type === 'archived') {
                         sheetWorkshops.push({
-                            type: type,
-                            title: title,
-                            speaker: speaker,
-                            platform: platform,
-                            details: details,
+                            type,
+                            title,
+                            speaker: cols[2] || '',
+                            platform: cols[3] || '',
+                            details: cols[4] || '',
                             link: type === 'next' ? 'https://t.me/BioMedHubA' : ''
                         });
                     }
                 }
-            } catch (error) {
-                console.error('خطأ في جلب بيانات قوقل شيت:', error);
-            }
+            } catch (error) { console.error('خطأ في جلب بيانات قوقل شيت:', error); }
 
             allWorkshopsCache = [...firebaseWorkshops, ...sheetWorkshops];
-
             if (allWorkshopsCache.length === 0) {
                 container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
                 return;
             }
-
             setupFilterButtons();
             renderWorkshopsList(activeWorkshopFilter);
         }
-
         loadAllWorkshopsTogether();
     </script>
 
-    <!-- سكريبت تغطية المعارض والمؤتمرات والورش (Firebase posts) -->
+    <!-- سكريبت تغطية المعارض والمؤتمرات والورش -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -1722,109 +703,22 @@
         };
         const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         function parseImages(post) {
             const list = [];
-            if (Array.isArray(post.imageUrls)) {
-                post.imageUrls.forEach(u => {
-                    const s = String(u || '').trim();
-                    if (s) list.push(s);
-                });
-            }
-            if (!list.length && post.imageUrl) {
-                String(post.imageUrl).split(/[\n,]+/).forEach(u => {
-                    const s = u.trim();
-                    if (s) list.push(s);
-                });
-            }
+            if (Array.isArray(post.imageUrls)) post.imageUrls.forEach(u => { const s = String(u || '').trim(); if (s) list.push(s); });
+            if (!list.length && post.imageUrl) String(post.imageUrl).split(/[\n,]+/).forEach(u => { const s = u.trim(); if (s) list.push(s); });
             return list;
         }
 
         const lightbox = document.getElementById('image-lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxClose = document.getElementById('lightbox-close');
-        const lightboxPrev = document.getElementById('lightbox-prev');
-        const lightboxNext = document.getElementById('lightbox-next');
-        const lightboxCounter = document.getElementById('lightbox-counter');
-
-        let currentGallery = [];
-        let currentIndex = 0;
-        let currentAlt = '';
-
-        function updateLightboxView() {
-            if (!lightboxImg || !currentGallery.length) return;
-            lightboxImg.src = currentGallery[currentIndex];
-            lightboxImg.alt = currentAlt;
-
-            const hasMultiple = currentGallery.length > 1;
-            if (lightboxPrev) lightboxPrev.style.display = hasMultiple ? 'flex' : 'none';
-            if (lightboxNext) lightboxNext.style.display = hasMultiple ? 'flex' : 'none';
-            if (lightboxCounter) {
-                lightboxCounter.style.display = hasMultiple ? 'block' : 'none';
-                lightboxCounter.innerText = `${currentIndex + 1} / ${currentGallery.length}`;
-            }
-        }
-
-        function openLightbox(gallery, startIndex = 0, alt = '') {
-            if (!lightbox || !gallery.length) return;
-            currentGallery = gallery;
-            currentIndex = startIndex;
-            currentAlt = alt;
-            updateLightboxView();
-            lightbox.style.display = 'flex';
-        }
-
-        function closeLightbox() {
-            if (!lightbox || !lightboxImg) return;
-            lightbox.style.display = 'none';
-            lightboxImg.src = '';
-            currentGallery = [];
-        }
-
-        function showNextImage() {
-            if (currentGallery.length <= 1) return;
-            currentIndex = (currentIndex + 1) % currentGallery.length;
-            updateLightboxView();
-        }
-
-        function showPrevImage() {
-            if (currentGallery.length <= 1) return;
-            currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
-            updateLightboxView();
-        }
-
-        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-        if (lightboxNext) lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); showNextImage(); });
-        if (lightboxPrev) lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrevImage(); });
-
-        if (lightbox) {
-            lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) closeLightbox();
-            });
-
-            // دعم السحب (Swipe) على شاشات اللمس للموبايل
-            let touchStartX = 0;
-            lightbox.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            lightbox.addEventListener('touchend', (e) => {
-                const diff = e.changedTouches[0].screenX - touchStartX;
-                if (Math.abs(diff) > 45) {
-                    if (diff > 0) showNextImage();
-                    else showPrevImage();
-                }
-            }, { passive: true });
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (!lightbox || lightbox.style.display !== 'flex') return;
-            if (e.key === 'Escape') closeLightbox();
-            else if (e.key === 'ArrowLeft') showNextImage();
-            else if (e.key === 'ArrowRight') showPrevImage();
-        });
+        function openLightbox(src, alt = '') { if (!lightbox || !lightboxImg) return; lightboxImg.src = src; lightboxImg.alt = alt; lightbox.style.display = 'flex'; }
+        function closeLightbox() { if (!lightbox || !lightboxImg) return; lightbox.style.display = 'none'; lightboxImg.src = ''; }
+        document.getElementById('lightbox-close')?.addEventListener('click', closeLightbox);
+        lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
         async function loadPosts() {
             const section = document.getElementById('posts');
@@ -1832,37 +726,19 @@
             if (!container) return;
             try {
                 const snap = await getDocs(collection(db, "posts"));
-                const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-                    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                if (!posts.length) {
-                    if (section) section.style.display = 'none';
-                    return;
-                }
+                const posts = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                if (!posts.length) { if (section) section.style.display = 'none'; return; }
 
                 container.innerHTML = posts.map(p => {
-                    const rawTag = (p.tag || p.category || '').trim();
-                    const badgeText = rawTag || 'تغطية فعالية';
+                    const badgeText = (p.tag || p.category || '').trim() || 'تغطية فعالية';
                     const dateText = (p.postDate || '').trim() || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
                     const imgs = parseImages(p);
-
                     let imagesHtml = '';
                     if (imgs.length === 1) {
-                        imagesHtml = `
-                            <img src="${esc(imgs[0])}" alt="${esc(p.title)}" loading="lazy"
-                                 class="post-zoomable-img w-full max-h-96 object-cover cursor-zoom-in">
-                        `;
+                        imagesHtml = `<img src="${esc(imgs[0])}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full max-h-96 object-cover cursor-zoom-in">`;
                     } else if (imgs.length > 1) {
-                        imagesHtml = `
-                            <div class="grid ${imgs.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'} gap-2 p-3 pb-0">
-                                ${imgs.map(url => `
-                                    <img src="${esc(url)}" alt="${esc(p.title)}" loading="lazy"
-                                         class="post-zoomable-img w-full h-48 object-cover rounded-2xl cursor-zoom-in hover:opacity-95 transition">
-                                `).join('')}
-                            </div>
-                        `;
+                        imagesHtml = `<div class="grid ${imgs.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'} gap-2 p-3 pb-0">${imgs.map(url => `<img src="${esc(url)}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full h-48 object-cover rounded-2xl cursor-zoom-in hover:opacity-95 transition">`).join('')}</div>`;
                     }
-
                     return `
                     <article class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden hover:border-purple-300 transition">
                         ${imagesHtml}
@@ -1877,15 +753,8 @@
                     </article>`;
                 }).join('');
 
-                container.querySelectorAll('article').forEach(articleEl => {
-                    const articleImgs = Array.from(articleEl.querySelectorAll('.post-zoomable-img'));
-                    const galleryUrls = articleImgs.map(img => img.src);
-
-                    articleImgs.forEach((imgEl, idx) => {
-                        imgEl.addEventListener('click', () => {
-                            openLightbox(galleryUrls, idx, imgEl.alt);
-                        });
-                    });
+                container.querySelectorAll('.post-zoomable-img').forEach(imgEl => {
+                    imgEl.addEventListener('click', () => openLightbox(imgEl.src, imgEl.alt));
                 });
             } catch (e) {
                 console.error('خطأ في جلب التغطيات:', e);
