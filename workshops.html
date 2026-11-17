@@ -154,6 +154,11 @@
         <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026</p>
     </footer>
 
+    <!-- إشعار نسخ المشاركة -->
+    <div id="bmh-share-toast" class="hidden fixed bottom-5 left-5 z-[10003] bg-purple-900 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-lg border border-purple-700">
+        تم نسخ تفاصيل الورشة والرابط للمشاركة ✅
+    </div>
+
     <!-- نافذة تنبيه الإشعارات للزائر غير المسجل -->
     <div id="guest-notif-modal" class="hidden fixed inset-0 bg-black/60 z-[10002] flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-purple-100 text-center space-y-4">
@@ -182,6 +187,43 @@
         const mobileMenu = document.getElementById('mobile-menu');
         function toggleMenu() { mobileMenu.classList.toggle('hidden'); }
         menuBtn.addEventListener('click', toggleMenu);
+
+        function showShareToast(msg) {
+            const toast = document.getElementById('bmh-share-toast');
+            if (!toast) return;
+            toast.innerText = msg || 'تم نسخ تفاصيل الورشة والرابط للمشاركة ✅';
+            toast.classList.remove('hidden');
+            clearTimeout(window.__bmhShareTimer);
+            window.__bmhShareTimer = setTimeout(() => toast.classList.add('hidden'), 2600);
+        }
+
+        window.shareBmhWorkshop = async function (title, speaker) {
+            const shareUrl = window.location.href.split('#')[0];
+            const cleanTitle = String(title || 'ورشة تدريبية').trim();
+            const cleanSpeaker = String(speaker || '').trim();
+            const speakerLine = cleanSpeaker ? `\nالمحاضر: ${cleanSpeaker}` : '';
+            const shareText = `📌 ${cleanTitle}${speakerLine}\nمنصة BioMed Hub للهندسة الطبية:\n${shareUrl}`;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `${cleanTitle} | BioMed Hub`,
+                        text: `📌 ${cleanTitle}${speakerLine} — BioMed Hub`,
+                        url: shareUrl
+                    });
+                    return;
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return;
+                }
+            }
+
+            try {
+                await navigator.clipboard.writeText(shareText);
+                showShareToast('تم نسخ تفاصيل الورشة والرابط للمشاركة ✅');
+            } catch (_) {
+                prompt('انسخ الرابط التالي:', shareUrl);
+            }
+        };
     </script>
 
     <!-- حالة الجلسة والإشعارات -->
@@ -284,7 +326,7 @@
         });
     </script>
 
-    <!-- جلب وعرض جميع الورش مع المحاور الكاملة والبحث والفلترة -->
+    <!-- جلب وعرض جميع الورش مع المحاور الكاملة والبحث والفلترة والمشاركة السريعة -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -306,6 +348,7 @@
         let activeWorkshopFilter = 'all';
         let searchQuery = '';
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const escAttr = t => String(t ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         function buildInPersonMetaHtml(w) {
             const gov = (w.governorate || '').trim();
@@ -318,6 +361,17 @@
             if (!lines.length && w.platform) lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(w.platform)}</p>`);
             if (!lines.length) lines.push(`<p>غير محدد</p>`);
             return lines.join('');
+        }
+
+        function buildShareBtnHtml(w) {
+            return `
+            <button type="button"
+                onclick="shareBmhWorkshop('${escAttr(w.title || '')}', '${escAttr(w.speaker || '')}')"
+                class="inline-flex items-center gap-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-2.5 py-1 rounded-xl text-[11px] font-bold transition"
+                title="مشاركة الورشة">
+                <i class="fa-solid fa-share-nodes text-[10px]"></i>
+                <span>مشاركة</span>
+            </button>`;
         }
 
         function buildTopicsHtml(w, idx, fadeBgClass = 'from-white') {
@@ -377,11 +431,14 @@
                     htmlContent += `
                     <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
                         <div>
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center justify-between gap-2 mb-4 flex-wrap">
                                 <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
                                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
                                 </span>
-                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
+                                <div class="flex items-center gap-2">
+                                    ${buildShareBtnHtml(w)}
+                                    <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
+                                </div>
                             </div>
                             <div class="space-y-3">
                                 <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
@@ -400,9 +457,12 @@
                     htmlContent += `
                     <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
                         <div>
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center justify-between gap-2 mb-4 flex-wrap">
                                 <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${esc(w.speaker || 'أرشيف')}</span>
-                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                                <div class="flex items-center gap-2">
+                                    ${buildShareBtnHtml(w)}
+                                    <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                                </div>
                             </div>
                             <div class="space-y-3">
                                 <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
