@@ -50,7 +50,7 @@
             <div class="hidden md:flex items-center gap-5">
                 <a href="#steps" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">كيف تبدأ؟</a>
                 <a href="#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
-                <a href="#posts" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
+                <a href="posts.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
 
@@ -84,7 +84,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
             <a href="#steps" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">كيف تبدأ؟</a>
             <a href="#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
-            <a href="#posts" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
+            <a href="posts.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
             <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
 
@@ -248,7 +248,7 @@
         </div>
     </section>
 
-    <!-- Posts Section -->
+    <!-- Posts Section (أول بوست فقط + إظهار المزيد) -->
     <section id="posts" class="py-14 px-6 max-w-4xl mx-auto">
         <div class="text-center mb-10 space-y-2">
             <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">تغطية الفعاليات</span>
@@ -257,6 +257,12 @@
         </div>
         <div id="posts-container" class="space-y-6">
             <div class="text-center text-slate-400 py-6 text-xs">جاري تحميل التغطيات...</div>
+        </div>
+        <div id="posts-more-wrap" class="hidden pt-6 text-center">
+            <a href="posts.html" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                <span>إظهار المزيد</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
         </div>
     </section>
 
@@ -350,25 +356,20 @@
 
     <!-- نافذة عرض الصورة كاملة مع أزرار التنقل (Lightbox) -->
     <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 10000; justify-content: center; align-items: center; padding: 20px; user-select: none;">
-        <!-- زر الإغلاق -->
         <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 22px; cursor: pointer; z-index: 10002;">
             &times;
         </button>
 
-        <!-- عداد الصور -->
         <div id="lightbox-counter" style="position: fixed; top: 22px; right: 20px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 9999px; font-size: 13px; font-weight: bold; z-index: 10002;">
             1 / 1
         </div>
 
-        <!-- زر الصورة السابقة (يمين في العربي) -->
         <button id="lightbox-prev" type="button" aria-label="السابق" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
-        <!-- الصورة المعروضة -->
         <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6); transition: opacity 0.15s ease;">
 
-        <!-- زر الصورة التالية (يسار في العربي) -->
         <button id="lightbox-next" type="button" aria-label="التالي" style="position: fixed; left: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
@@ -431,7 +432,6 @@
 
         let currentUser = null;
 
-        // بانر ترحيب للزائر لأول مرة
         (function initFirstVisitWelcome() {
             const VISIT_KEY = 'bmh_first_visit_v1';
             if (localStorage.getItem(VISIT_KEY)) return;
@@ -706,7 +706,7 @@
         loadAllWorkshopsTogether();
     </script>
 
-    <!-- سكريبت تغطية المعارض والمؤتمرات والورش -->
+    <!-- سكريبت عرض أول بوست فقط من تغطية الفعاليات + زر إظهار المزيد -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -792,7 +792,6 @@
                 if (e.target === lightbox) closeLightbox();
             });
 
-            // دعم السحب (Swipe) على شاشات اللمس للموبايل
             let touchStartX = 0;
             lightbox.addEventListener('touchstart', (e) => {
                 touchStartX = e.changedTouches[0].screenX;
@@ -814,38 +813,43 @@
             else if (e.key === 'ArrowRight') showPrevImage();
         });
 
-        async function loadPosts() {
+        async function loadLatestPost() {
             const section = document.getElementById('posts');
             const container = document.getElementById('posts-container');
+            const moreWrap = document.getElementById('posts-more-wrap');
             if (!container) return;
             try {
                 const snap = await getDocs(collection(db, "posts"));
                 const posts = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 if (!posts.length) { if (section) section.style.display = 'none'; return; }
 
-                container.innerHTML = posts.map(p => {
-                    const badgeText = (p.tag || p.category || '').trim() || 'تغطية فعالية';
-                    const dateText = (p.postDate || '').trim() || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
-                    const imgs = parseImages(p);
-                    let imagesHtml = '';
-                    if (imgs.length === 1) {
-                        imagesHtml = `<img src="${esc(imgs[0])}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full max-h-96 object-cover cursor-zoom-in">`;
-                    } else if (imgs.length > 1) {
-                        imagesHtml = `<div class="grid ${imgs.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'} gap-2 p-3 pb-0">${imgs.map(url => `<img src="${esc(url)}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full h-48 object-cover rounded-2xl cursor-zoom-in hover:opacity-95 transition">`).join('')}</div>`;
-                    }
-                    return `
-                    <article class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden hover:border-purple-300 transition">
-                        ${imagesHtml}
-                        <div class="p-6 space-y-3">
-                            <div class="flex items-center justify-between gap-2 flex-wrap">
-                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-1 rounded-full">${esc(badgeText)}</span>
-                                ${dateText ? `<span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar ml-1"></i> ${esc(dateText)}</span>` : ''}
-                            </div>
-                            <h3 class="text-lg font-black text-purple-900">${esc(p.title)}</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">${esc(p.body)}</p>
+                if (posts.length > 1 && moreWrap) {
+                    moreWrap.classList.remove('hidden');
+                }
+
+                const p = posts[0];
+                const badgeText = (p.tag || p.category || '').trim() || 'تغطية فعالية';
+                const dateText = (p.postDate || '').trim() || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
+                const imgs = parseImages(p);
+                let imagesHtml = '';
+                if (imgs.length === 1) {
+                    imagesHtml = `<img src="${esc(imgs[0])}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full max-h-96 object-cover cursor-zoom-in">`;
+                } else if (imgs.length > 1) {
+                    imagesHtml = `<div class="grid ${imgs.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'} gap-2 p-3 pb-0">${imgs.map(url => `<img src="${esc(url)}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full h-48 object-cover rounded-2xl cursor-zoom-in hover:opacity-95 transition">`).join('')}</div>`;
+                }
+
+                container.innerHTML = `
+                <article class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden hover:border-purple-300 transition">
+                    ${imagesHtml}
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-1 rounded-full">${esc(badgeText)}</span>
+                            ${dateText ? `<span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar ml-1"></i> ${esc(dateText)}</span>` : ''}
                         </div>
-                    </article>`;
-                }).join('');
+                        <h3 class="text-lg font-black text-purple-900">${esc(p.title)}</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">${esc(p.body)}</p>
+                    </div>
+                </article>`;
 
                 container.querySelectorAll('article').forEach(articleEl => {
                     const articleImgs = Array.from(articleEl.querySelectorAll('.post-zoomable-img'));
@@ -862,7 +866,7 @@
                 if (section) section.style.display = 'none';
             }
         }
-        loadPosts();
+        loadLatestPost();
     </script>
 </body>
 </html>
