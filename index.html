@@ -707,7 +707,7 @@
         });
     </script>
 
-    <!-- سكريبت عرض أول ورشة فقط في الرئيسية + زر إظهار المزيد -->
+    <!-- سكريبت عرض أول ورشة فقط في الرئيسية + مؤقت العد التنازلي + زر إظهار المزيد -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -726,6 +726,79 @@
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        let workshopCountdownTimer = null;
+
+        function parseWorkshopDate(w) {
+            const candidates = [w.startDate, w.date, w.dateTime, w.platform].filter(Boolean);
+            for (const raw of candidates) {
+                const str = String(raw).trim();
+                if (!str) continue;
+
+                // صيغة ISO أو تاريخ قياسي مثل 2026-11-21 أو 2026-11-21T20:00:00
+                const direct = Date.parse(str);
+                if (!Number.isNaN(direct)) return direct;
+
+                // صيغة يوم/شهر/سنة مع وقت اختياري مثل 21/11/2026 20:00 أو 21-11-2026
+                const dmy = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\D+(\d{1,2}):(\d{2}))?/);
+                if (dmy) {
+                    const day = Number(dmy[1]);
+                    const month = Number(dmy[2]) - 1;
+                    const year = Number(dmy[3]);
+                    const hour = dmy[4] ? Number(dmy[4]) : 20;
+                    const min = dmy[5] ? Number(dmy[5]) : 0;
+                    const parsed = new Date(year, month, day, hour, min, 0).getTime();
+                    if (!Number.isNaN(parsed)) return parsed;
+                }
+            }
+            return null;
+        }
+
+        function startWorkshopCountdown(targetMs) {
+            if (workshopCountdownTimer) {
+                clearInterval(workshopCountdownTimer);
+                workshopCountdownTimer = null;
+            }
+            const box = document.getElementById('bmh-workshop-countdown');
+            if (!box || !targetMs) return;
+
+            const dEl = document.getElementById('bmh-cd-days');
+            const hEl = document.getElementById('bmh-cd-hours');
+            const mEl = document.getElementById('bmh-cd-mins');
+            const sEl = document.getElementById('bmh-cd-secs');
+            const statusEl = document.getElementById('bmh-cd-status');
+
+            function renderTick() {
+                const diff = targetMs - Date.now();
+                if (diff <= 0) {
+                    if (statusEl) statusEl.innerText = 'بدأت الورشة الآن أو حان موعدها';
+                    if (dEl) dEl.innerText = '00';
+                    if (hEl) hEl.innerText = '00';
+                    if (mEl) mEl.innerText = '00';
+                    if (sEl) sEl.innerText = '00';
+                    if (workshopCountdownTimer) {
+                        clearInterval(workshopCountdownTimer);
+                        workshopCountdownTimer = null;
+                    }
+                    return;
+                }
+
+                const totalSecs = Math.floor(diff / 1000);
+                const days = Math.floor(totalSecs / 86400);
+                const hours = Math.floor((totalSecs % 86400) / 3600);
+                const mins = Math.floor((totalSecs % 3600) / 60);
+                const secs = totalSecs % 60;
+
+                if (dEl) dEl.innerText = String(days).padStart(2, '0');
+                if (hEl) hEl.innerText = String(hours).padStart(2, '0');
+                if (mEl) mEl.innerText = String(mins).padStart(2, '0');
+                if (sEl) sEl.innerText = String(secs).padStart(2, '0');
+            }
+
+            box.classList.remove('hidden');
+            renderTick();
+            workshopCountdownTimer = setInterval(renderTick, 1000);
+        }
 
         function buildInPersonMetaHtml(w) {
             const gov = (w.governorate || '').trim();
@@ -815,6 +888,34 @@
                             <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
                             <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
                             <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
+
+                            <!-- مؤقت العد التنازلي الذكي للورشة -->
+                            <div id="bmh-workshop-countdown" class="hidden bg-purple-900 text-white rounded-2xl p-3.5 border border-purple-800">
+                                <div class="flex items-center justify-between text-[11px] text-purple-200 mb-2">
+                                    <span id="bmh-cd-status" class="font-bold flex items-center gap-1.5">
+                                        <i class="fa-regular fa-hourglass-half text-purple-300"></i> متبقي على موعد الورشة
+                                    </span>
+                                    <span class="text-[10px] text-purple-300">تحديث حي</span>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2 text-center" dir="ltr">
+                                    <div class="bg-white/10 rounded-xl py-1.5 px-1">
+                                        <div id="bmh-cd-days" class="text-sm font-black">00</div>
+                                        <div class="text-[10px] text-purple-200">يوم</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl py-1.5 px-1">
+                                        <div id="bmh-cd-hours" class="text-sm font-black">00</div>
+                                        <div class="text-[10px] text-purple-200">ساعة</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl py-1.5 px-1">
+                                        <div id="bmh-cd-mins" class="text-sm font-black">00</div>
+                                        <div class="text-[10px] text-purple-200">دقيقة</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl py-1.5 px-1">
+                                        <div id="bmh-cd-secs" class="text-sm font-black">00</div>
+                                        <div class="text-[10px] text-purple-200">ثانية</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="pt-6">
@@ -823,6 +924,11 @@
                         </a>
                     </div>
                 </div>`;
+
+                const targetMs = parseWorkshopDate(w);
+                if (targetMs) {
+                    startWorkshopCountdown(targetMs);
+                }
             } else {
                 container.innerHTML = `
                 <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
