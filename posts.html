@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تغطية الفعاليات | BioMed Hub</title>
+    <link rel="icon" type="image/png" href="M.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+</head>
+<body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="M.png" alt="BioMed Hub" class="w-10 h-10 object-contain">
+                <div>
+                    <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
+                    <p class="text-xs text-purple-600 font-medium">منصة الهندسة الطبية</p>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-5">
+                <a href="index.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الرئيسية</a>
+                <a href="index.html#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
+                <a href="posts.html" class="text-purple-700 font-extrabold text-xs">تغطية الفعاليات</a>
+                <a href="index.html#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
+
+                <!-- زر الإشعارات -->
+                <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-bell text-purple-600"></i>
+                    <span>الإشعارات</span>
+                    <span id="nav-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+                </button>
+
+                <!-- أزرار الحساب -->
+                <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user"></i>
+                    <span>تسجيل الدخول</span>
+                </button>
+                <a href="account.html" id="nav-account-btn" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>حسابي</span>
+                </a>
+                <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+
+            <button id="menu-btn" class="md:hidden text-purple-900 text-2xl focus:outline-none p-1">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
+            <a href="index.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الرئيسية</a>
+            <a href="index.html#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
+            <a href="posts.html" onclick="toggleMenu()" class="block text-purple-700 font-extrabold text-sm">تغطية الفعاليات</a>
+            <a href="index.html#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bell text-purple-600"></i>
+                <span>الإشعارات</span>
+                <span id="mobile-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+            </button>
+
+            <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user"></i>
+                <span>تسجيل الدخول</span>
+            </button>
+            <a href="account.html" id="mobile-account-btn" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user-check"></i>
+                <span>حسابي</span>
+            </a>
+            <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
+                تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 py-10 px-6 max-w-4xl w-full mx-auto space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+            <a href="index.html" class="inline-flex items-center gap-2 text-xs font-bold text-purple-700 hover:text-purple-900 bg-white border border-purple-100 px-3.5 py-2 rounded-xl shadow-sm transition">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>العودة للصفحة الرئيسية</span>
+            </a>
+            <span id="posts-total-badge" class="text-[11px] bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded-full">0 تغطية</span>
+        </div>
+
+        <header class="text-center space-y-2 py-2">
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">أرشيف التغطيات</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-purple-900">تغطية المعارض والمؤتمرات والورش</h2>
+            <p class="text-slate-500 text-xs">جميع ملخصات وصور مشاركات وتغطيات BioMed Hub الميدانية والرقمية</p>
+        </header>
+
+        <!-- بحث سريع -->
+        <div class="bg-white rounded-2xl border border-purple-100 p-3 shadow-sm">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute right-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="posts-search-input" type="text" placeholder="ابحث في عنوان التغطية أو تفاصيلها..."
+                       class="w-full pr-9 pl-4 py-2 rounded-xl bg-purple-50/40 border border-purple-100 focus:border-purple-600 outline-none text-xs">
+            </div>
+        </div>
+
+        <div id="all-posts-container" class="space-y-6">
+            <div class="text-center text-slate-400 py-8 text-xs">جاري تحميل التغطيات...</div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 text-center bg-white border-t border-purple-100 mt-10">
+        <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026</p>
+    </footer>
+
+    <!-- نافذة تنبيه الإشعارات للزائر غير المسجل -->
+    <div id="guest-notif-modal" class="hidden fixed inset-0 bg-black/60 z-[10002] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-purple-100 text-center space-y-4">
+            <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-purple-900">سجل الدخول لتصلك الإشعارات</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    سجل دخولك أو أنشئ حساباً في BioMed Hub حتى تصلك إشعارات الورش الجديدة والفعاليات والشهادات.
+                </p>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+                <button id="guest-notif-close" type="button" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold transition">
+                    إغلاق
+                </button>
+                <a href="account.html" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm text-center">
+                    تسجيل الدخول
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض الصورة كاملة مع أزرار التنقل (Lightbox) -->
+    <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 10000; justify-content: center; align-items: center; padding: 20px; user-select: none;">
+        <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 22px; cursor: pointer; z-index: 10002;">
+            &times;
+        </button>
+
+        <div id="lightbox-counter" style="position: fixed; top: 22px; right: 20px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 9999px; font-size: 13px; font-weight: bold; z-index: 10002;">
+            1 / 1
+        </div>
+
+        <button id="lightbox-prev" type="button" aria-label="السابق" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6); transition: opacity 0.15s ease;">
+
+        <button id="lightbox-next" type="button" aria-label="التالي" style="position: fixed; left: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <!-- Script قائمة الموبايل -->
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        function toggleMenu() { mobileMenu.classList.toggle('hidden'); }
+        menuBtn.addEventListener('click', toggleMenu);
+    </script>
+
+    <!-- حالة الجلسة والإشعارات -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        const guestNotifModal = document.getElementById('guest-notif-modal');
+        document.getElementById('guest-notif-close')?.addEventListener('click', () => guestNotifModal?.classList.add('hidden'));
+        guestNotifModal?.addEventListener('click', (e) => {
+            if (e.target === guestNotifModal) guestNotifModal.classList.add('hidden');
+        });
+
+        function handleNotifClick() {
+            if (!currentUser) {
+                guestNotifModal?.classList.remove('hidden');
+                return;
+            }
+            window.location.href = 'account.html#notifications';
+        }
+
+        document.getElementById('nav-notifications-btn')?.addEventListener('click', handleNotifClick);
+        document.getElementById('mobile-notifications-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            handleNotifClick();
+        });
+
+        document.getElementById('nav-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+        document.getElementById('mobile-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+
+        const handleLogout = async () => {
+            await signOut(auth);
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+        };
+        document.getElementById('nav-logout-btn')?.addEventListener('click', handleLogout);
+        document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);
+
+        function updateNavNotifCounter(unreadCount) {
+            [document.getElementById('nav-notif-count'), document.getElementById('mobile-notif-count')].forEach(el => {
+                if (!el) return;
+                if (unreadCount > 0) {
+                    el.innerText = String(unreadCount);
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        async function syncUnreadCount(user) {
+            try {
+                let unread = 0;
+                const userSnap = await getDocs(query(collection(db, 'members', user.uid, 'notifications'), orderBy('createdAt', 'desc'), limit(15)));
+                userSnap.forEach(d => { if (!d.data().read) unread++; });
+
+                const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
+                const readMap = JSON.parse(localStorage.getItem(`bmh_read_ann_${user.uid}`) || '{}');
+                publicSnap.forEach(d => { if (!readMap[d.id]) unread++; });
+
+                updateNavNotifCounter(unread);
+            } catch (e) {
+                console.error('Error syncing unread count:', e);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                document.getElementById('nav-auth-btn')?.classList.add('hidden');
+                document.getElementById('nav-account-btn')?.classList.remove('hidden');
+                document.getElementById('nav-logout-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.add('hidden');
+                document.getElementById('mobile-account-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.remove('hidden');
+                syncUnreadCount(user);
+            } else {
+                updateNavNotifCounter(0);
+                document.getElementById('nav-auth-btn')?.classList.remove('hidden');
+                document.getElementById('nav-account-btn')?.classList.add('hidden');
+                document.getElementById('nav-logout-btn')?.classList.add('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-account-btn')?.classList.add('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <!-- جلب وعرض جميع التغطيات -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        let allPosts = [];
+
+        function parseImages(post) {
+            const list = [];
+            if (Array.isArray(post.imageUrls)) post.imageUrls.forEach(u => { const s = String(u || '').trim(); if (s) list.push(s); });
+            if (!list.length && post.imageUrl) String(post.imageUrl).split(/[\n,]+/).forEach(u => { const s = u.trim(); if (s) list.push(s); });
+            return list;
+        }
+
+        const lightbox = document.getElementById('image-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const lightboxCounter = document.getElementById('lightbox-counter');
+
+        let currentGallery = [];
+        let currentIndex = 0;
+        let currentAlt = '';
+
+        function updateLightboxView() {
+            if (!lightboxImg || !currentGallery.length) return;
+            lightboxImg.src = currentGallery[currentIndex];
+            lightboxImg.alt = currentAlt;
+
+            const hasMultiple = currentGallery.length > 1;
+            if (lightboxPrev) lightboxPrev.style.display = hasMultiple ? 'flex' : 'none';
+            if (lightboxNext) lightboxNext.style.display = hasMultiple ? 'flex' : 'none';
+            if (lightboxCounter) {
+                lightboxCounter.style.display = hasMultiple ? 'block' : 'none';
+                lightboxCounter.innerText = `${currentIndex + 1} / ${currentGallery.length}`;
+            }
+        }
+
+        function openLightbox(gallery, startIndex = 0, alt = '') {
+            if (!lightbox || !gallery.length) return;
+            currentGallery = gallery;
+            currentIndex = startIndex;
+            currentAlt = alt;
+            updateLightboxView();
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            if (!lightbox || !lightboxImg) return;
+            lightbox.style.display = 'none';
+            lightboxImg.src = '';
+            currentGallery = [];
+        }
+
+        function showNextImage() {
+            if (currentGallery.length <= 1) return;
+            currentIndex = (currentIndex + 1) % currentGallery.length;
+            updateLightboxView();
+        }
+
+        function showPrevImage() {
+            if (currentGallery.length <= 1) return;
+            currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+            updateLightboxView();
+        }
+
+        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+        if (lightboxNext) lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); showNextImage(); });
+        if (lightboxPrev) lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrevImage(); });
+
+        if (lightbox) {
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            let touchStartX = 0;
+            lightbox.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            lightbox.addEventListener('touchend', (e) => {
+                const diff = e.changedTouches[0].screenX - touchStartX;
+                if (Math.abs(diff) > 45) {
+                    if (diff > 0) showNextImage();
+                    else showPrevImage();
+                }
+            }, { passive: true });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox || lightbox.style.display !== 'flex') return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') showNextImage();
+            else if (e.key === 'ArrowRight') showPrevImage();
+        });
+
+        function renderPosts(list) {
+            const container = document.getElementById('all-posts-container');
+            const badge = document.getElementById('posts-total-badge');
+            if (badge) badge.innerText = `${list.length} تغطية`;
+
+            if (!list.length) {
+                container.innerHTML = '<div class="bg-white rounded-3xl border border-purple-100 p-8 text-center text-slate-400 text-xs">لا توجد تغطيات مطابقة حالياً.</div>';
+                return;
+            }
+
+            container.innerHTML = list.map(p => {
+                const badgeText = (p.tag || p.category || '').trim() || 'تغطية فعالية';
+                const dateText = (p.postDate || '').trim() || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
+                const imgs = parseImages(p);
+                let imagesHtml = '';
+                if (imgs.length === 1) {
+                    imagesHtml = `<img src="${esc(imgs[0])}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full max-h-96 object-cover cursor-zoom-in">`;
+                } else if (imgs.length > 1) {
+                    imagesHtml = `<div class="grid ${imgs.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'} gap-2 p-3 pb-0">${imgs.map(url => `<img src="${esc(url)}" alt="${esc(p.title)}" loading="lazy" class="post-zoomable-img w-full h-48 object-cover rounded-2xl cursor-zoom-in hover:opacity-95 transition">`).join('')}</div>`;
+                }
+                return `
+                <article class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden hover:border-purple-300 transition">
+                    ${imagesHtml}
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-1 rounded-full">${esc(badgeText)}</span>
+                            ${dateText ? `<span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar ml-1"></i> ${esc(dateText)}</span>` : ''}
+                        </div>
+                        <h3 class="text-lg font-black text-purple-900">${esc(p.title)}</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">${esc(p.body)}</p>
+                    </div>
+                </article>`;
+            }).join('');
+
+            container.querySelectorAll('article').forEach(articleEl => {
+                const articleImgs = Array.from(articleEl.querySelectorAll('.post-zoomable-img'));
+                const galleryUrls = articleImgs.map(img => img.src);
+
+                articleImgs.forEach((imgEl, idx) => {
+                    imgEl.addEventListener('click', () => {
+                        openLightbox(galleryUrls, idx, imgEl.alt);
+                    });
+                });
+            });
+        }
+
+        document.getElementById('posts-search-input')?.addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            if (!q) {
+                renderPosts(allPosts);
+                return;
+            }
+            const filtered = allPosts.filter(p =>
+                String(p.title || '').toLowerCase().includes(q) ||
+                String(p.body || '').toLowerCase().includes(q) ||
+                String(p.tag || p.category || '').toLowerCase().includes(q)
+            );
+            renderPosts(filtered);
+        });
+
+        async function loadAllPosts() {
+            try {
+                const snap = await getDocs(collection(db, "posts"));
+                allPosts = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                renderPosts(allPosts);
+            } catch (e) {
+                console.error('خطأ في جلب التغطيات:', e);
+                document.getElementById('all-posts-container').innerHTML = '<div class="text-center text-red-500 py-6 text-xs">تعذر تحميل التغطيات حالياً.</div>';
+            }
+        }
+        loadAllPosts();
+    </script>
+</body>
+</html>
