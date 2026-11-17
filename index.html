@@ -83,6 +83,59 @@
             0%, 100% { transform: scale(0.85); opacity: 0.7; }
             50% { transform: scale(1.35); opacity: 1; }
         }
+
+        /* تأثير 3D للوغو الرئيسي */
+        .bmh-logo-3d-stage {
+            perspective: 900px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        .bmh-logo-3d-stage::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.24) 0%, rgba(124, 58, 237, 0) 72%);
+            filter: blur(12px);
+            z-index: 0;
+            pointer-events: none;
+            animation: bmhLogoGlow 4s ease-in-out infinite;
+        }
+        .bmh-logo-3d-card {
+            position: relative;
+            z-index: 1;
+            transform-style: preserve-3d;
+            transition: transform 0.22s ease-out, box-shadow 0.22s ease-out;
+            will-change: transform;
+            border-radius: 1.75rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(245, 243, 255, 0.88));
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            box-shadow:
+                0 18px 34px -12px rgba(76, 29, 149, 0.32),
+                0 6px 14px -3px rgba(15, 23, 42, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .bmh-logo-3d-card img {
+            display: block;
+            transform: translateZ(20px);
+            filter: drop-shadow(0 10px 16px rgba(76, 29, 149, 0.24));
+        }
+        @keyframes bmhLogoGlow {
+            0%, 100% { transform: scale(0.95); opacity: 0.78; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .bmh-logo-3d-stage::before,
+            .bmh-logo-3d-card {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 antialiased pt-7">
@@ -172,7 +225,11 @@
     <!-- Hero Section -->
     <section class="py-16 px-6 max-w-4xl mx-auto text-center space-y-6">
         <div class="w-full flex justify-center mb-2">
-            <img src="M.png" alt="BioMed Hub Logo" class="w-36 h-36 object-contain drop-shadow-md">
+            <div class="bmh-logo-3d-stage" id="bmh-logo-stage">
+                <div class="bmh-logo-3d-card" id="bmh-logo-card">
+                    <img src="M.png" alt="BioMed Hub Logo" class="w-36 h-36 object-contain">
+                </div>
+            </div>
         </div>
 
         <span class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-4 py-1.5 rounded-full">
@@ -438,6 +495,39 @@
             <p style="color: #999; font-size: 11px; margin-top: 15px;">ستختفي هذه النافذة خلال ثوانٍ...</p>
         </div>
     </div>
+
+    <!-- Script تأثير 3D للوغو -->
+    <script>
+        (function () {
+            const stage = document.getElementById('bmh-logo-stage');
+            const card = document.getElementById('bmh-logo-card');
+            if (!stage || !card) return;
+
+            const maxTilt = 9;
+
+            function handleMove(clientX, clientY) {
+                const rect = stage.getBoundingClientRect();
+                const x = (clientX - rect.left) / rect.width - 0.5;
+                const y = (clientY - rect.top) / rect.height - 0.5;
+                const rotateY = (x * maxTilt * 2).toFixed(2);
+                const rotateX = (-y * maxTilt * 2).toFixed(2);
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px)`;
+            }
+
+            function resetTilt() {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            }
+
+            stage.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+            stage.addEventListener('mouseleave', resetTilt);
+            stage.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches[0]) {
+                    handleMove(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+            stage.addEventListener('touchend', resetTilt);
+        })();
+    </script>
 
     <!-- Script مؤشر النبض -->
     <script>
