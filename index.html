@@ -54,6 +54,13 @@
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
 
+                <!-- زر الإشعارات بصف تسجيل الدخول / حسابي (يظهر للكل) -->
+                <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-bell text-purple-600"></i>
+                    <span>الإشعارات</span>
+                    <span id="nav-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+                </button>
+
                 <!-- أزرار حساب العضو العام -->
                 <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
                     <i class="fa-solid fa-user"></i>
@@ -80,6 +87,13 @@
             <a href="#posts" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
             <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <!-- زر الإشعارات بقائمة الموبايل بصف تسجيل الدخول / حسابي -->
+            <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bell text-purple-600"></i>
+                <span>الإشعارات</span>
+                <span id="mobile-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+            </button>
 
             <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-user"></i>
@@ -163,7 +177,7 @@
                 </div>
             </div>
 
-            <!-- ملخص بيانات العضو (يظهر بشكل مختصر بدون إظهار الفورم مباشرة) -->
+            <!-- ملخص بيانات العضو -->
             <div id="profile-summary-box" class="bg-purple-50/40 rounded-2xl border border-purple-100 p-4">
                 <div id="profile-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div>
@@ -185,7 +199,7 @@
                 </div>
             </div>
 
-            <!-- نموذج تعديل البيانات الشخصية (مخفي افتراضياً ويفتح عند الضغط على زر تعديل البيانات الشخصية) -->
+            <!-- نموذج تعديل البيانات الشخصية -->
             <div id="profile-edit-panel" class="hidden bg-purple-50/60 rounded-2xl border border-purple-200 p-5 space-y-4">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <h3 class="text-sm font-extrabold text-purple-900">
@@ -474,6 +488,29 @@
         </div>
     </footer>
 
+    <!-- نافذة تنبيه الإشعارات للزائر غير المسجل -->
+    <div id="guest-notif-modal" class="hidden fixed inset-0 bg-black/60 z-[10002] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-purple-100 text-center space-y-4">
+            <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-purple-900">سجل الدخول لتصلك الإشعارات</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    سجل دخولك أو أنشئ حساباً في BioMed Hub حتى تصلك إشعارات الورش الجديدة والفعاليات والشهادات.
+                </p>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+                <button id="guest-notif-close" type="button" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold transition">
+                    إغلاق
+                </button>
+                <button id="guest-notif-login" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                    تسجيل الدخول
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- نافذة تسجيل الدخول / إنشاء حساب عام للعضو -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5 my-8">
@@ -489,7 +526,6 @@
                 <p id="auth-modal-subtitle" class="text-xs text-slate-500">ادخل إلى حسابك في BioMed Hub لمتابعة ملفك وشهاداتك إن وجدت.</p>
             </div>
 
-            <!-- أزرار التبديل بين الدخول وإنشاء حساب -->
             <div class="grid grid-cols-2 gap-2 bg-purple-50 p-1 rounded-xl">
                 <button id="tab-login" type="button" class="py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition">
                     تسجيل الدخول
@@ -500,7 +536,6 @@
             </div>
 
             <form id="auth-form" class="space-y-3">
-                <!-- حقول التسجيل الجديد -->
                 <div id="register-extra-fields" class="hidden space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
@@ -550,7 +585,6 @@
                     </div>
                 </div>
 
-                <!-- البريد وكلمة المرور -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
                     <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
@@ -720,7 +754,6 @@
             }
         })();
 
-        // رابط CSV الخاص بورقة All_Certificates
         const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
 
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -728,7 +761,60 @@
         let isRegisterMode = false;
         let currentUser = null;
 
-        // إشعار ترحيبي تلقائي عند إنشاء حساب جديد لأول مرة
+        // نافذة تنبيه الزائر غير المسجل عند الضغط على الإشعارات
+        const guestNotifModal = document.getElementById('guest-notif-modal');
+        const guestNotifClose = document.getElementById('guest-notif-close');
+        const guestNotifLogin = document.getElementById('guest-notif-login');
+
+        function openGuestNotifModal() {
+            if (guestNotifModal) guestNotifModal.classList.remove('hidden');
+        }
+        function closeGuestNotifModal() {
+            if (guestNotifModal) guestNotifModal.classList.add('hidden');
+        }
+
+        guestNotifClose?.addEventListener('click', closeGuestNotifModal);
+        guestNotifModal?.addEventListener('click', (e) => {
+            if (e.target === guestNotifModal) closeGuestNotifModal();
+        });
+        guestNotifLogin?.addEventListener('click', () => {
+            closeGuestNotifModal();
+            openAuthModal(false);
+        });
+
+        function handleNavNotificationsClick() {
+            if (!currentUser) {
+                openGuestNotifModal();
+                return;
+            }
+            const accountSec = document.getElementById('member-account-section');
+            const notifBox = document.getElementById('member-notifications-box');
+            if (accountSec) accountSec.classList.remove('hidden');
+            if (notifBox) {
+                notifBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        document.getElementById('nav-notifications-btn')?.addEventListener('click', handleNavNotificationsClick);
+        document.getElementById('mobile-notifications-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            handleNavNotificationsClick();
+        });
+
+        function updateNavNotifCounter(unreadCount) {
+            const navBadge = document.getElementById('nav-notif-count');
+            const mobileBadge = document.getElementById('mobile-notif-count');
+            [navBadge, mobileBadge].forEach(el => {
+                if (!el) return;
+                if (unreadCount > 0) {
+                    el.innerText = String(unreadCount);
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
         async function createWelcomeNotification(uid) {
             if (!uid) return;
             try {
@@ -743,7 +829,6 @@
             }
         }
 
-        // تحميل إشعارات العضو + الإشعارات العامة
         async function loadUserNotifications(user) {
             const listEl = document.getElementById('user-notifications-list');
             const badgeEl = document.getElementById('notifications-unread-badge');
@@ -753,7 +838,6 @@
             try {
                 const items = [];
 
-                // 1) إشعارات خاصة بالعضو
                 const userNotifRef = collection(db, 'members', user.uid, 'notifications');
                 const userSnap = await getDocs(query(userNotifRef, orderBy('createdAt', 'desc'), limit(15)));
                 userSnap.forEach(d => {
@@ -765,7 +849,6 @@
                     });
                 });
 
-                // 2) إشعارات عامة للمنصة (من لوحة الأدمن)
                 const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
                 const readKey = `bmh_read_ann_${user.uid}`;
                 const readMap = JSON.parse(localStorage.getItem(readKey) || '{}');
@@ -787,6 +870,7 @@
 
                 const unreadCount = items.filter(n => !n.read).length;
                 badgeEl.innerText = `${unreadCount} جديد`;
+                updateNavNotifCounter(unreadCount);
 
                 if (!items.length) {
                     listEl.innerHTML = `
@@ -1376,6 +1460,7 @@
                 loadUserCertificates(user.email);
             } else {
                 accountSection.classList.add('hidden');
+                updateNavNotifCounter(0);
 
                 navAuthBtn.classList.remove('hidden');
                 navAccountBtn.classList.add('hidden');
