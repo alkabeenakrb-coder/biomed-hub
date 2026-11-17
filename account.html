@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي | BioMed Hub</title>
+    <link rel="icon" type="image/png" href="M.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+</head>
+<body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="M.png" alt="BioMed Hub" class="w-10 h-10 object-contain">
+                <div>
+                    <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
+                    <p class="text-xs text-purple-600 font-medium">منصة الهندسة الطبية</p>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-5">
+                <a href="index.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الرئيسية</a>
+                <a href="index.html#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
+                <a href="index.html#posts" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
+                <a href="index.html#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
+
+                <!-- زر الإشعارات -->
+                <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-bell text-purple-600"></i>
+                    <span>الإشعارات</span>
+                    <span id="nav-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+                </button>
+
+                <!-- أزرار الحساب -->
+                <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user"></i>
+                    <span>تسجيل الدخول</span>
+                </button>
+                <a href="account.html" id="nav-account-btn" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>حسابي</span>
+                </a>
+                <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+
+            <button id="menu-btn" class="md:hidden text-purple-900 text-2xl focus:outline-none p-1">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
+            <a href="index.html" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الرئيسية</a>
+            <a href="index.html#workshops" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
+            <a href="index.html#posts" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
+            <a href="index.html#contact" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bell text-purple-600"></i>
+                <span>الإشعارات</span>
+                <span id="mobile-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+            </button>
+
+            <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user"></i>
+                <span>تسجيل الدخول</span>
+            </button>
+            <a href="account.html" id="mobile-account-btn" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user-check"></i>
+                <span>حسابي</span>
+            </a>
+            <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
+                تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 py-10 px-6 max-w-4xl w-full mx-auto space-y-6">
+
+        <!-- شريط العودة -->
+        <div class="flex items-center justify-between flex-wrap gap-2">
+            <a href="index.html" class="inline-flex items-center gap-2 text-xs font-bold text-purple-700 hover:text-purple-900 bg-white border border-purple-100 px-3.5 py-2 rounded-xl shadow-sm transition">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>العودة للصفحة الرئيسية</span>
+            </a>
+            <span class="text-[11px] text-slate-400">لوحة حساب العضو</span>
+        </div>
+
+        <!-- حالة التحقق من الجلسة -->
+        <div id="account-loading-state" class="bg-white rounded-3xl border border-purple-100 p-8 text-center text-xs text-slate-400 shadow-sm">
+            جاري التحقق من الحساب...
+        </div>
+
+        <!-- واجهة الزائر غير المسجل (تظهر مباشرة في صفحة account.html إذا لم يسجل دخول) -->
+        <section id="guest-login-box" class="hidden bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm max-w-lg mx-auto space-y-5">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h2 id="auth-modal-title" class="text-xl font-black text-purple-900">تسجيل الدخول إلى حسابك</h2>
+                <p id="auth-modal-subtitle" class="text-xs text-slate-500">سجل دخولك أو أنشئ حساباً لمتابعة ملفك، إشعاراتك، وشهاداتك في BioMed Hub.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 bg-purple-50 p-1 rounded-xl">
+                <button id="tab-login" type="button" class="py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition">
+                    تسجيل الدخول
+                </button>
+                <button id="tab-register" type="button" class="py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition">
+                    إنشاء حساب جديد
+                </button>
+            </div>
+
+            <form id="auth-form" class="space-y-3">
+                <div id="register-extra-fields" class="hidden space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
+                        <input type="text" id="reg-name" placeholder="مثال: مجتبى ميثم"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة / المعهد *</label>
+                            <input type="text" id="reg-university" placeholder="مثال: جامعة ذي قار"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف *</label>
+                            <input type="tel" id="reg-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">التحصيل الدراسي *</label>
+                            <select id="reg-education" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                                <option value="">اختر الحالة</option>
+                                <option value="طالب">طالب</option>
+                                <option value="خريج">خريج</option>
+                            </select>
+                        </div>
+                        <div id="reg-stage-box" class="hidden">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المرحلة الدراسية *</label>
+                            <select id="reg-stage" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                                <option value="">اختر المرحلة</option>
+                                <option value="المرحلة الأولى">المرحلة الأولى</option>
+                                <option value="المرحلة الثانية">المرحلة الثانية</option>
+                                <option value="المرحلة الثالثة">المرحلة الثالثة</option>
+                                <option value="المرحلة الرابعة">المرحلة الرابعة</option>
+                                <option value="المرحلة الخامسة">المرحلة الخامسة</option>
+                                <option value="المرحلة السادسة">المرحلة السادسة</option>
+                            </select>
+                        </div>
+                        <div id="reg-city-box">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+                            <input type="text" id="reg-city" placeholder="مثال: كربلاء"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
+                    <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">رمز السر (كلمة المرور) *</label>
+                        <input type="password" id="auth-password" required minlength="6" dir="ltr" placeholder="••••••••"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
+                    <div id="confirm-password-box" class="hidden">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">تأكيد رمز السر *</label>
+                        <input type="password" id="auth-password-confirm" minlength="6" dir="ltr" placeholder="••••••••"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
+                </div>
+
+                <p id="auth-error-msg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 py-2 px-3 rounded-xl"></p>
+                <p id="auth-success-msg" class="hidden text-xs text-emerald-700 font-bold text-center bg-emerald-50 py-2 px-3 rounded-xl"></p>
+
+                <button id="auth-submit-btn" type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
+                    تسجيل الدخول
+                </button>
+            </form>
+
+            <div class="text-center">
+                <button id="forgot-password-btn" type="button" class="text-xs text-purple-700 hover:underline font-bold">
+                    نسيت رمز السر؟
+                </button>
+            </div>
+        </section>
+
+        <!-- لوحة حساب العضو الكاملة -->
+        <section id="member-account-section" class="hidden space-y-6">
+            <!-- بطاقة البيانات الشخصية -->
+            <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-black text-lg shrink-0">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block mb-1">
+                                حساب عضو في BioMed Hub
+                            </span>
+                            <h2 id="account-display-name" class="text-xl font-black text-purple-900">حسابي</h2>
+                            <p id="logged-user-email" class="text-xs text-slate-500 mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:items-end gap-2">
+                        <button id="toggle-edit-profile-btn" type="button" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-pen"></i>
+                            <span>تعديل البيانات الشخصية</span>
+                        </button>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <a href="https://biomedhubiq.com/join.html" target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                                <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
+                            </a>
+                            <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>تحديث الشهادات</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ملخص بيانات العضو -->
+                <div class="bg-purple-50/40 rounded-2xl border border-purple-100 p-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">الجامعة / المعهد</span>
+                            <strong id="summary-university" class="text-slate-800">-</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">التحصيل الدراسي</span>
+                            <strong id="summary-education" class="text-slate-800">-</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">رقم الهاتف</span>
+                            <strong id="summary-phone" dir="ltr" class="text-slate-800 inline-block">-</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">المحافظة</span>
+                            <strong id="summary-city" class="text-slate-800">-</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- نموذج تعديل البيانات الشخصية -->
+                <div id="profile-edit-panel" class="hidden bg-purple-50/60 rounded-2xl border border-purple-200 p-5 space-y-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <h3 class="text-sm font-extrabold text-purple-900">
+                            <i class="fa-solid fa-id-card text-purple-600 ml-1"></i>
+                            تعديل البيانات الشخصية
+                        </h3>
+                        <span id="profile-save-status" class="text-xs font-bold text-emerald-700 hidden"></span>
+                    </div>
+
+                    <form id="profile-form" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
+                            <input type="text" id="profile-name" placeholder="مثال: مجتبى ميثم"
+                                   class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / المعهد</label>
+                            <input type="text" id="profile-university" placeholder="مثال: جامعة ذي قار"
+                                   class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">رقم الهاتف</label>
+                            <input type="tel" id="profile-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
+                                   class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs text-left">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">التحصيل الدراسي</label>
+                            <select id="profile-education" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                                <option value="">اختر الحالة</option>
+                                <option value="طالب">طالب</option>
+                                <option value="خريج">خريج</option>
+                            </select>
+                        </div>
+                        <div id="profile-stage-wrapper" class="hidden">
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">المرحلة الدراسية</label>
+                            <select id="profile-stage" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                                <option value="">اختر المرحلة</option>
+                                <option value="المرحلة الأولى">المرحلة الأولى</option>
+                                <option value="المرحلة الثانية">المرحلة الثانية</option>
+                                <option value="المرحلة الثالثة">المرحلة الثالثة</option>
+                                <option value="المرحلة الرابعة">المرحلة الرابعة</option>
+                                <option value="المرحلة الخامسة">المرحلة الخامسة</option>
+                                <option value="المرحلة السادسة">المرحلة السادسة</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">المحافظة</label>
+                            <input type="text" id="profile-city" placeholder="مثال: كربلاء"
+                                   class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                        </div>
+                        <div class="sm:col-span-2 md:col-span-3 flex items-center justify-end gap-2">
+                            <button id="cancel-edit-profile-btn" type="button" class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                إلغاء
+                            </button>
+                            <button id="save-profile-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                                حفظ البيانات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- بطاقة الإشعارات المستقلة -->
+            <div id="notifications" class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-base font-black text-purple-900">
+                            <i class="fa-solid fa-bell text-purple-600 ml-1"></i>
+                            الإشعارات
+                        </h3>
+                        <span id="notifications-unread-badge" class="text-[11px] bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full font-bold">
+                            0 جديد
+                        </span>
+                    </div>
+                    <button id="mark-all-read-btn" type="button" class="text-xs text-purple-700 hover:underline font-bold">
+                        تحديد الكل كمقروء
+                    </button>
+                </div>
+
+                <div id="user-notifications-list" class="space-y-2.5">
+                    <div class="bg-slate-50 rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-400">
+                        جاري تحميل الإشعارات...
+                    </div>
+                </div>
+            </div>
+
+            <!-- بطاقة الشهادات المستقلة -->
+            <div id="certificates" class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-black text-purple-900">
+                        <i class="fa-solid fa-certificate text-purple-600 ml-1"></i>
+                        شهاداتي المرتبطة بالحساب
+                    </h3>
+                    <span id="certs-count-badge" class="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full font-bold">0</span>
+                </div>
+
+                <div id="user-certificates-list" class="grid sm:grid-cols-2 gap-4">
+                    <div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 text-center bg-white border-t border-purple-100 mt-10">
+        <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026</p>
+    </footer>
+
+    <!-- Script قائمة الموبايل -->
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    </script>
+
+    <!-- سكريبت حساب العضو -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            collection,
+            query,
+            orderBy,
+            limit,
+            getDocs,
+            updateDoc,
+            addDoc,
+            writeBatch
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        let isRegisterMode = false;
+        let currentUser = null;
+
+        function scrollToNotifications() {
+            const box = document.getElementById('notifications');
+            if (box) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        document.getElementById('nav-notifications-btn')?.addEventListener('click', () => {
+            if (!currentUser) {
+                document.getElementById('guest-login-box')?.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            scrollToNotifications();
+        });
+        document.getElementById('mobile-notifications-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            if (!currentUser) {
+                document.getElementById('guest-login-box')?.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            scrollToNotifications();
+        });
+
+        function updateNavNotifCounter(unreadCount) {
+            [document.getElementById('nav-notif-count'), document.getElementById('mobile-notif-count')].forEach(el => {
+                if (!el) return;
+                if (unreadCount > 0) {
+                    el.innerText = String(unreadCount);
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        async function createWelcomeNotification(uid) {
+            if (!uid) return;
+            try {
+                await addDoc(collection(db, 'members', uid, 'notifications'), {
+                    title: 'أهلاً وسهلاً بيك في BioMed Hub',
+                    body: 'تم إنشاء حسابك بنجاح. تقدر من هنا تراجع بياناتك الشخصية، تتابع شهاداتك، وتوصلك إشعارات الورش والفعاليات.',
+                    read: false,
+                    createdAt: Date.now()
+                });
+            } catch (err) {
+                console.error('Error creating welcome notification:', err);
+            }
+        }
+
+        async function loadUserNotifications(user) {
+            const listEl = document.getElementById('user-notifications-list');
+            const badgeEl = document.getElementById('notifications-unread-badge');
+            const markAllBtn = document.getElementById('mark-all-read-btn');
+            if (!listEl || !badgeEl || !user) return;
+
+            try {
+                const items = [];
+                const userNotifRef = collection(db, 'members', user.uid, 'notifications');
+                const userSnap = await getDocs(query(userNotifRef, orderBy('createdAt', 'desc'), limit(15)));
+                userSnap.forEach(d => items.push({ id: d.id, source: 'user', docRef: d.ref, ...d.data() }));
+
+                const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
+                const readKey = `bmh_read_ann_${user.uid}`;
+                const readMap = JSON.parse(localStorage.getItem(readKey) || '{}');
+
+                publicSnap.forEach(d => {
+                    const data = d.data();
+                    items.push({
+                        id: d.id,
+                        source: 'public',
+                        title: data.title || 'إشعار من BioMed Hub',
+                        body: data.body || '',
+                        link: data.link || '',
+                        createdAt: data.createdAt || 0,
+                        read: !!readMap[d.id]
+                    });
+                });
+
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                const unreadCount = items.filter(n => !n.read).length;
+                badgeEl.innerText = `${unreadCount} جديد`;
+                updateNavNotifCounter(unreadCount);
+
+                if (!items.length) {
+                    listEl.innerHTML = `<div class="bg-slate-50 rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">لا توجد إشعارات جديدة حالياً.</div>`;
+                    return;
+                }
+
+                listEl.innerHTML = items.map(n => {
+                    const dateStr = n.createdAt ? new Date(n.createdAt).toLocaleDateString('ar-IQ') : '';
+                    const unreadClass = n.read ? 'bg-slate-50/70 border-slate-100' : 'bg-purple-50 border-purple-200';
+                    return `
+                        <div data-notif-id="${esc(n.id)}" data-source="${esc(n.source)}"
+                             class="notif-card rounded-2xl border p-3.5 transition flex items-start justify-between gap-3 cursor-pointer ${unreadClass}">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    ${!n.read ? '<span class="w-2 h-2 rounded-full bg-purple-600 shrink-0"></span>' : ''}
+                                    <h4 class="text-xs font-extrabold text-purple-900">${esc(n.title || 'إشعار')}</h4>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">${esc(n.body || '')}</p>
+                                ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] font-bold text-purple-700 hover:underline pt-0.5">فتح الرابط <i class="fa-solid fa-arrow-left mr-1"></i></a>` : ''}
+                            </div>
+                            <span class="text-[10px] text-slate-400 shrink-0">${esc(dateStr)}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                listEl.querySelectorAll('.notif-card').forEach(card => {
+                    card.addEventListener('click', async (e) => {
+                        if (e.target.closest('a')) return;
+                        const notifId = card.dataset.notifId;
+                        const source = card.dataset.source;
+                        const target = items.find(x => x.id === notifId && x.source === source);
+                        if (!target || target.read) return;
+
+                        target.read = true;
+                        if (source === 'user' && target.docRef) {
+                            await updateDoc(target.docRef, { read: true });
+                        } else if (source === 'public') {
+                            readMap[notifId] = true;
+                            localStorage.setItem(readKey, JSON.stringify(readMap));
+                        }
+                        loadUserNotifications(user);
+                    });
+                });
+
+                if (markAllBtn) {
+                    markAllBtn.onclick = async () => {
+                        const batch = writeBatch(db);
+                        let hasUserUpdates = false;
+                        items.forEach(item => {
+                            if (item.read) return;
+                            if (item.source === 'user' && item.docRef) {
+                                batch.update(item.docRef, { read: true });
+                                hasUserUpdates = true;
+                            } else if (item.source === 'public') {
+                                readMap[item.id] = true;
+                            }
+                        });
+                        localStorage.setItem(readKey, JSON.stringify(readMap));
+                        if (hasUserUpdates) await batch.commit();
+                        loadUserNotifications(user);
+                    };
+                }
+            } catch (err) {
+                console.error('Error loading notifications:', err);
+                listEl.innerHTML = `<div class="bg-slate-50 rounded-2xl border border-slate-100 p-4 text-center text-xs text-slate-500">لا توجد إشعارات حالياً.</div>`;
+            }
+        }
+
+        const authForm = document.getElementById('auth-form');
+        const authErrorMsg = document.getElementById('auth-error-msg');
+        const authSuccessMsg = document.getElementById('auth-success-msg');
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        const registerExtraFields = document.getElementById('register-extra-fields');
+        const confirmPasswordBox = document.getElementById('confirm-password-box');
+        const authModalTitle = document.getElementById('auth-modal-title');
+        const authModalSubtitle = document.getElementById('auth-modal-subtitle');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+
+        function sanitizePhone(raw) {
+            let s = String(raw || '').trim();
+            return s.startsWith('+') ? '+' + s.slice(1).replace(/\D/g, '') : s.replace(/\D/g, '');
+        }
+        function isValidIraqiPhone(phone) {
+            const clean = sanitizePhone(phone);
+            return /^07\d{9}$/.test(clean) || /^\+9647\d{9}$/.test(clean);
+        }
+
+        [document.getElementById('reg-phone'), document.getElementById('profile-phone')].forEach(inp => {
+            inp?.addEventListener('input', () => { inp.value = sanitizePhone(inp.value); });
+        });
+
+        const regEducation = document.getElementById('reg-education');
+        const regStageBox = document.getElementById('reg-stage-box');
+        const regStage = document.getElementById('reg-stage');
+        const profileEducation = document.getElementById('profile-education');
+        const profileStageWrapper = document.getElementById('profile-stage-wrapper');
+        const profileStage = document.getElementById('profile-stage');
+
+        function toggleStageField(selectEl, wrapperEl, inputEl) {
+            if (!selectEl || !wrapperEl) return;
+            if (selectEl.value === 'طالب') wrapperEl.classList.remove('hidden');
+            else {
+                wrapperEl.classList.add('hidden');
+                if (inputEl) inputEl.value = '';
+            }
+        }
+        regEducation.addEventListener('change', () => toggleStageField(regEducation, regStageBox, regStage));
+        profileEducation.addEventListener('change', () => toggleStageField(profileEducation, profileStageWrapper, profileStage));
+
+        function setAuthMode(registerMode) {
+            isRegisterMode = registerMode;
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+            if (isRegisterMode) {
+                tabRegister.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
+                tabLogin.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
+                registerExtraFields.classList.remove('hidden');
+                confirmPasswordBox.classList.remove('hidden');
+                authModalTitle.innerText = 'إنشاء حساب جديد في BioMed Hub';
+                authModalSubtitle.innerText = 'أدخل بياناتك الأساسية لإنشاء حسابك في المنصة.';
+                authSubmitBtn.innerText = 'إنشاء الحساب';
+            } else {
+                tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
+                tabRegister.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
+                registerExtraFields.classList.add('hidden');
+                confirmPasswordBox.classList.add('hidden');
+                authModalTitle.innerText = 'تسجيل الدخول إلى حسابك';
+                authModalSubtitle.innerText = 'سجل دخولك لمتابعة ملفك، إشعاراتك، وشهاداتك.';
+                authSubmitBtn.innerText = 'تسجيل الدخول';
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        setAuthMode(urlParams.get('mode') === 'register');
+
+        tabLogin.addEventListener('click', () => setAuthMode(false));
+        tabRegister.addEventListener('click', () => setAuthMode(true));
+
+        const profileEditPanel = document.getElementById('profile-edit-panel');
+        function setEditPanelOpen(open) {
+            if (open) profileEditPanel.classList.remove('hidden');
+            else {
+                profileEditPanel.classList.add('hidden');
+                document.getElementById('profile-save-status').classList.add('hidden');
+            }
+        }
+        document.getElementById('toggle-edit-profile-btn').addEventListener('click', () => setEditPanelOpen(profileEditPanel.classList.contains('hidden')));
+        document.getElementById('cancel-edit-profile-btn').addEventListener('click', () => setEditPanelOpen(false));
+
+        const handleLogout = async () => { await signOut(auth); };
+        document.getElementById('nav-logout-btn').addEventListener('click', handleLogout);
+        document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
+        document.getElementById('refresh-certs-btn').addEventListener('click', () => {
+            if (currentUser?.email) loadUserCertificates(currentUser.email);
+        });
+
+        function renderProfileSummary(data) {
+            document.getElementById('account-display-name').innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
+            document.getElementById('summary-university').innerText = data.university || '-';
+            document.getElementById('summary-education').innerText = (data.education === 'طالب' && data.stage) ? `طالب (${data.stage})` : (data.education || '-');
+            document.getElementById('summary-phone').innerText = data.phone || '-';
+            document.getElementById('summary-city').innerText = data.city || '-';
+        }
+
+        async function loadUserProfile(user) {
+            setEditPanelOpen(false);
+            try {
+                const snap = await getDoc(doc(db, 'members', user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('profile-name').value = data.fullName || '';
+                    document.getElementById('profile-university').value = data.university || '';
+                    document.getElementById('profile-phone').value = data.phone || '';
+                    profileEducation.value = data.education || '';
+                    toggleStageField(profileEducation, profileStageWrapper, profileStage);
+                    profileStage.value = data.stage || '';
+                    document.getElementById('profile-city').value = data.city || '';
+                    renderProfileSummary(data);
+                } else {
+                    renderProfileSummary({});
+                }
+            } catch (e) {
+                console.error('Error loading profile:', e);
+                renderProfileSummary({});
+            }
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const saveBtn = document.getElementById('save-profile-btn');
+            const statusEl = document.getElementById('profile-save-status');
+            const fullName = document.getElementById('profile-name').value.trim();
+            const university = document.getElementById('profile-university').value.trim();
+            const phone = sanitizePhone(document.getElementById('profile-phone').value);
+            const education = profileEducation.value;
+            const stage = education === 'طالب' ? profileStage.value : '';
+            const city = document.getElementById('profile-city').value.trim();
+
+            if (phone && !isValidIraqiPhone(phone)) {
+                statusEl.className = 'text-xs font-bold text-red-600';
+                statusEl.innerText = 'يرجى كتابة رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX)';
+                statusEl.classList.remove('hidden');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'جاري الحفظ...';
+            statusEl.classList.add('hidden');
+
+            try {
+                const updatedData = { email: currentUser.email, fullName, university, phone, education, stage, city, updatedAt: Date.now() };
+                await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
+                renderProfileSummary(updatedData);
+                statusEl.className = 'text-xs font-bold text-emerald-700';
+                statusEl.innerText = 'تم حفظ بيانات الحساب بنجاح';
+                statusEl.classList.remove('hidden');
+                setTimeout(() => setEditPanelOpen(false), 900);
+            } catch (err) {
+                statusEl.className = 'text-xs font-bold text-red-600';
+                statusEl.innerText = 'تعذر حفظ البيانات، حاول مرة أخرى';
+                statusEl.classList.remove('hidden');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = 'حفظ البيانات';
+            }
+        });
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            if (isRegisterMode) {
+                const fullName = document.getElementById('reg-name').value.trim();
+                const university = document.getElementById('reg-university').value.trim();
+                const phone = sanitizePhone(document.getElementById('reg-phone').value);
+                const education = regEducation.value;
+                const stage = regStage.value;
+                const city = document.getElementById('reg-city').value.trim();
+                const confirmPass = document.getElementById('auth-password-confirm').value;
+
+                if (!fullName || !university || !phone || !education) {
+                    authErrorMsg.innerText = 'يرجى ملء الاسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (!isValidIraqiPhone(phone)) {
+                    authErrorMsg.innerText = 'يرجى إدخال رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX).';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (education === 'طالب' && !stage) {
+                    authErrorMsg.innerText = 'يرجى اختيار المرحلة الدراسية.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (password !== confirmPass) {
+                    authErrorMsg.innerText = 'رمز السر وتأكيد رمز السر غير متطابقين.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+
+                authSubmitBtn.disabled = true;
+                authSubmitBtn.innerText = 'جاري إنشاء الحساب...';
+
+                try {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await setDoc(doc(db, 'members', cred.user.uid), {
+                        email: cred.user.email,
+                        fullName,
+                        university,
+                        phone,
+                        education,
+                        stage: education === 'طالب' ? stage : '',
+                        city,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    }, { merge: true });
+                    await createWelcomeNotification(cred.user.uid);
+                } catch (err) {
+                    let msg = 'حدث خطأ أثناء إنشاء الحساب، حاول مرة أخرى.';
+                    if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
+                    else if (err.code === 'auth/weak-password') msg = 'رمز السر يجب أن يكون 6 أحرف على الأقل.';
+                    else if (err.code === 'auth/invalid-email') msg = 'صيغة البريد الإلكتروني غير صحيحة.';
+                    authErrorMsg.innerText = msg;
+                    authErrorMsg.classList.remove('hidden');
+                } finally {
+                    authSubmitBtn.disabled = false;
+                    setAuthMode(isRegisterMode);
+                }
+                return;
+            }
+
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.innerText = 'جاري الدخول...';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                let msg = 'حدث خطأ أثناء تسجيل الدخول.';
+                if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                    msg = 'البريد الإلكتروني أو رمز السر غير صحيح.';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'صيغة البريد الإلكتروني غير صحيحة.';
+                }
+                authErrorMsg.innerText = msg;
+                authErrorMsg.classList.remove('hidden');
+            } finally {
+                authSubmitBtn.disabled = false;
+                setAuthMode(isRegisterMode);
+            }
+        });
+
+        document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+            const email = document.getElementById('auth-email').value.trim();
+            if (!email) {
+                authErrorMsg.innerText = 'اكتب بريدك الإلكتروني أولاً ثم اضغط على نسيت رمز السر.';
+                authErrorMsg.classList.remove('hidden');
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                authSuccessMsg.innerText = 'تم إرسال رابط إعادة تعيين رمز السر إلى بريدك الإلكتروني.';
+                authSuccessMsg.classList.remove('hidden');
+            } catch (err) {
+                authErrorMsg.innerText = 'تعذر إرسال الرابط، تأكد من صحة البريد الإلكتروني.';
+                authErrorMsg.classList.remove('hidden');
+            }
+        });
+
+        function buildDriveLinks(rawUrl) {
+            const url = String(rawUrl || '').trim();
+            if (!url) return { viewUrl: '', downloadUrl: '' };
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return {
+                    viewUrl: `https://drive.google.com/file/d/${match[1]}/view`,
+                    downloadUrl: `https://drive.google.com/uc?export=download&id=${match[1]}`
+                };
+            }
+            return { viewUrl: url, downloadUrl: url };
+        }
+
+        async function loadUserCertificates(userEmail) {
+            const container = document.getElementById('user-certificates-list');
+            const badge = document.getElementById('certs-count-badge');
+            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>';
+            const targetEmail = String(userEmail || '').trim().toLowerCase();
+
+            try {
+                const response = await fetch(CERT_CSV_URL + '&t=' + Date.now());
+                const csvText = await response.text();
+                const rows = csvText.split(/\r?\n/).map(row =>
+                    row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'))
+                );
+
+                const matchedCerts = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (!cols || cols.length < 2) continue;
+                    if ((cols[1] || '').trim().toLowerCase() === targetEmail) {
+                        matchedCerts.push({
+                            name: cols[0] || '',
+                            email: cols[1] || '',
+                            date: cols[2] || '',
+                            workshop: cols[3] || '',
+                            serialId: cols[4] || '',
+                            lecturer: cols[5] || '',
+                            certLink: cols[6] || ''
+                        });
+                    }
+                }
+
+                badge.innerText = String(matchedCerts.length);
+                if (matchedCerts.length === 0) {
+                    container.innerHTML = `<div class="col-span-2 bg-slate-50 rounded-2xl border border-slate-100 p-5 text-center"><p class="text-xs text-slate-500">لا توجد شهادات مسجلة حالياً لهذا البريد الإلكتروني.</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = matchedCerts.reverse().map(cert => {
+                    const links = buildDriveLinks(cert.certLink);
+                    const verifyUrl = `https://biomedhubiq.com/?id=${encodeURIComponent(cert.serialId)}&name=${encodeURIComponent(cert.name)}`;
+                    return `
+                    <div class="bg-slate-50/60 rounded-2xl border border-purple-100 p-5 flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-1 rounded-full">${esc(cert.serialId || 'موثقة')}</span>
+                                <span class="text-[11px] text-slate-400"><i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}</span>
+                            </div>
+                            <h4 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h4>
+                            <p class="text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
+                            ${cert.lecturer ? `<p class="text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
+                        </div>
+                        <div class="pt-2 flex items-center gap-2">
+                            ${links.downloadUrl ? `
+                                <a href="${esc(links.downloadUrl)}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                                    <i class="fa-solid fa-download ml-1"></i> تحميل الشهادة PDF
+                                </a>
+                                <a href="${esc(links.viewUrl)}" target="_blank" class="bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold py-2.5 px-3 rounded-xl transition" title="معاينة الشهادة">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            ` : `
+                                <a href="${esc(verifyUrl)}" target="_blank" class="flex-1 text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">عرض التوثيق</a>
+                            `}
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading certificates:', error);
+                container.innerHTML = '<div class="col-span-2 text-center text-red-500 py-4 text-xs">تعذر تحميل الشهادات حالياً، حاول تحديث القائمة.</div>';
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            document.getElementById('account-loading-state')?.classList.add('hidden');
+            const accountSection = document.getElementById('member-account-section');
+            const guestBox = document.getElementById('guest-login-box');
+
+            if (user) {
+                guestBox.classList.add('hidden');
+                accountSection.classList.remove('hidden');
+                document.getElementById('logged-user-email').innerText = user.email;
+
+                document.getElementById('nav-auth-btn').classList.add('hidden');
+                document.getElementById('nav-account-btn').classList.remove('hidden');
+                document.getElementById('nav-logout-btn').classList.remove('hidden');
+                document.getElementById('mobile-auth-btn').classList.add('hidden');
+                document.getElementById('mobile-account-btn').classList.remove('hidden');
+                document.getElementById('mobile-logout-btn').classList.remove('hidden');
+
+                await loadUserProfile(user);
+                await loadUserNotifications(user);
+                loadUserCertificates(user.email);
+
+                if (window.location.hash === '#notifications') {
+                    scrollToNotifications();
+                }
+            } else {
+                accountSection.classList.add('hidden');
+                guestBox.classList.remove('hidden');
+                updateNavNotifCounter(0);
+
+                document.getElementById('nav-auth-btn').classList.remove('hidden');
+                document.getElementById('nav-account-btn').classList.add('hidden');
+                document.getElementById('nav-logout-btn').classList.add('hidden');
+                document.getElementById('mobile-auth-btn').classList.remove('hidden');
+                document.getElementById('mobile-account-btn').classList.add('hidden');
+                document.getElementById('mobile-logout-btn').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
