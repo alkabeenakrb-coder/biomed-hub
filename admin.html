@@ -25,6 +25,7 @@
         .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
         .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
         .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
+        .pre-line { white-space: pre-line; }
         .hint { font-size: 11px; color: #777; margin-top: -10px; margin-bottom: 14px; }
         .check-row { display: flex; align-items: center; gap: 8px; margin: 6px 0 14px 0; font-size: 13px; font-weight: bold; color: #4c1d95; }
         .check-row input[type="checkbox"] { width: auto; margin: 0; }
@@ -75,8 +76,9 @@
                 <label>المحاضر (speaker):</label>
                 <input type="text" id="wSpeaker" placeholder="تقديم المهندس...">
 
-                <label>التفاصيل (details):</label>
-                <textarea id="wDetails" rows="2" placeholder="نبذة مختصرة عن الورشة..."></textarea>
+                <label>المحاور (details):</label>
+                <textarea id="wDetails" rows="6" placeholder="اكتب محاور الورشة بالتفصيل (تستقبل عدد حروف كبير وأسطر متعددة)..."></textarea>
+                <p class="hint">تستقبل نصاً طويلاً بدون حد لعدد الحروف، وتظهر تحت قسم «المحاور» في صفحة الورش.</p>
 
                 <div id="inPersonContainer" class="hidden">
                     <label>المحافظة:</label>
@@ -456,11 +458,10 @@
                         <div class="workshop-item">
                             <h4>${esc(w.title)} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
                             <p><strong>المحاضر:</strong> ${esc(w.speaker || 'غير محدد')}</p>
-                            <p><strong>التفاصيل:</strong> ${esc(w.details || 'لا توجد تفاصيل')}</p>
+                            <p class="pre-line"><strong>المحاور:</strong> ${esc(w.details || 'لا توجد محاور')}</p>
                             ${w.type === 'in-person'
                                 ? `<p><strong>موقع الورشة:</strong> ${esc(venueText)}</p>
-                                   <p><strong>التاريخ والوقت:</strong> ${esc(w.dateTime || 'غير محدد')}</p>`
-                                : `<p><strong>المنصة:</strong> ${esc(w.platform || 'غير محدد')}</p>`
+                                   <p><strong>التاريخ والوقت:</strong> ${esc(w.dateTime \vert{}\vert{} 'غير محدد')}</p>` : `<p><strong>المنصة:</strong> ${esc(w.platform || 'غير محدد')}</p>`
                             }
                             ${w.link ? `<p><strong>الرابط:</strong> <a href="${esc(w.link)}" target="_blank">${esc(w.link)}</a></p>` : ''}
                             <button class="btn-edit" onclick="editWorkshop('${w.id}')">تعديل الورشة</button>
@@ -558,61 +559,4 @@
             if (document.getElementById('notifyPostCheck')) {
                 document.getElementById('notifyPostCheck').checked = true;
             }
-            document.getElementById('postFormTitleText').innerText = 'إضافة تغطية معرض / مؤتمر / ورشة';
-            document.getElementById('submitPostBtn').innerText = 'نشر التغطية';
-            document.getElementById('submitPostBtn').style.backgroundColor = '#6366f1';
-            document.getElementById('cancelPostBtn').classList.add('hidden');
-        }
-
-        window.deletePost = async function(id) {
-            if (!db) return;
-            if (!confirm('هل أنت متأكد من حذف هذه التغطية؟')) return;
-            try {
-                await deleteDoc(doc(db, "posts", id));
-                renderPosts();
-            } catch (error) {
-                alert('خطأ أثناء الحذف: ' + error.message);
-            }
-        }
-
-        async function renderPosts() {
-            const container = document.getElementById('postsList');
-            if (!container) return;
-            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل التغطيات...</p>';
-
-            try {
-                const querySnapshot = await getDocs(collection(db, "posts"));
-                localPosts = [];
-                querySnapshot.forEach((docSnap) => {
-                    localPosts.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                if (localPosts.length === 0) {
-                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد تغطيات منشورة بعد.</p>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                localPosts.forEach(p => {
-                    const imgs = getPostImages(p);
-                    const dateDisplay = p.postDate || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
-                    container.innerHTML += `
-                        <div class="workshop-item">
-                            <h4>${esc(p.title)} <span style="font-size: 11px; padding: 2px 6px; background: #ede9fe; color: #5b21b6; border-radius: 4px;">${esc(p.tag || 'تغطية')}</span></h4>
-                            ${dateDisplay ? `<p><strong>التاريخ:</strong> ${esc(dateDisplay)}</p>` : ''}
-                            <p>${esc(p.body || '')}</p>
-                            ${imgs.length ? `<p><strong>الصور:</strong> ${imgs.length} صورة</p>` : ''}
-                            <button class="btn-edit" onclick="editPost('${p.id}')">تعديل التغطية</button>
-                            <button class="btn-danger" onclick="deletePost('${p.id}')">حذف التغطية</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض التغطيات.</p>';
-            }
-        }
-    </script>
-</body>
-</html>
+            document.getElementById('postFormTitleText').innerText =
