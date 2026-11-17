@@ -26,6 +26,8 @@
         .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
         .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
         .hint { font-size: 11px; color: #777; margin-top: -10px; margin-bottom: 14px; }
+        .check-row { display: flex; align-items: center; gap: 8px; margin: 6px 0 14px 0; font-size: 13px; font-weight: bold; color: #4c1d95; }
+        .check-row input[type="checkbox"] { width: auto; margin: 0; }
     </style>
 </head>
 <body>
@@ -40,7 +42,7 @@
             <p id="loginMsg" style="color: red; margin-top: 10px; text-align: center;"></p>
         </div>
 
-        <!-- 2. لوحة التحكم الرئيسية (مخفية لحين الدخول) -->
+        <!-- 2. لوحة التحكم الرئيسية -->
         <div id="adminCard" class="hidden">
             
             <div style="text-align: left; margin-bottom: 10px;">
@@ -76,7 +78,6 @@
                 <label>التفاصيل (details):</label>
                 <textarea id="wDetails" rows="2" placeholder="نبذة مختصرة عن الورشة..."></textarea>
 
-                <!-- حقول الورشة الحضورية -->
                 <div id="inPersonContainer" class="hidden">
                     <label>المحافظة:</label>
                     <input type="text" id="wGovernorate" placeholder="مثال: كربلاء المقدسة / بغداد / نينوى...">
@@ -88,7 +89,6 @@
                     <input type="text" id="wDateTime" placeholder="مثال: السبت 22/11/2026 - الساعة 10:00 صباحاً">
                 </div>
 
-                <!-- حقل الورشة الأونلاين / الأرشيف -->
                 <div id="platformContainer">
                     <label>المنصة / الوقت (platform):</label>
                     <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
@@ -98,6 +98,11 @@
                     <label>رابط الورشة أو الانضمام (link):</label>
                     <input type="text" id="wLink" placeholder="https://t.me/...">
                 </div>
+
+                <label class="check-row" id="notifyWorkshopRow">
+                    <input type="checkbox" id="notifyWorkshopCheck" checked>
+                    <span>إرسال إشعار تلقائي للأعضاء عند إضافة الورشة</span>
+                </label>
 
                 <button id="submitBtn">إضافة الورشة للقائمة</button>
                 <button id="cancelBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
@@ -135,6 +140,11 @@
                 <label>تفاصيل التغطية:</label>
                 <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية أو التغطية..."></textarea>
 
+                <label class="check-row" id="notifyPostRow">
+                    <input type="checkbox" id="notifyPostCheck" checked>
+                    <span>إرسال إشعار تلقائي للأعضاء عند نشر التغطية</span>
+                </label>
+
                 <button id="submitPostBtn">نشر التغطية</button>
                 <button id="cancelPostBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
                 <p id="msgPost" class="msg"></p>
@@ -148,7 +158,6 @@
         </div>
     </div>
 
-    <!-- برمجة الصفحة المستقرة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -176,6 +185,20 @@
 
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+        async function publishAnnouncement({ title, body, link = '' }) {
+            if (!db) return;
+            try {
+                await addDoc(collection(db, "announcements"), {
+                    title,
+                    body,
+                    link,
+                    createdAt: Date.now()
+                });
+            } catch (err) {
+                console.error("Error publishing announcement:", err);
+            }
+        }
+
         function parseImageUrls(raw) {
             if (Array.isArray(raw)) {
                 return raw.map(u => String(u || '').trim()).filter(Boolean);
@@ -193,14 +216,12 @@
             return parseImageUrls(post.imageUrl);
         }
 
-        // التحقق عند التحميل
         if (localStorage.getItem('biomed_admin_logged') === 'true') {
             document.getElementById('loginCard').classList.add('hidden');
             document.getElementById('adminCard').classList.remove('hidden');
             if (db) loadAdminData();
         }
 
-        // ربط الأحداث بالأزرار برمجياً لتجنب أي تعليق
         document.getElementById('loginBtn').addEventListener('click', checkPassword);
         document.getElementById('passwordInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') checkPassword();
@@ -290,6 +311,7 @@
             const title = document.getElementById('wTitle').value;
             const speaker = document.getElementById('wSpeaker').value;
             const details = document.getElementById('wDetails').value;
+            const shouldNotify = document.getElementById('notifyWorkshopCheck')?.checked;
 
             const governorate = type === 'in-person' ? document.getElementById('wGovernorate').value : '';
             const location = type === 'in-person' ? document.getElementById('wLocation').value : '';
@@ -317,6 +339,15 @@
                         ...payload,
                         createdAt: Date.now()
                     });
+
+                    if (shouldNotify) {
+                        await publishAnnouncement({
+                            title: `ورشة جديدة: ${title.trim()}`,
+                            body: details.trim() || `تمت إضافة ورشة جديدة (${speaker.trim() || 'BioMed Hub'}). اضغط للتفاصيل والتسجيل.`,
+                            link: link.trim() || 'https://biomedhubiq.com/#workshops'
+                        });
+                    }
+
                     document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
                 }
                 resetForm();
@@ -344,6 +375,7 @@
 
             toggleTypeFields();
 
+            document.getElementById('notifyWorkshopRow').classList.add('hidden');
             document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
             document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
             document.getElementById('submitBtn').style.backgroundColor = '#3b82f6';
@@ -364,6 +396,10 @@
             document.getElementById('wLink').value = '';
             toggleTypeFields();
 
+            document.getElementById('notifyWorkshopRow').classList.remove('hidden');
+            if (document.getElementById('notifyWorkshopCheck')) {
+                document.getElementById('notifyWorkshopCheck').checked = true;
+            }
             document.getElementById('formTitleText').innerText = 'إضافة ورشة جديدة / أرشيف';
             document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
             document.getElementById('submitBtn').style.backgroundColor = '#6366f1';
@@ -437,7 +473,6 @@
             }
         }
 
-        // إدارة تغطية المعارض والمؤتمرات والورش (posts)
         async function savePost() {
             if (!db) return;
             const editPostId = document.getElementById('editPostId').value;
@@ -446,6 +481,7 @@
             const postDate = document.getElementById('pDate').value.trim();
             const imageUrls = parseImageUrls(document.getElementById('pImageUrls').value);
             const body = document.getElementById('pBody').value;
+            const shouldNotify = document.getElementById('notifyPostCheck')?.checked;
 
             if (!title.trim() || !body.trim()) {
                 alert('الرجاء كتابة عنوان التغطية والتفاصيل!');
@@ -470,6 +506,15 @@
                         ...payload,
                         createdAt: Date.now()
                     });
+
+                    if (shouldNotify) {
+                        await publishAnnouncement({
+                            title: `تغطية فعالية جديدة: ${title.trim()}`,
+                            body: body.trim().slice(0, 180) + (body.trim().length > 180 ? '...' : ''),
+                            link: 'https://biomedhubiq.com/#posts'
+                        });
+                    }
+
                     document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح! ✅';
                 }
                 resetPostForm();
@@ -493,6 +538,7 @@
             document.getElementById('pImageUrls').value = imgs.join('\n');
             document.getElementById('pBody').value = p.body || '';
 
+            document.getElementById('notifyPostRow').classList.add('hidden');
             document.getElementById('postFormTitleText').innerText = 'تعديل التغطية';
             document.getElementById('submitPostBtn').innerText = 'حفظ تعديلات التغطية';
             document.getElementById('submitPostBtn').style.backgroundColor = '#3b82f6';
@@ -508,6 +554,10 @@
             document.getElementById('pImageUrls').value = '';
             document.getElementById('pBody').value = '';
 
+            document.getElementById('notifyPostRow').classList.remove('hidden');
+            if (document.getElementById('notifyPostCheck')) {
+                document.getElementById('notifyPostCheck').checked = true;
+            }
             document.getElementById('postFormTitleText').innerText = 'إضافة تغطية معرض / مؤتمر / ورشة';
             document.getElementById('submitPostBtn').innerText = 'نشر التغطية';
             document.getElementById('submitPostBtn').style.backgroundColor = '#6366f1';
