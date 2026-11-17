@@ -54,14 +54,14 @@
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
 
-                <!-- أزرار حساب الزائر والشهادات -->
+                <!-- أزرار حساب العضو العام -->
                 <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-graduate"></i>
-                    <span>تسجيل الدخول / شهاداتي</span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>تسجيل الدخول</span>
                 </button>
-                <button id="nav-my-certs-btn" type="button" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-certificate"></i>
-                    <span>شهاداتي</span>
+                <button id="nav-account-btn" type="button" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>حسابي</span>
                 </button>
                 <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -82,12 +82,12 @@
             <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
 
             <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-user-graduate"></i>
-                <span>تسجيل الدخول / شهاداتي</span>
+                <i class="fa-solid fa-user"></i>
+                <span>تسجيل الدخول</span>
             </button>
-            <button id="mobile-my-certs-btn" type="button" class="hidden w-full bg-emerald-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-certificate"></i>
-                <span>شهاداتي</span>
+            <button id="mobile-account-btn" type="button" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user-check"></i>
+                <span>حسابي</span>
             </button>
             <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
                 تسجيل الخروج
@@ -120,32 +120,89 @@
             <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
                 استعرض الورش
             </a>
-            <button id="hero-certs-btn" type="button" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
-                <i class="fa-solid fa-award text-emerald-600"></i>
-                <span>تحميل شهاداتي</span>
+            <button id="hero-account-btn" type="button" class="bg-white hover:bg-purple-50 text-purple-900 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-user-gear text-purple-600"></i>
+                <span>حسابي في المنصة</span>
             </button>
         </div>
     </section>
 
-    <!-- قسم شهادات الطالب (يظهر تلقائياً عند تسجيل الدخول) -->
-    <section id="my-certificates-section" class="hidden py-10 px-6 max-w-4xl mx-auto">
-        <div class="bg-gradient-to-br from-purple-50 via-white to-emerald-50/40 rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-4">
-                <div>
-                    <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full inline-block mb-1">
-                        <i class="fa-solid fa-circle-check ml-1"></i> حساب موثق
-                    </span>
-                    <h2 class="text-xl sm:text-2xl font-black text-purple-900">شهاداتي في BioMed Hub</h2>
-                    <p id="logged-user-email" class="text-xs text-slate-500 mt-1"></p>
+    <!-- لوحة حساب العضو العامة (تظهر تلقائياً عند تسجيل الدخول) -->
+    <section id="member-account-section" class="hidden py-10 px-6 max-w-4xl mx-auto">
+        <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-8">
+            <!-- رأس الحساب -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-black text-lg shrink-0">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block mb-1">
+                            حساب عضو في BioMed Hub
+                        </span>
+                        <h2 id="account-display-name" class="text-xl font-black text-purple-900">حسابي</h2>
+                        <p id="logged-user-email" class="text-xs text-slate-500 mt-0.5"></p>
+                    </div>
                 </div>
-                <button id="refresh-certs-btn" type="button" class="self-start sm:self-center bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-rotate"></i>
-                    <span>تحديث القائمة</span>
-                </button>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                    <a href="https://biomedhubiq.com/join.html" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
+                    </a>
+                    <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span>تحديث الشهادات</span>
+                    </button>
+                </div>
             </div>
 
-            <div id="user-certificates-list" class="grid sm:grid-cols-2 gap-4">
-                <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري البحث عن شهاداتك...</div>
+            <!-- بيانات البروفايل العام للحساب -->
+            <div class="bg-purple-50/50 rounded-2xl border border-purple-100 p-5 space-y-4">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <h3 class="text-sm font-extrabold text-purple-900">
+                        <i class="fa-solid fa-id-card text-purple-600 ml-1"></i>
+                        بيانات الحساب الشخصي
+                    </h3>
+                    <span id="profile-save-status" class="text-xs font-bold text-emerald-700 hidden"></span>
+                </div>
+
+                <form id="profile-form" class="grid sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
+                        <input type="text" id="profile-name" placeholder="مثال: أحمد علي"
+                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / الجهة</label>
+                        <input type="text" id="profile-org" placeholder="مثال: جامعة بغداد / مستشفى"
+                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">المحافظة</label>
+                        <input type="text" id="profile-city" placeholder="مثال: كربلاء"
+                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                    </div>
+                    <div class="sm:col-span-3 flex justify-end">
+                        <button id="save-profile-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                            حفظ بيانات الحساب
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- قسم فرعي داخل الحساب لعرض الشهادات إن وجدت -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-extrabold text-purple-900">
+                        <i class="fa-solid fa-certificate text-purple-600 ml-1"></i>
+                        شهاداتي المرتبطة بالحساب
+                    </h3>
+                    <span id="certs-count-badge" class="text-[11px] bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-full font-bold">0</span>
+                </div>
+
+                <div id="user-certificates-list" class="grid sm:grid-cols-2 gap-4">
+                    <div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>
+                </div>
             </div>
         </div>
     </section>
@@ -336,7 +393,7 @@
         </div>
     </footer>
 
-    <!-- نافذة تسجيل الدخول / إنشاء حساب للزائر -->
+    <!-- نافذة تسجيل الدخول / إنشاء حساب عام للعضو -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5">
             <button id="close-auth-modal" type="button" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
@@ -345,10 +402,10 @@
 
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl mb-2">
-                    <i class="fa-solid fa-certificate"></i>
+                    <i class="fa-solid fa-user"></i>
                 </div>
                 <h3 id="auth-modal-title" class="text-xl font-black text-purple-900">تسجيل الدخول إلى حسابك</h3>
-                <p class="text-xs text-slate-500">سجّل بنفس البريد الإلكتروني الذي استخدمته في استمارة حضور الورش لعرض شهاداتك وتحميلها.</p>
+                <p class="text-xs text-slate-500">حسابك في BioMed Hub لمتابعة ملفك الشخصي وشهاداتك إن وجدت.</p>
             </div>
 
             <!-- أزرار التبديل بين الدخول وإنشاء حساب -->
@@ -362,8 +419,16 @@
             </div>
 
             <form id="auth-form" class="space-y-3">
+                <div id="register-extra-fields" class="hidden space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label>
+                        <input type="text" id="reg-name" placeholder="مثال: أحمد علي"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني (Gmail / Email)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
                     <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
                 </div>
@@ -377,7 +442,7 @@
                 <p id="auth-success-msg" class="hidden text-xs text-emerald-700 font-bold text-center bg-emerald-50 py-2 px-3 rounded-xl"></p>
 
                 <button id="auth-submit-btn" type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
-                    دخول وعرض شهاداتي
+                    تسجيل الدخول
                 </button>
             </form>
 
@@ -440,7 +505,7 @@
         });
     </script>
 
-    <!-- سكريبت تسجيل دخول الزائر وربط الشهادات من Google Sheets -->
+    <!-- سكريبت حساب العضو العام (Auth + Profile + قسم فرعي للشهادات إن وجدت) -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import {
@@ -451,6 +516,12 @@
             signOut,
             onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -463,6 +534,7 @@
 
         const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         // رابط CSV الخاص بورقة All_Certificates
         const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
@@ -478,6 +550,7 @@
         const authSuccessMsg = document.getElementById('auth-success-msg');
         const tabLogin = document.getElementById('tab-login');
         const tabRegister = document.getElementById('tab-register');
+        const registerExtraFields = document.getElementById('register-extra-fields');
         const authModalTitle = document.getElementById('auth-modal-title');
         const authSubmitBtn = document.getElementById('auth-submit-btn');
 
@@ -489,13 +562,15 @@
             if (isRegisterMode) {
                 tabRegister.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
                 tabLogin.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
-                authModalTitle.innerText = 'إنشاء حساب جديد';
-                authSubmitBtn.innerText = 'إنشاء الحساب وعرض شهاداتي';
+                registerExtraFields.classList.remove('hidden');
+                authModalTitle.innerText = 'إنشاء حساب في BioMed Hub';
+                authSubmitBtn.innerText = 'إنشاء الحساب';
             } else {
                 tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
                 tabRegister.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
+                registerExtraFields.classList.add('hidden');
                 authModalTitle.innerText = 'تسجيل الدخول إلى حسابك';
-                authSubmitBtn.innerText = 'دخول وعرض شهاداتي';
+                authSubmitBtn.innerText = 'تسجيل الدخول';
             }
         }
 
@@ -508,8 +583,8 @@
             authModal.classList.add('hidden');
         }
 
-        function scrollToCerts() {
-            const sec = document.getElementById('my-certificates-section');
+        function scrollToAccount() {
+            const sec = document.getElementById('member-account-section');
             if (sec) sec.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -526,18 +601,18 @@
             openAuthModal();
         });
 
-        document.getElementById('hero-certs-btn').addEventListener('click', () => {
+        document.getElementById('hero-account-btn').addEventListener('click', () => {
             if (currentUser) {
-                scrollToCerts();
+                scrollToAccount();
             } else {
                 openAuthModal();
             }
         });
 
-        document.getElementById('nav-my-certs-btn').addEventListener('click', scrollToCerts);
-        document.getElementById('mobile-my-certs-btn').addEventListener('click', () => {
+        document.getElementById('nav-account-btn').addEventListener('click', scrollToAccount);
+        document.getElementById('mobile-account-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.add('hidden');
-            scrollToCerts();
+            scrollToAccount();
         });
 
         const handleLogout = async () => {
@@ -553,7 +628,67 @@
             }
         });
 
-        // معالجة الدخول وإنشاء الحساب
+        // تحميل وحفظ بيانات البروفايل العام في Firestore
+        async function loadUserProfile(user) {
+            const nameInput = document.getElementById('profile-name');
+            const orgInput = document.getElementById('profile-org');
+            const cityInput = document.getElementById('profile-city');
+            const displayNameEl = document.getElementById('account-display-name');
+
+            try {
+                const snap = await getDoc(doc(db, 'members', user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    nameInput.value = data.fullName || '';
+                    orgInput.value = data.organization || '';
+                    cityInput.value = data.city || '';
+                    displayNameEl.innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
+                } else {
+                    displayNameEl.innerText = 'حسابي';
+                }
+            } catch (e) {
+                console.error('Error loading profile:', e);
+            }
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const saveBtn = document.getElementById('save-profile-btn');
+            const statusEl = document.getElementById('profile-save-status');
+            const fullName = document.getElementById('profile-name').value.trim();
+            const organization = document.getElementById('profile-org').value.trim();
+            const city = document.getElementById('profile-city').value.trim();
+
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'جاري الحفظ...';
+            statusEl.classList.add('hidden');
+
+            try {
+                await setDoc(doc(db, 'members', currentUser.uid), {
+                    email: currentUser.email,
+                    fullName,
+                    organization,
+                    city,
+                    updatedAt: Date.now()
+                }, { merge: true });
+
+                document.getElementById('account-display-name').innerText = fullName ? `مرحباً، ${fullName}` : 'حسابي';
+                statusEl.innerText = 'تم حفظ بيانات الحساب بنجاح';
+                statusEl.classList.remove('hidden');
+                setTimeout(() => statusEl.classList.add('hidden'), 3500);
+            } catch (err) {
+                console.error('Error saving profile:', err);
+                statusEl.innerText = 'تعذر حفظ البيانات، حاول مرة أخرى';
+                statusEl.classList.remove('hidden');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = 'حفظ بيانات الحساب';
+            }
+        });
+
+        // معالجة الدخول وإنشاء الحساب العام
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             authErrorMsg.classList.add('hidden');
@@ -561,18 +696,24 @@
 
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
+            const regName = document.getElementById('reg-name').value.trim();
 
             authSubmitBtn.disabled = true;
             authSubmitBtn.innerText = 'جاري المعالجة...';
 
             try {
                 if (isRegisterMode) {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await setDoc(doc(db, 'members', cred.user.uid), {
+                        email: cred.user.email,
+                        fullName: regName || '',
+                        createdAt: Date.now()
+                    }, { merge: true });
                 } else {
                     await signInWithEmailAndPassword(auth, email, password);
                 }
                 closeAuthModal();
-                setTimeout(scrollToCerts, 300);
+                setTimeout(scrollToAccount, 300);
             } catch (err) {
                 let msg = 'حدث خطأ أثناء العملية، تأكد من البيانات.';
                 if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
@@ -608,7 +749,6 @@
             }
         });
 
-        // تحويل رابط Google Drive إلى رابط تحميل مباشر إذا أمكن
         function buildDriveLinks(rawUrl) {
             const url = String(rawUrl || '').trim();
             if (!url) return { viewUrl: '', downloadUrl: '' };
@@ -623,10 +763,11 @@
             return { viewUrl: url, downloadUrl: url };
         }
 
-        // قراءة شيت الشهادات ومطابقة إيميل المستخدم
+        // قسم فرعي داخل الحساب: قراءة الشهادات المرتبطة بالإيميل إن وجدت
         async function loadUserCertificates(userEmail) {
             const container = document.getElementById('user-certificates-list');
-            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري جلب شهاداتك...</div>';
+            const badge = document.getElementById('certs-count-badge');
+            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-4 text-xs">جاري التحقق من الشهادات...</div>';
 
             const targetEmail = String(userEmail || '').trim().toLowerCase();
 
@@ -637,8 +778,6 @@
                     row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'))
                 );
 
-                // الأعمدة في All_Certificates:
-                // 0: Name | 1: Email | 2: Date | 3: Workshop Name | 4: ID | 5: Lecturer | 6: CertLink
                 const matchedCerts = [];
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i];
@@ -658,11 +797,12 @@
                     }
                 }
 
+                badge.innerText = String(matchedCerts.length);
+
                 if (matchedCerts.length === 0) {
                     container.innerHTML = `
-                        <div class="col-span-2 bg-white rounded-2xl border border-purple-100 p-6 text-center space-y-2">
-                            <p class="text-sm font-bold text-slate-700">لا توجد شهادات مرتبطة بهذا البريد الإلكتروني حالياً.</p>
-                            <p class="text-xs text-slate-500">تأكد من تسجيل الدخول بنفس الإيميل الذي كتبته في استمارة حضور الورش.</p>
+                        <div class="col-span-2 bg-slate-50 rounded-2xl border border-slate-100 p-5 text-center">
+                            <p class="text-xs text-slate-500">لا توجد شهادات مسجلة حالياً لهذا البريد الإلكتروني.</p>
                         </div>
                     `;
                     return;
@@ -683,7 +823,7 @@
                                     <i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}
                                 </span>
                             </div>
-                            <h3 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h3>
+                            <h4 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h4>
                             <p class="text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
                             ${cert.lecturer ? `<p class="text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
                         </div>
@@ -713,38 +853,39 @@
         }
 
         // مراقبة حالة تسجيل الدخول
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             currentUser = user;
-            const certsSection = document.getElementById('my-certificates-section');
+            const accountSection = document.getElementById('member-account-section');
             const navAuthBtn = document.getElementById('nav-auth-btn');
-            const navMyCertsBtn = document.getElementById('nav-my-certs-btn');
+            const navAccountBtn = document.getElementById('nav-account-btn');
             const navLogoutBtn = document.getElementById('nav-logout-btn');
             const mobileAuthBtn = document.getElementById('mobile-auth-btn');
-            const mobileMyCertsBtn = document.getElementById('mobile-my-certs-btn');
+            const mobileAccountBtn = document.getElementById('mobile-account-btn');
             const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
 
             if (user) {
-                certsSection.classList.remove('hidden');
-                document.getElementById('logged-user-email').innerText = `البريد المسجل: ${user.email}`;
+                accountSection.classList.remove('hidden');
+                document.getElementById('logged-user-email').innerText = user.email;
 
                 navAuthBtn.classList.add('hidden');
-                navMyCertsBtn.classList.remove('hidden');
+                navAccountBtn.classList.remove('hidden');
                 navLogoutBtn.classList.remove('hidden');
 
                 mobileAuthBtn.classList.add('hidden');
-                mobileMyCertsBtn.classList.remove('hidden');
+                mobileAccountBtn.classList.remove('hidden');
                 mobileLogoutBtn.classList.remove('hidden');
 
+                await loadUserProfile(user);
                 loadUserCertificates(user.email);
             } else {
-                certsSection.classList.add('hidden');
+                accountSection.classList.add('hidden');
 
                 navAuthBtn.classList.remove('hidden');
-                navMyCertsBtn.classList.add('hidden');
+                navAccountBtn.classList.add('hidden');
                 navLogoutBtn.classList.add('hidden');
 
                 mobileAuthBtn.classList.remove('hidden');
-                mobileMyCertsBtn.classList.add('hidden');
+                mobileAccountBtn.classList.add('hidden');
                 mobileLogoutBtn.classList.add('hidden');
             }
         });
@@ -899,7 +1040,6 @@
             let firebaseWorkshops = [];
             let sheetWorkshops = [];
 
-            // 1. جلب الورش من Firebase وترتيبها من الأحدث للأقدم
             try {
                 const querySnapshot = await getDocs(collection(db, "workshops"));
                 querySnapshot.forEach((docSnap) => {
@@ -910,7 +1050,6 @@
                 console.error("خطأ في جلب بيانات Firebase:", error);
             }
 
-            // 2. جلب الورش من Google Sheets (CSV)
             try {
                 const response = await fetch(csvUrl);
                 const data = await response.text();
