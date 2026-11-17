@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الورش التدريبية | BioMed Hub</title>
+    <link rel="icon" type="image/png" href="M.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+</head>
+<body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="M.png" alt="BioMed Hub" class="w-10 h-10 object-contain">
+                <div>
+                    <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
+                    <p class="text-xs text-purple-600 font-medium">منصة الهندسة الطبية</p>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-5">
+                <a href="index.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الرئيسية</a>
+                <a href="workshops.html" class="text-purple-700 font-extrabold text-xs">الورش التدريبية</a>
+                <a href="posts.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
+                <a href="index.html#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
+
+                <!-- زر الإشعارات -->
+                <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-bell text-purple-600"></i>
+                    <span>الإشعارات</span>
+                    <span id="nav-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+                </button>
+
+                <!-- أزرار الحساب -->
+                <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user"></i>
+                    <span>تسجيل الدخول</span>
+                </button>
+                <a href="account.html" id="nav-account-btn" class="hidden bg-purple-900 hover:bg-purple-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>حسابي</span>
+                </a>
+                <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+
+            <button id="menu-btn" class="md:hidden text-purple-900 text-2xl focus:outline-none p-1">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
+            <a href="index.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الرئيسية</a>
+            <a href="workshops.html" onclick="toggleMenu()" class="block text-purple-700 font-extrabold text-sm">الورش التدريبية</a>
+            <a href="posts.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
+            <a href="index.html#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bell text-purple-600"></i>
+                <span>الإشعارات</span>
+                <span id="mobile-notif-count" class="hidden bg-purple-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">0</span>
+            </button>
+
+            <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user"></i>
+                <span>تسجيل الدخول</span>
+            </button>
+            <a href="account.html" id="mobile-account-btn" class="hidden w-full bg-purple-900 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user-check"></i>
+                <span>حسابي</span>
+            </a>
+            <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
+                تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 py-10 px-6 max-w-5xl w-full mx-auto space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+            <a href="index.html" class="inline-flex items-center gap-2 text-xs font-bold text-purple-700 hover:text-purple-900 bg-white border border-purple-100 px-3.5 py-2 rounded-xl shadow-sm transition">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>العودة للصفحة الرئيسية</span>
+            </a>
+            <span id="workshops-total-badge" class="text-[11px] bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded-full">0 ورشة</span>
+        </div>
+
+        <header class="text-center space-y-2 py-2">
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">الأنشطة والفعاليات</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-purple-900">الورش التدريبية</h2>
+            <p class="text-slate-500 text-xs">جميع الورش التدريبية الأونلاين والحضورية والأرشيف في BioMed Hub</p>
+        </header>
+
+        <!-- بحث + فلترة -->
+        <div class="bg-white rounded-2xl border border-purple-100 p-4 shadow-sm space-y-3">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute right-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="workshops-search-input" type="text" placeholder="ابحث بعنوان الورشة أو المحاضر أو المحافظة..."
+                       class="w-full pr-9 pl-4 py-2 rounded-xl bg-purple-50/40 border border-purple-100 focus:border-purple-600 outline-none text-xs">
+            </div>
+
+            <div id="workshops-filter-bar" class="flex items-center justify-center gap-2 flex-wrap">
+                <button type="button" data-filter="all" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm">
+                    الكل
+                </button>
+                <button type="button" data-filter="next" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                    أونلاين
+                </button>
+                <button type="button" data-filter="in-person" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                    حضوري
+                </button>
+                <button type="button" data-filter="archived" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
+                    أرشيف
+                </button>
+            </div>
+        </div>
+
+        <div id="workshops-container" class="grid md:grid-cols-2 gap-6">
+            <div class="col-span-2 text-center text-slate-400 py-8 text-xs">جاري تحميل الورش...</div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 text-center bg-white border-t border-purple-100 mt-10">
+        <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026</p>
+    </footer>
+
+    <!-- نافذة تنبيه الإشعارات للزائر غير المسجل -->
+    <div id="guest-notif-modal" class="hidden fixed inset-0 bg-black/60 z-[10002] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-purple-100 text-center space-y-4">
+            <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-purple-900">سجل الدخول لتصلك الإشعارات</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    سجل دخولك أو أنشئ حساباً في BioMed Hub حتى تصلك إشعارات الورش الجديدة والفعاليات والشهادات.
+                </p>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+                <button id="guest-notif-close" type="button" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold transition">
+                    إغلاق
+                </button>
+                <a href="account.html" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm text-center">
+                    تسجيل الدخول
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        function toggleMenu() { mobileMenu.classList.toggle('hidden'); }
+        menuBtn.addEventListener('click', toggleMenu);
+    </script>
+
+    <!-- حالة الجلسة والإشعارات -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        const guestNotifModal = document.getElementById('guest-notif-modal');
+        document.getElementById('guest-notif-close')?.addEventListener('click', () => guestNotifModal?.classList.add('hidden'));
+        guestNotifModal?.addEventListener('click', (e) => {
+            if (e.target === guestNotifModal) guestNotifModal.classList.add('hidden');
+        });
+
+        function handleNotifClick() {
+            if (!currentUser) {
+                guestNotifModal?.classList.remove('hidden');
+                return;
+            }
+            window.location.href = 'account.html#notifications';
+        }
+
+        document.getElementById('nav-notifications-btn')?.addEventListener('click', handleNotifClick);
+        document.getElementById('mobile-notifications-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            handleNotifClick();
+        });
+
+        document.getElementById('nav-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+        document.getElementById('mobile-auth-btn')?.addEventListener('click', () => { window.location.href = 'account.html'; });
+
+        const handleLogout = async () => {
+            await signOut(auth);
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+        };
+        document.getElementById('nav-logout-btn')?.addEventListener('click', handleLogout);
+        document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);
+
+        function updateNavNotifCounter(unreadCount) {
+            [document.getElementById('nav-notif-count'), document.getElementById('mobile-notif-count')].forEach(el => {
+                if (!el) return;
+                if (unreadCount > 0) {
+                    el.innerText = String(unreadCount);
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        async function syncUnreadCount(user) {
+            try {
+                let unread = 0;
+                const userSnap = await getDocs(query(collection(db, 'members', user.uid, 'notifications'), orderBy('createdAt', 'desc'), limit(15)));
+                userSnap.forEach(d => { if (!d.data().read) unread++; });
+
+                const publicSnap = await getDocs(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)));
+                const readMap = JSON.parse(localStorage.getItem(`bmh_read_ann_${user.uid}`) || '{}');
+                publicSnap.forEach(d => { if (!readMap[d.id]) unread++; });
+
+                updateNavNotifCounter(unread);
+            } catch (e) {
+                console.error('Error syncing unread count:', e);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                document.getElementById('nav-auth-btn')?.classList.add('hidden');
+                document.getElementById('nav-account-btn')?.classList.remove('hidden');
+                document.getElementById('nav-logout-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.add('hidden');
+                document.getElementById('mobile-account-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.remove('hidden');
+                syncUnreadCount(user);
+            } else {
+                updateNavNotifCounter(0);
+                document.getElementById('nav-auth-btn')?.classList.remove('hidden');
+                document.getElementById('nav-account-btn')?.classList.add('hidden');
+                document.getElementById('nav-logout-btn')?.classList.add('hidden');
+                document.getElementById('mobile-auth-btn')?.classList.remove('hidden');
+                document.getElementById('mobile-account-btn')?.classList.add('hidden');
+                document.getElementById('mobile-logout-btn')?.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <!-- جلب وعرض جميع الورش مع البحث والفلترة -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
+
+        let allWorkshopsCache = [];
+        let activeWorkshopFilter = 'all';
+        let searchQuery = '';
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        function buildInPersonMetaHtml(w) {
+            const gov = (w.governorate || '').trim();
+            const loc = (w.location || '').trim();
+            const dt = (w.dateTime || '').trim();
+            const venueParts = [gov, loc].filter(Boolean).join(' - ');
+            const lines = [];
+            if (venueParts) lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(venueParts)}</p>`);
+            if (dt) lines.push(`<p><i class="fa-regular fa-calendar-days text-purple-600 ml-1"></i> <strong>التاريخ والوقت:</strong> ${esc(dt)}</p>`);
+            if (!lines.length && w.platform) lines.push(`<p><i class="fa-solid fa-location-dot text-purple-600 ml-1"></i> <strong>موقع الورشة:</strong> ${esc(w.platform)}</p>`);
+            if (!lines.length) lines.push(`<p>غير محدد</p>`);
+            return lines.join('');
+        }
+
+        function renderWorkshopsList() {
+            const container = document.getElementById('workshops-container');
+            const badge = document.getElementById('workshops-total-badge');
+            if (!container) return;
+
+            let filtered = activeWorkshopFilter === 'all'
+                ? allWorkshopsCache
+                : allWorkshopsCache.filter(w => w.type === activeWorkshopFilter);
+
+            if (searchQuery) {
+                filtered = filtered.filter(w =>
+                    String(w.title || '').toLowerCase().includes(searchQuery) ||
+                    String(w.speaker || '').toLowerCase().includes(searchQuery) ||
+                    String(w.governorate || '').toLowerCase().includes(searchQuery) ||
+                    String(w.location || '').toLowerCase().includes(searchQuery) ||
+                    String(w.details || '').toLowerCase().includes(searchQuery)
+                );
+            }
+
+            if (badge) badge.innerText = `${filtered.length} ورشة`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-8 text-xs">لا توجد ورش مطابقة حالياً.</div>';
+                return;
+            }
+
+            let htmlContent = '';
+            filtered.forEach(w => {
+                if (w.type === 'next' || w.type === 'in-person') {
+                    const isInPerson = w.type === 'in-person';
+                    const modeLabel = isInPerson ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري' : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+                    const metaBoxContent = isInPerson ? buildInPersonMetaHtml(w) : `<p>${esc(w.platform || 'غير محدد')}</p>`;
+                    htmlContent += `
+                    <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                                </span>
+                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
+                            </div>
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
+                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
+                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
+                                <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            <a href="${esc(w.link || 'https://t.me/BioMedHubA')}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                                سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>`;
+                } else {
+                    htmlContent += `
+                    <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${esc(w.speaker || 'أرشيف')}</span>
+                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                            </div>
+                            <div class="space-y-3">
+                                <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
+                                <p class="text-xs text-slate-500 leading-relaxed">${esc(w.details || w.platform || '')}</p>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            ${w.link ? `<a href="${esc(w.link)}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">انتهت الورشة بنجاح</div>
+                        </div>
+                    </div>`;
+                }
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        function setupControls() {
+            const buttons = document.querySelectorAll('.workshop-filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeWorkshopFilter = btn.dataset.filter || 'all';
+                    buttons.forEach(b => {
+                        const isActive = b.dataset.filter === activeWorkshopFilter;
+                        b.className = isActive
+                            ? 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm'
+                            : 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100';
+                    });
+                    renderWorkshopsList();
+                });
+            });
+
+            document.getElementById('workshops-search-input')?.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                renderWorkshopsList();
+            });
+        }
+
+        async function loadAllWorkshops() {
+            const container = document.getElementById('workshops-container');
+            if (!container) return;
+            let firebaseWorkshops = [];
+            let sheetWorkshops = [];
+            try {
+                const querySnapshot = await getDocs(collection(db, "workshops"));
+                querySnapshot.forEach((docSnap) => firebaseWorkshops.push({ id: docSnap.id, ...docSnap.data() }));
+                firebaseWorkshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            } catch (error) { console.error("خطأ في جلب بيانات Firebase:", error); }
+
+            try {
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                const rows = data.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1')));
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (!cols || cols.length < 2 || !cols[0]) continue;
+                    const type = cols[0].trim();
+                    const title = cols[1] || '';
+                    if (type === 'next' || type === 'archived') {
+                        sheetWorkshops.push({
+                            type,
+                            title,
+                            speaker: cols[2] || '',
+                            platform: cols[3] || '',
+                            details: cols[4] || '',
+                            link: type === 'next' ? 'https://t.me/BioMedHubA' : ''
+                        });
+                    }
+                }
+            } catch (error) { console.error('خطأ في جلب بيانات قوقل شيت:', error); }
+
+            allWorkshopsCache = [...firebaseWorkshops, ...sheetWorkshops];
+            setupControls();
+            renderWorkshopsList();
+        }
+        loadAllWorkshops();
+    </script>
+</body>
+</html>
