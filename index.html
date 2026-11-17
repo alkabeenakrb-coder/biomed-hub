@@ -129,7 +129,7 @@
 
     <!-- لوحة حساب العضو العامة (تظهر تلقائياً عند تسجيل الدخول) -->
     <section id="member-account-section" class="hidden py-10 px-6 max-w-4xl mx-auto">
-        <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-8">
+        <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
             <!-- رأس الحساب -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
                 <div class="flex items-center gap-3.5">
@@ -145,23 +145,52 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 flex-wrap">
-                    <a href="https://biomedhubiq.com/join.html" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition">
-                        <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
-                    </a>
-                    <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate"></i>
-                        <span>تحديث الشهادات</span>
+                <!-- أزرار الإجراءات: تعديل البيانات الشخصية فوق طلب العضوية الرسمية -->
+                <div class="flex flex-col sm:items-end gap-2">
+                    <button id="toggle-edit-profile-btn" type="button" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-pen"></i>
+                        <span>تعديل البيانات الشخصية</span>
                     </button>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <a href="https://biomedhubiq.com/join.html" target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                            <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
+                        </a>
+                        <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>تحديث الشهادات</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- بيانات البروفايل العام للحساب -->
-            <div class="bg-purple-50/50 rounded-2xl border border-purple-100 p-5 space-y-4">
+            <!-- ملخص بيانات العضو (يظهر بشكل مختصر بدون إظهار الفورم مباشرة) -->
+            <div id="profile-summary-box" class="bg-purple-50/40 rounded-2xl border border-purple-100 p-4">
+                <div id="profile-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">الجامعة / المعهد</span>
+                        <strong id="summary-university" class="text-slate-800">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">التحصيل الدراسي</span>
+                        <strong id="summary-education" class="text-slate-800">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">رقم الهاتف</span>
+                        <strong id="summary-phone" dir="ltr" class="text-slate-800 inline-block">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">المحافظة</span>
+                        <strong id="summary-city" class="text-slate-800">-</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج تعديل البيانات الشخصية (مخفي افتراضياً ويفتح عند الضغط على زر تعديل البيانات الشخصية) -->
+            <div id="profile-edit-panel" class="hidden bg-purple-50/60 rounded-2xl border border-purple-200 p-5 space-y-4">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <h3 class="text-sm font-extrabold text-purple-900">
                         <i class="fa-solid fa-id-card text-purple-600 ml-1"></i>
-                        بيانات الحساب الشخصي
+                        تعديل البيانات الشخصية
                     </h3>
                     <span id="profile-save-status" class="text-xs font-bold text-emerald-700 hidden"></span>
                 </div>
@@ -169,17 +198,17 @@
                 <form id="profile-form" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
-                        <input type="text" id="profile-name" placeholder="مثال: أحمد علي"
+                        <input type="text" id="profile-name" placeholder="مثال: مجتبى ميثم"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / المعهد</label>
-                        <input type="text" id="profile-university" placeholder="مثال: جامعة بغداد"
+                        <input type="text" id="profile-university" placeholder="مثال: جامعة ذي قار"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">رقم الهاتف</label>
-                        <input type="tel" id="profile-phone" dir="ltr" placeholder="07XXXXXXXXX"
+                        <input type="tel" id="profile-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs text-left">
                     </div>
                     <div>
@@ -190,7 +219,7 @@
                             <option value="خريج">خريج</option>
                         </select>
                     </div>
-                    <div id="profile-stage-wrapper">
+                    <div id="profile-stage-wrapper" class="hidden">
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">المرحلة الدراسية</label>
                         <select id="profile-stage" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                             <option value="">اختر المرحلة</option>
@@ -207,9 +236,12 @@
                         <input type="text" id="profile-city" placeholder="مثال: كربلاء"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                     </div>
-                    <div class="sm:col-span-2 md:col-span-3 flex justify-end">
+                    <div class="sm:col-span-2 md:col-span-3 flex items-center justify-end gap-2">
+                        <button id="cancel-edit-profile-btn" type="button" class="bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">
+                            إلغاء
+                        </button>
                         <button id="save-profile-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                            حفظ بيانات الحساب
+                            حفظ البيانات
                         </button>
                     </div>
                 </form>
@@ -460,7 +492,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف *</label>
-                            <input type="tel" id="reg-phone" dir="ltr" placeholder="07XXXXXXXXX"
+                            <input type="tel" id="reg-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
                         </div>
                     </div>
@@ -632,6 +664,33 @@
         const authModalSubtitle = document.getElementById('auth-modal-subtitle');
         const authSubmitBtn = document.getElementById('auth-submit-btn');
 
+        const regPhone = document.getElementById('reg-phone');
+        const profilePhone = document.getElementById('profile-phone');
+
+        // تنظيف رقم الهاتف ليقبل أرقاماً فقط و + في البداية
+        function sanitizePhone(raw) {
+            let s = String(raw || '').trim();
+            if (s.startsWith('+')) {
+                s = '+' + s.slice(1).replace(/\D/g, '');
+            } else {
+                s = s.replace(/\D/g, '');
+            }
+            return s;
+        }
+
+        // التحقق من صحة رقم الهاتف العراقي (مثل 07XXXXXXXXX أو +9647XXXXXXXXX)
+        function isValidIraqiPhone(phone) {
+            const clean = sanitizePhone(phone);
+            return /^07\d{9}$/.test(clean) || /^\+9647\d{9}$/.test(clean);
+        }
+
+        [regPhone, profilePhone].forEach(inp => {
+            if (!inp) return;
+            inp.addEventListener('input', () => {
+                inp.value = sanitizePhone(inp.value);
+            });
+        });
+
         const regEducation = document.getElementById('reg-education');
         const regStageBox = document.getElementById('reg-stage-box');
         const regStage = document.getElementById('reg-stage');
@@ -639,6 +698,27 @@
         const profileEducation = document.getElementById('profile-education');
         const profileStageWrapper = document.getElementById('profile-stage-wrapper');
         const profileStage = document.getElementById('profile-stage');
+
+        const toggleEditProfileBtn = document.getElementById('toggle-edit-profile-btn');
+        const cancelEditProfileBtn = document.getElementById('cancel-edit-profile-btn');
+        const profileEditPanel = document.getElementById('profile-edit-panel');
+
+        function setEditPanelOpen(open) {
+            if (!profileEditPanel) return;
+            if (open) {
+                profileEditPanel.classList.remove('hidden');
+            } else {
+                profileEditPanel.classList.add('hidden');
+                document.getElementById('profile-save-status').classList.add('hidden');
+            }
+        }
+
+        toggleEditProfileBtn.addEventListener('click', () => {
+            const isHidden = profileEditPanel.classList.contains('hidden');
+            setEditPanelOpen(isHidden);
+        });
+
+        cancelEditProfileBtn.addEventListener('click', () => setEditPanelOpen(false));
 
         function toggleStageField(selectEl, wrapperEl, inputEl) {
             if (!selectEl || !wrapperEl) return;
@@ -731,13 +811,34 @@
             }
         });
 
-        // تحميل وحفظ بيانات البروفايل العام في Firestore
+        function renderProfileSummary(data) {
+            const displayNameEl = document.getElementById('account-display-name');
+            const uniEl = document.getElementById('summary-university');
+            const eduEl = document.getElementById('summary-education');
+            const phoneEl = document.getElementById('summary-phone');
+            const cityEl = document.getElementById('summary-city');
+
+            displayNameEl.innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
+            uniEl.innerText = data.university || '-';
+
+            if (data.education === 'طالب' && data.stage) {
+                eduEl.innerText = `طالب (${data.stage})`;
+            } else {
+                eduEl.innerText = data.education || '-';
+            }
+
+            phoneEl.innerText = data.phone || '-';
+            cityEl.innerText = data.city || '-';
+        }
+
+        // تحميل بيانات البروفايل العام من Firestore
         async function loadUserProfile(user) {
+            setEditPanelOpen(false);
+
             const nameInput = document.getElementById('profile-name');
             const uniInput = document.getElementById('profile-university');
             const phoneInput = document.getElementById('profile-phone');
             const cityInput = document.getElementById('profile-city');
-            const displayNameEl = document.getElementById('account-display-name');
 
             try {
                 const snap = await getDoc(doc(db, 'members', user.uid));
@@ -750,12 +851,13 @@
                     toggleStageField(profileEducation, profileStageWrapper, profileStage);
                     profileStage.value = data.stage || '';
                     cityInput.value = data.city || '';
-                    displayNameEl.innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
+                    renderProfileSummary(data);
                 } else {
-                    displayNameEl.innerText = 'حسابي';
+                    renderProfileSummary({});
                 }
             } catch (e) {
                 console.error('Error loading profile:', e);
+                renderProfileSummary({});
             }
         }
 
@@ -767,17 +869,24 @@
             const statusEl = document.getElementById('profile-save-status');
             const fullName = document.getElementById('profile-name').value.trim();
             const university = document.getElementById('profile-university').value.trim();
-            const phone = document.getElementById('profile-phone').value.trim();
+            const phone = sanitizePhone(document.getElementById('profile-phone').value);
             const education = profileEducation.value;
             const stage = education === 'طالب' ? profileStage.value : '';
             const city = document.getElementById('profile-city').value.trim();
+
+            if (phone && !isValidIraqiPhone(phone)) {
+                statusEl.className = 'text-xs font-bold text-red-600';
+                statusEl.innerText = 'يرجى كتابة رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX)';
+                statusEl.classList.remove('hidden');
+                return;
+            }
 
             saveBtn.disabled = true;
             saveBtn.innerText = 'جاري الحفظ...';
             statusEl.classList.add('hidden');
 
             try {
-                await setDoc(doc(db, 'members', currentUser.uid), {
+                const updatedData = {
                     email: currentUser.email,
                     fullName,
                     university,
@@ -786,19 +895,26 @@
                     stage,
                     city,
                     updatedAt: Date.now()
-                }, { merge: true });
+                };
 
-                document.getElementById('account-display-name').innerText = fullName ? `مرحباً، ${fullName}` : 'حسابي';
+                await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
+
+                renderProfileSummary(updatedData);
+                statusEl.className = 'text-xs font-bold text-emerald-700';
                 statusEl.innerText = 'تم حفظ بيانات الحساب بنجاح';
                 statusEl.classList.remove('hidden');
-                setTimeout(() => statusEl.classList.add('hidden'), 3500);
+
+                setTimeout(() => {
+                    setEditPanelOpen(false);
+                }, 900);
             } catch (err) {
                 console.error('Error saving profile:', err);
+                statusEl.className = 'text-xs font-bold text-red-600';
                 statusEl.innerText = 'تعذر حفظ البيانات، حاول مرة أخرى';
                 statusEl.classList.remove('hidden');
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.innerText = 'حفظ بيانات الحساب';
+                saveBtn.innerText = 'حفظ البيانات';
             }
         });
 
@@ -814,7 +930,7 @@
             if (isRegisterMode) {
                 const fullName = document.getElementById('reg-name').value.trim();
                 const university = document.getElementById('reg-university').value.trim();
-                const phone = document.getElementById('reg-phone').value.trim();
+                const phone = sanitizePhone(document.getElementById('reg-phone').value);
                 const education = regEducation.value;
                 const stage = regStage.value;
                 const city = document.getElementById('reg-city').value.trim();
@@ -822,6 +938,11 @@
 
                 if (!fullName || !university || !phone || !education) {
                     authErrorMsg.innerText = 'يرجى ملء الاسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (!isValidIraqiPhone(phone)) {
+                    authErrorMsg.innerText = 'يرجى إدخال رقم هاتف صحيح وكامل (مثال: 07XXXXXXXXX).';
                     authErrorMsg.classList.remove('hidden');
                     return;
                 }
