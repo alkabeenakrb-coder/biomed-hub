@@ -47,14 +47,25 @@
                 </div>
             </div>
 
-            <div class="hidden md:flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-5">
                 <a href="#steps" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">كيف تبدأ؟</a>
                 <a href="#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
                 <a href="#posts" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
-                <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                    تواصل معنا
-                </a>
+                <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
+
+                <!-- أزرار حساب الزائر والشهادات -->
+                <button id="nav-auth-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>تسجيل الدخول / شهاداتي</span>
+                </button>
+                <button id="nav-my-certs-btn" type="button" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-certificate"></i>
+                    <span>شهاداتي</span>
+                </button>
+                <button id="nav-logout-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition" title="تسجيل الخروج">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
             </div>
 
             <button id="menu-btn" class="md:hidden text-purple-900 text-2xl focus:outline-none p-1">
@@ -68,9 +79,19 @@
             <a href="#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
             <a href="#posts" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
-            <a href="#contact" onclick="toggleMenu()" class="block bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm">
-                تواصل معنا
-            </a>
+            <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
+
+            <button id="mobile-auth-btn" type="button" class="w-full bg-purple-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span>تسجيل الدخول / شهاداتي</span>
+            </button>
+            <button id="mobile-my-certs-btn" type="button" class="hidden w-full bg-emerald-600 text-white text-center py-2.5 rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-certificate"></i>
+                <span>شهاداتي</span>
+            </button>
+            <button id="mobile-logout-btn" type="button" class="hidden w-full bg-slate-100 text-slate-700 text-center py-2 rounded-xl font-bold text-xs">
+                تسجيل الخروج
+            </button>
         </div>
     </nav>
 
@@ -92,13 +113,40 @@
             نهدف لبناء مجتمع مهني بسيط وفعال، ونشر المعرفة التطبيقية في مجالات صيانة الأجهزة الطبية والمبيعات والمجال الهندسي الطبي.
         </p>
 
-        <div class="pt-4 flex justify-center gap-4">
+        <div class="pt-4 flex justify-center gap-4 flex-wrap">
             <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition shadow-md shadow-purple-200">
                 انضم إلى قنواتنا
             </a>
             <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
                 استعرض الورش
             </a>
+            <button id="hero-certs-btn" type="button" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-award text-emerald-600"></i>
+                <span>تحميل شهاداتي</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- قسم شهادات الطالب (يظهر تلقائياً عند تسجيل الدخول) -->
+    <section id="my-certificates-section" class="hidden py-10 px-6 max-w-4xl mx-auto">
+        <div class="bg-gradient-to-br from-purple-50 via-white to-emerald-50/40 rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-4">
+                <div>
+                    <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-3 py-1 rounded-full inline-block mb-1">
+                        <i class="fa-solid fa-circle-check ml-1"></i> حساب موثق
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-black text-purple-900">شهاداتي في BioMed Hub</h2>
+                    <p id="logged-user-email" class="text-xs text-slate-500 mt-1"></p>
+                </div>
+                <button id="refresh-certs-btn" type="button" class="self-start sm:self-center bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>تحديث القائمة</span>
+                </button>
+            </div>
+
+            <div id="user-certificates-list" class="grid sm:grid-cols-2 gap-4">
+                <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري البحث عن شهاداتك...</div>
+            </div>
         </div>
     </section>
 
@@ -288,6 +336,59 @@
         </div>
     </footer>
 
+    <!-- نافذة تسجيل الدخول / إنشاء حساب للزائر -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5">
+            <button id="close-auth-modal" type="button" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
+                &times;
+            </button>
+
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl mb-2">
+                    <i class="fa-solid fa-certificate"></i>
+                </div>
+                <h3 id="auth-modal-title" class="text-xl font-black text-purple-900">تسجيل الدخول إلى حسابك</h3>
+                <p class="text-xs text-slate-500">سجّل بنفس البريد الإلكتروني الذي استخدمته في استمارة حضور الورش لعرض شهاداتك وتحميلها.</p>
+            </div>
+
+            <!-- أزرار التبديل بين الدخول وإنشاء حساب -->
+            <div class="grid grid-cols-2 gap-2 bg-purple-50 p-1 rounded-xl">
+                <button id="tab-login" type="button" class="py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition">
+                    تسجيل الدخول
+                </button>
+                <button id="tab-register" type="button" class="py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition">
+                    إنشاء حساب جديد
+                </button>
+            </div>
+
+            <form id="auth-form" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني (Gmail / Email)</label>
+                    <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+                    <input type="password" id="auth-password" required minlength="6" dir="ltr" placeholder="••••••••"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                </div>
+
+                <p id="auth-error-msg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 py-2 px-3 rounded-xl"></p>
+                <p id="auth-success-msg" class="hidden text-xs text-emerald-700 font-bold text-center bg-emerald-50 py-2 px-3 rounded-xl"></p>
+
+                <button id="auth-submit-btn" type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-md">
+                    دخول وعرض شهاداتي
+                </button>
+            </form>
+
+            <div class="text-center">
+                <button id="forgot-password-btn" type="button" class="text-xs text-purple-700 hover:underline font-bold">
+                    نسيت كلمة المرور؟
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- نافذة عرض الصورة كاملة (Lightbox) -->
     <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 10000; justify-content: center; align-items: center; padding: 20px;">
         <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 20px; cursor: pointer;">
@@ -335,6 +436,316 @@
                 setTimeout(function() {
                     popup.style.display = 'none';
                 }, 10000);
+            }
+        });
+    </script>
+
+    <!-- سكريبت تسجيل دخول الزائر وربط الشهادات من Google Sheets -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
+            authDomain: "biomed-hub.firebaseapp.com",
+            projectId: "biomed-hub",
+            storageBucket: "biomed-hub.firebasestorage.app",
+            messagingSenderId: "780975186763",
+            appId: "1:780975186763:web:36411ce118e70749d37ece"
+        };
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // رابط CSV الخاص بورقة All_Certificates
+        const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
+
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        let isRegisterMode = false;
+        let currentUser = null;
+
+        const authModal = document.getElementById('auth-modal');
+        const authForm = document.getElementById('auth-form');
+        const authErrorMsg = document.getElementById('auth-error-msg');
+        const authSuccessMsg = document.getElementById('auth-success-msg');
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        const authModalTitle = document.getElementById('auth-modal-title');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+
+        function setAuthMode(registerMode) {
+            isRegisterMode = registerMode;
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+
+            if (isRegisterMode) {
+                tabRegister.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
+                tabLogin.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
+                authModalTitle.innerText = 'إنشاء حساب جديد';
+                authSubmitBtn.innerText = 'إنشاء الحساب وعرض شهاداتي';
+            } else {
+                tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
+                tabRegister.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
+                authModalTitle.innerText = 'تسجيل الدخول إلى حسابك';
+                authSubmitBtn.innerText = 'دخول وعرض شهاداتي';
+            }
+        }
+
+        function openAuthModal() {
+            setAuthMode(false);
+            authModal.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            authModal.classList.add('hidden');
+        }
+
+        function scrollToCerts() {
+            const sec = document.getElementById('my-certificates-section');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        tabLogin.addEventListener('click', () => setAuthMode(false));
+        tabRegister.addEventListener('click', () => setAuthMode(true));
+        document.getElementById('close-auth-modal').addEventListener('click', closeAuthModal);
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) closeAuthModal();
+        });
+
+        document.getElementById('nav-auth-btn').addEventListener('click', openAuthModal);
+        document.getElementById('mobile-auth-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('hidden');
+            openAuthModal();
+        });
+
+        document.getElementById('hero-certs-btn').addEventListener('click', () => {
+            if (currentUser) {
+                scrollToCerts();
+            } else {
+                openAuthModal();
+            }
+        });
+
+        document.getElementById('nav-my-certs-btn').addEventListener('click', scrollToCerts);
+        document.getElementById('mobile-my-certs-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('hidden');
+            scrollToCerts();
+        });
+
+        const handleLogout = async () => {
+            await signOut(auth);
+            document.getElementById('mobile-menu').classList.add('hidden');
+        };
+        document.getElementById('nav-logout-btn').addEventListener('click', handleLogout);
+        document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
+
+        document.getElementById('refresh-certs-btn').addEventListener('click', () => {
+            if (currentUser && currentUser.email) {
+                loadUserCertificates(currentUser.email);
+            }
+        });
+
+        // معالجة الدخول وإنشاء الحساب
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.innerText = 'جاري المعالجة...';
+
+            try {
+                if (isRegisterMode) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                closeAuthModal();
+                setTimeout(scrollToCerts, 300);
+            } catch (err) {
+                let msg = 'حدث خطأ أثناء العملية، تأكد من البيانات.';
+                if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
+                else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                else if (err.code === 'auth/weak-password') msg = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
+                else if (err.code === 'auth/invalid-email') msg = 'صيغة البريد الإلكتروني غير صحيحة.';
+
+                authErrorMsg.innerText = msg;
+                authErrorMsg.classList.remove('hidden');
+            } finally {
+                authSubmitBtn.disabled = false;
+                setAuthMode(isRegisterMode);
+            }
+        });
+
+        // استعادة كلمة المرور
+        document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+            authErrorMsg.classList.add('hidden');
+            authSuccessMsg.classList.add('hidden');
+            const email = document.getElementById('auth-email').value.trim();
+            if (!email) {
+                authErrorMsg.innerText = 'اكتب بريدك الإلكتروني أولاً ثم اضغط على استعادة كلمة المرور.';
+                authErrorMsg.classList.remove('hidden');
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                authSuccessMsg.innerText = 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.';
+                authSuccessMsg.classList.remove('hidden');
+            } catch (err) {
+                authErrorMsg.innerText = 'تعذر إرسال الرابط، تأكد من صحة البريد الإلكتروني.';
+                authErrorMsg.classList.remove('hidden');
+            }
+        });
+
+        // تحويل رابط Google Drive إلى رابط تحميل مباشر إذا أمكن
+        function buildDriveLinks(rawUrl) {
+            const url = String(rawUrl || '').trim();
+            if (!url) return { viewUrl: '', downloadUrl: '' };
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                const fileId = match[1];
+                return {
+                    viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
+                    downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`
+                };
+            }
+            return { viewUrl: url, downloadUrl: url };
+        }
+
+        // قراءة شيت الشهادات ومطابقة إيميل المستخدم
+        async function loadUserCertificates(userEmail) {
+            const container = document.getElementById('user-certificates-list');
+            container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري جلب شهاداتك...</div>';
+
+            const targetEmail = String(userEmail || '').trim().toLowerCase();
+
+            try {
+                const response = await fetch(CERT_CSV_URL + '&t=' + Date.now());
+                const csvText = await response.text();
+                const rows = csvText.split(/\r?\n/).map(row =>
+                    row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(val => val.trim().replace(/^"(.*)"$/, '$1'))
+                );
+
+                // الأعمدة في All_Certificates:
+                // 0: Name | 1: Email | 2: Date | 3: Workshop Name | 4: ID | 5: Lecturer | 6: CertLink
+                const matchedCerts = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i];
+                    if (!cols || cols.length < 2) continue;
+
+                    const rowEmail = (cols[1] || '').trim().toLowerCase();
+                    if (rowEmail && rowEmail === targetEmail) {
+                        matchedCerts.push({
+                            name: cols[0] || '',
+                            email: cols[1] || '',
+                            date: cols[2] || '',
+                            workshop: cols[3] || '',
+                            serialId: cols[4] || '',
+                            lecturer: cols[5] || '',
+                            certLink: cols[6] || ''
+                        });
+                    }
+                }
+
+                if (matchedCerts.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-2 bg-white rounded-2xl border border-purple-100 p-6 text-center space-y-2">
+                            <p class="text-sm font-bold text-slate-700">لا توجد شهادات مرتبطة بهذا البريد الإلكتروني حالياً.</p>
+                            <p class="text-xs text-slate-500">تأكد من تسجيل الدخول بنفس الإيميل الذي كتبته في استمارة حضور الورش.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = matchedCerts.reverse().map(cert => {
+                    const links = buildDriveLinks(cert.certLink);
+                    const verifyUrl = `https://biomedhubiq.com/?id=${encodeURIComponent(cert.serialId)}&name=${encodeURIComponent(cert.name)}`;
+
+                    return `
+                    <div class="bg-white rounded-2xl border border-purple-100 p-5 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-1 rounded-full">
+                                    ${esc(cert.serialId || 'موثقة')}
+                                </span>
+                                <span class="text-[11px] text-slate-400">
+                                    <i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}
+                                </span>
+                            </div>
+                            <h3 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h3>
+                            <p class="text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
+                            ${cert.lecturer ? `<p class="text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
+                        </div>
+
+                        <div class="pt-2 flex items-center gap-2">
+                            ${links.downloadUrl ? `
+                                <a href="${esc(links.downloadUrl)}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                                    <i class="fa-solid fa-download ml-1"></i> تحميل الشهادة PDF
+                                </a>
+                                <a href="${esc(links.viewUrl)}" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs font-bold py-2.5 px-3 rounded-xl transition" title="معاينة الشهادة">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            ` : `
+                                <a href="${esc(verifyUrl)}" target="_blank" class="flex-1 text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">
+                                    عرض التوثيق
+                                </a>
+                            `}
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading certificates:', error);
+                container.innerHTML = '<div class="col-span-2 text-center text-red-500 py-4 text-xs">تعذر تحميل الشهادات حالياً، حاول تحديث القائمة.</div>';
+            }
+        }
+
+        // مراقبة حالة تسجيل الدخول
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const certsSection = document.getElementById('my-certificates-section');
+            const navAuthBtn = document.getElementById('nav-auth-btn');
+            const navMyCertsBtn = document.getElementById('nav-my-certs-btn');
+            const navLogoutBtn = document.getElementById('nav-logout-btn');
+            const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+            const mobileMyCertsBtn = document.getElementById('mobile-my-certs-btn');
+            const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+
+            if (user) {
+                certsSection.classList.remove('hidden');
+                document.getElementById('logged-user-email').innerText = `البريد المسجل: ${user.email}`;
+
+                navAuthBtn.classList.add('hidden');
+                navMyCertsBtn.classList.remove('hidden');
+                navLogoutBtn.classList.remove('hidden');
+
+                mobileAuthBtn.classList.add('hidden');
+                mobileMyCertsBtn.classList.remove('hidden');
+                mobileLogoutBtn.classList.remove('hidden');
+
+                loadUserCertificates(user.email);
+            } else {
+                certsSection.classList.add('hidden');
+
+                navAuthBtn.classList.remove('hidden');
+                navMyCertsBtn.classList.add('hidden');
+                navLogoutBtn.classList.add('hidden');
+
+                mobileAuthBtn.classList.remove('hidden');
+                mobileMyCertsBtn.classList.add('hidden');
+                mobileLogoutBtn.classList.add('hidden');
             }
         });
     </script>
@@ -592,7 +1003,6 @@
             return list;
         }
 
-        // إعداد نافذة عرض الصورة كاملة
         const lightbox = document.getElementById('image-lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
