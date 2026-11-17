@@ -166,23 +166,48 @@
                     <span id="profile-save-status" class="text-xs font-bold text-emerald-700 hidden"></span>
                 </div>
 
-                <form id="profile-form" class="grid sm:grid-cols-3 gap-3">
+                <form id="profile-form" class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
                         <input type="text" id="profile-name" placeholder="مثال: أحمد علي"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / الجهة</label>
-                        <input type="text" id="profile-org" placeholder="مثال: جامعة بغداد / مستشفى"
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / المعهد</label>
+                        <input type="text" id="profile-university" placeholder="مثال: جامعة بغداد"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">رقم الهاتف</label>
+                        <input type="tel" id="profile-phone" dir="ltr" placeholder="07XXXXXXXXX"
+                               class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs text-left">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">التحصيل الدراسي</label>
+                        <select id="profile-education" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                            <option value="">اختر الحالة</option>
+                            <option value="طالب">طالب</option>
+                            <option value="خريج">خريج</option>
+                        </select>
+                    </div>
+                    <div id="profile-stage-wrapper">
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1">المرحلة الدراسية</label>
+                        <select id="profile-stage" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                            <option value="">اختر المرحلة</option>
+                            <option value="المرحلة الأولى">المرحلة الأولى</option>
+                            <option value="المرحلة الثانية">المرحلة الثانية</option>
+                            <option value="المرحلة الثالثة">المرحلة الثالثة</option>
+                            <option value="المرحلة الرابعة">المرحلة الرابعة</option>
+                            <option value="المرحلة الخامسة">المرحلة الخامسة</option>
+                            <option value="المرحلة السادسة">المرحلة السادسة</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 mb-1">المحافظة</label>
                         <input type="text" id="profile-city" placeholder="مثال: كربلاء"
                                class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
                     </div>
-                    <div class="sm:col-span-3 flex justify-end">
+                    <div class="sm:col-span-2 md:col-span-3 flex justify-end">
                         <button id="save-profile-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm">
                             حفظ بيانات الحساب
                         </button>
@@ -394,8 +419,8 @@
     </footer>
 
     <!-- نافذة تسجيل الدخول / إنشاء حساب عام للعضو -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5">
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/60 z-[10001] flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-purple-100 relative space-y-5 my-8">
             <button id="close-auth-modal" type="button" class="absolute top-4 left-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-lg">
                 &times;
             </button>
@@ -405,7 +430,7 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <h3 id="auth-modal-title" class="text-xl font-black text-purple-900">تسجيل الدخول إلى حسابك</h3>
-                <p class="text-xs text-slate-500">حسابك في BioMed Hub لمتابعة ملفك الشخصي وشهاداتك إن وجدت.</p>
+                <p id="auth-modal-subtitle" class="text-xs text-slate-500">ادخل إلى حسابك في BioMed Hub لمتابعة ملفك وشهاداتك إن وجدت.</p>
             </div>
 
             <!-- أزرار التبديل بين الدخول وإنشاء حساب -->
@@ -419,23 +444,74 @@
             </div>
 
             <form id="auth-form" class="space-y-3">
+                <!-- حقول التسجيل الجديد -->
                 <div id="register-extra-fields" class="hidden space-y-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label>
-                        <input type="text" id="reg-name" placeholder="مثال: أحمد علي"
+                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
+                        <input type="text" id="reg-name" placeholder="مثال: مجتبى ميثم"
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة / المعهد *</label>
+                            <input type="text" id="reg-university" placeholder="مثال: جامعة ذي قار"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف *</label>
+                            <input type="tel" id="reg-phone" dir="ltr" placeholder="07XXXXXXXXX"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">التحصيل الدراسي *</label>
+                            <select id="reg-education" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                                <option value="">اختر الحالة</option>
+                                <option value="طالب">طالب</option>
+                                <option value="خريج">خريج</option>
+                            </select>
+                        </div>
+                        <div id="reg-stage-box" class="hidden">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المرحلة الدراسية *</label>
+                            <select id="reg-stage" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                                <option value="">اختر المرحلة</option>
+                                <option value="المرحلة الأولى">المرحلة الأولى</option>
+                                <option value="المرحلة الثانية">المرحلة الثانية</option>
+                                <option value="المرحلة الثالثة">المرحلة الثالثة</option>
+                                <option value="المرحلة الرابعة">المرحلة الرابعة</option>
+                                <option value="المرحلة الخامسة">المرحلة الخامسة</option>
+                                <option value="المرحلة السادسة">المرحلة السادسة</option>
+                            </select>
+                        </div>
+                        <div id="reg-city-box">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+                            <input type="text" id="reg-city" placeholder="مثال: كربلاء"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                        </div>
                     </div>
                 </div>
 
+                <!-- البريد وكلمة المرور -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
                     <input type="email" id="auth-email" required dir="ltr" placeholder="example@gmail.com"
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
-                    <input type="password" id="auth-password" required minlength="6" dir="ltr" placeholder="••••••••"
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+
+                <div class="grid sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">رمز السر (كلمة المرور) *</label>
+                        <input type="password" id="auth-password" required minlength="6" dir="ltr" placeholder="••••••••"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
+                    <div id="confirm-password-box" class="hidden">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">تأكيد رمز السر *</label>
+                        <input type="password" id="auth-password-confirm" minlength="6" dir="ltr" placeholder="••••••••"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
                 </div>
 
                 <p id="auth-error-msg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 py-2 px-3 rounded-xl"></p>
@@ -448,7 +524,7 @@
 
             <div class="text-center">
                 <button id="forgot-password-btn" type="button" class="text-xs text-purple-700 hover:underline font-bold">
-                    نسيت كلمة المرور؟
+                    نسيت رمز السر؟
                 </button>
             </div>
         </div>
@@ -551,8 +627,31 @@
         const tabLogin = document.getElementById('tab-login');
         const tabRegister = document.getElementById('tab-register');
         const registerExtraFields = document.getElementById('register-extra-fields');
+        const confirmPasswordBox = document.getElementById('confirm-password-box');
         const authModalTitle = document.getElementById('auth-modal-title');
+        const authModalSubtitle = document.getElementById('auth-modal-subtitle');
         const authSubmitBtn = document.getElementById('auth-submit-btn');
+
+        const regEducation = document.getElementById('reg-education');
+        const regStageBox = document.getElementById('reg-stage-box');
+        const regStage = document.getElementById('reg-stage');
+
+        const profileEducation = document.getElementById('profile-education');
+        const profileStageWrapper = document.getElementById('profile-stage-wrapper');
+        const profileStage = document.getElementById('profile-stage');
+
+        function toggleStageField(selectEl, wrapperEl, inputEl) {
+            if (!selectEl || !wrapperEl) return;
+            if (selectEl.value === 'طالب') {
+                wrapperEl.classList.remove('hidden');
+            } else {
+                wrapperEl.classList.add('hidden');
+                if (inputEl) inputEl.value = '';
+            }
+        }
+
+        regEducation.addEventListener('change', () => toggleStageField(regEducation, regStageBox, regStage));
+        profileEducation.addEventListener('change', () => toggleStageField(profileEducation, profileStageWrapper, profileStage));
 
         function setAuthMode(registerMode) {
             isRegisterMode = registerMode;
@@ -563,19 +662,23 @@
                 tabRegister.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
                 tabLogin.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
                 registerExtraFields.classList.remove('hidden');
-                authModalTitle.innerText = 'إنشاء حساب في BioMed Hub';
+                confirmPasswordBox.classList.remove('hidden');
+                authModalTitle.innerText = 'إنشاء حساب جديد في BioMed Hub';
+                authModalSubtitle.innerText = 'أدخل بياناتك الأساسية لإنشاء حسابك في المنصة.';
                 authSubmitBtn.innerText = 'إنشاء الحساب';
             } else {
                 tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
                 tabRegister.className = 'py-2 rounded-lg text-xs font-bold text-purple-700 hover:bg-purple-100 transition';
                 registerExtraFields.classList.add('hidden');
+                confirmPasswordBox.classList.add('hidden');
                 authModalTitle.innerText = 'تسجيل الدخول إلى حسابك';
+                authModalSubtitle.innerText = 'ادخل إلى حسابك في BioMed Hub لمتابعة ملفك وشهاداتك إن وجدت.';
                 authSubmitBtn.innerText = 'تسجيل الدخول';
             }
         }
 
-        function openAuthModal() {
-            setAuthMode(false);
+        function openAuthModal(defaultRegister = false) {
+            setAuthMode(defaultRegister);
             authModal.classList.remove('hidden');
         }
 
@@ -595,17 +698,17 @@
             if (e.target === authModal) closeAuthModal();
         });
 
-        document.getElementById('nav-auth-btn').addEventListener('click', openAuthModal);
+        document.getElementById('nav-auth-btn').addEventListener('click', () => openAuthModal(false));
         document.getElementById('mobile-auth-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.add('hidden');
-            openAuthModal();
+            openAuthModal(false);
         });
 
         document.getElementById('hero-account-btn').addEventListener('click', () => {
             if (currentUser) {
                 scrollToAccount();
             } else {
-                openAuthModal();
+                openAuthModal(false);
             }
         });
 
@@ -631,7 +734,8 @@
         // تحميل وحفظ بيانات البروفايل العام في Firestore
         async function loadUserProfile(user) {
             const nameInput = document.getElementById('profile-name');
-            const orgInput = document.getElementById('profile-org');
+            const uniInput = document.getElementById('profile-university');
+            const phoneInput = document.getElementById('profile-phone');
             const cityInput = document.getElementById('profile-city');
             const displayNameEl = document.getElementById('account-display-name');
 
@@ -640,7 +744,11 @@
                 if (snap.exists()) {
                     const data = snap.data();
                     nameInput.value = data.fullName || '';
-                    orgInput.value = data.organization || '';
+                    uniInput.value = data.university || '';
+                    phoneInput.value = data.phone || '';
+                    profileEducation.value = data.education || '';
+                    toggleStageField(profileEducation, profileStageWrapper, profileStage);
+                    profileStage.value = data.stage || '';
                     cityInput.value = data.city || '';
                     displayNameEl.innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
                 } else {
@@ -658,7 +766,10 @@
             const saveBtn = document.getElementById('save-profile-btn');
             const statusEl = document.getElementById('profile-save-status');
             const fullName = document.getElementById('profile-name').value.trim();
-            const organization = document.getElementById('profile-org').value.trim();
+            const university = document.getElementById('profile-university').value.trim();
+            const phone = document.getElementById('profile-phone').value.trim();
+            const education = profileEducation.value;
+            const stage = education === 'طالب' ? profileStage.value : '';
             const city = document.getElementById('profile-city').value.trim();
 
             saveBtn.disabled = true;
@@ -669,7 +780,10 @@
                 await setDoc(doc(db, 'members', currentUser.uid), {
                     email: currentUser.email,
                     fullName,
-                    organization,
+                    university,
+                    phone,
+                    education,
+                    stage,
                     city,
                     updatedAt: Date.now()
                 }, { merge: true });
@@ -696,31 +810,80 @@
 
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
-            const regName = document.getElementById('reg-name').value.trim();
 
-            authSubmitBtn.disabled = true;
-            authSubmitBtn.innerText = 'جاري المعالجة...';
+            if (isRegisterMode) {
+                const fullName = document.getElementById('reg-name').value.trim();
+                const university = document.getElementById('reg-university').value.trim();
+                const phone = document.getElementById('reg-phone').value.trim();
+                const education = regEducation.value;
+                const stage = regStage.value;
+                const city = document.getElementById('reg-city').value.trim();
+                const confirmPass = document.getElementById('auth-password-confirm').value;
 
-            try {
-                if (isRegisterMode) {
+                if (!fullName || !university || !phone || !education) {
+                    authErrorMsg.innerText = 'يرجى ملء الاسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (education === 'طالب' && !stage) {
+                    authErrorMsg.innerText = 'يرجى اختيار المرحلة الدراسية.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+                if (password !== confirmPass) {
+                    authErrorMsg.innerText = 'رمز السر وتأكيد رمز السر غير متطابقين.';
+                    authErrorMsg.classList.remove('hidden');
+                    return;
+                }
+
+                authSubmitBtn.disabled = true;
+                authSubmitBtn.innerText = 'جاري إنشاء الحساب...';
+
+                try {
                     const cred = await createUserWithEmailAndPassword(auth, email, password);
                     await setDoc(doc(db, 'members', cred.user.uid), {
                         email: cred.user.email,
-                        fullName: regName || '',
-                        createdAt: Date.now()
+                        fullName,
+                        university,
+                        phone,
+                        education,
+                        stage: education === 'طالب' ? stage : '',
+                        city,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
                     }, { merge: true });
-                } else {
-                    await signInWithEmailAndPassword(auth, email, password);
+
+                    closeAuthModal();
+                    setTimeout(scrollToAccount, 300);
+                } catch (err) {
+                    let msg = 'حدث خطأ أثناء إنشاء الحساب، حاول مرة أخرى.';
+                    if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
+                    else if (err.code === 'auth/weak-password') msg = 'رمز السر يجب أن يكون 6 أحرف على الأقل.';
+                    else if (err.code === 'auth/invalid-email') msg = 'صيغة البريد الإلكتروني غير صحيحة.';
+                    authErrorMsg.innerText = msg;
+                    authErrorMsg.classList.remove('hidden');
+                } finally {
+                    authSubmitBtn.disabled = false;
+                    setAuthMode(isRegisterMode);
                 }
+                return;
+            }
+
+            // وضع تسجيل الدخول
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.innerText = 'جاري الدخول...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
                 closeAuthModal();
                 setTimeout(scrollToAccount, 300);
             } catch (err) {
-                let msg = 'حدث خطأ أثناء العملية، تأكد من البيانات.';
-                if (err.code === 'auth/email-already-in-use') msg = 'هذا البريد مسجل مسبقاً، اختر "تسجيل الدخول".';
-                else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                else if (err.code === 'auth/weak-password') msg = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.';
-                else if (err.code === 'auth/invalid-email') msg = 'صيغة البريد الإلكتروني غير صحيحة.';
-
+                let msg = 'حدث خطأ أثناء تسجيل الدخول.';
+                if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                    msg = 'البريد الإلكتروني أو رمز السر غير صحيح.';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'صيغة البريد الإلكتروني غير صحيحة.';
+                }
                 authErrorMsg.innerText = msg;
                 authErrorMsg.classList.remove('hidden');
             } finally {
@@ -729,19 +892,19 @@
             }
         });
 
-        // استعادة كلمة المرور
+        // استعادة رمز السر
         document.getElementById('forgot-password-btn').addEventListener('click', async () => {
             authErrorMsg.classList.add('hidden');
             authSuccessMsg.classList.add('hidden');
             const email = document.getElementById('auth-email').value.trim();
             if (!email) {
-                authErrorMsg.innerText = 'اكتب بريدك الإلكتروني أولاً ثم اضغط على استعادة كلمة المرور.';
+                authErrorMsg.innerText = 'اكتب بريدك الإلكتروني أولاً ثم اضغط على نسيت رمز السر.';
                 authErrorMsg.classList.remove('hidden');
                 return;
             }
             try {
                 await sendPasswordResetEmail(auth, email);
-                authSuccessMsg.innerText = 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.';
+                authSuccessMsg.innerText = 'تم إرسال رابط إعادة تعيين رمز السر إلى بريدك الإلكتروني.';
                 authSuccessMsg.classList.remove('hidden');
             } catch (err) {
                 authErrorMsg.innerText = 'تعذر إرسال الرابط، تأكد من صحة البريد الإلكتروني.';
