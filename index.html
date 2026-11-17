@@ -208,14 +208,15 @@
         </div>
     </section>
 
-    <!-- Posts Section -->
-    <section id="posts" class="py-14 px-6 max-w-3xl mx-auto">
+    <!-- Posts Section: تغطية المعارض والمؤتمرات والورش -->
+    <section id="posts" class="py-14 px-6 max-w-4xl mx-auto">
         <div class="text-center mb-10 space-y-2">
-            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">آخر الأخبار</span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">آخر المستجدات</h2>
+            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">تغطية الفعاليات</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">تغطية المعارض والمؤتمرات والورش</h2>
+            <p class="text-slate-500 text-xs">ملخصات وصور من مشاركات وتغطيات BioMed Hub الميدانية والرقمية</p>
         </div>
         <div id="posts-container" class="space-y-6">
-            <div class="text-center text-slate-400 py-6 text-xs">جاري تحميل المنشورات...</div>
+            <div class="text-center text-slate-400 py-6 text-xs">جاري تحميل التغطيات...</div>
         </div>
     </section>
 
@@ -546,7 +547,7 @@
         loadAllWorkshopsTogether();
     </script>
 
-    <!-- سكريبت المنشورات (Firebase) -->
+    <!-- سكريبت تغطية المعارض والمؤتمرات والورش (Firebase posts) -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -565,6 +566,7 @@
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         async function loadPosts() {
+            const section = document.getElementById('posts');
             const container = document.getElementById('posts-container');
             if (!container) return;
             try {
@@ -573,21 +575,28 @@
                     .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                 if (!posts.length) {
-                    document.getElementById('posts').style.display = 'none';
+                    if (section) section.style.display = 'none';
                     return;
                 }
-                container.innerHTML = posts.map(p => `
+                container.innerHTML = posts.map(p => {
+                    const rawTag = (p.tag || p.category || '').trim();
+                    const badgeText = rawTag || 'تغطية فعالية';
+                    return `
                     <article class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden hover:border-purple-300 transition">
                         ${p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" class="w-full max-h-96 object-cover">` : ''}
                         <div class="p-6 space-y-3">
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-1 rounded-full">${esc(badgeText)}</span>
+                                <span class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar ml-1"></i> ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : ''}</span>
+                            </div>
                             <h3 class="text-lg font-black text-purple-900">${esc(p.title)}</h3>
                             <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">${esc(p.body)}</p>
-                            <p class="text-[11px] text-slate-400 font-medium"><i class="fa-regular fa-calendar ml-1"></i> ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : ''}</p>
                         </div>
-                    </article>`).join('');
+                    </article>`;
+                }).join('');
             } catch (e) {
-                console.error('خطأ في جلب المنشورات:', e);
-                document.getElementById('posts').style.display = 'none';
+                console.error('خطأ في جلب التغطيات:', e);
+                if (section) section.style.display = 'none';
             }
         }
         loadPosts();
