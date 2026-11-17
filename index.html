@@ -49,7 +49,7 @@
 
             <div class="hidden md:flex items-center gap-5">
                 <a href="#steps" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">كيف تبدأ؟</a>
-                <a href="#workshops" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
+                <a href="workshops.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">الورش التدريبية</a>
                 <a href="posts.html" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تغطية الفعاليات</a>
                 <a href="#services" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">شنو نقدم؟</a>
                 <a href="#contact" class="text-slate-600 hover:text-purple-600 font-bold text-xs transition">تواصل معنا</a>
@@ -83,7 +83,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-100 px-6 py-4 space-y-3 mt-3 shadow-lg">
             <a href="#steps" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">كيف تبدأ؟</a>
-            <a href="#workshops" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
+            <a href="workshops.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">الورش التدريبية</a>
             <a href="posts.html" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تغطية الفعاليات</a>
             <a href="#services" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">شنو نقدم؟</a>
             <a href="#contact" onclick="toggleMenu()" class="block text-slate-700 hover:text-purple-600 font-bold text-sm">تواصل معنا</a>
@@ -130,7 +130,7 @@
             <a href="#contact" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition shadow-md shadow-purple-200">
                 انضم إلى قنواتنا
             </a>
-            <a href="#workshops" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
+            <a href="workshops.html" class="bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition">
                 استعرض الورش
             </a>
             <a href="account.html" id="hero-account-btn" class="bg-white hover:bg-purple-50 text-purple-900 border border-purple-200 px-6 py-3 rounded-xl text-sm font-bold transition flex items-center gap-2">
@@ -266,7 +266,7 @@
         </div>
     </section>
 
-    <!-- Workshops Section -->
+    <!-- Workshops Section (أول ورشة فقط + إظهار المزيد) -->
     <section id="workshops" class="py-14 px-6 max-w-5xl mx-auto">
         <div class="text-center mb-8 space-y-2">
             <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">الأنشطة والفعاليات</span>
@@ -274,23 +274,15 @@
             <p class="text-slate-500 text-xs">احجز مقعدك في الورشة القادمة أو استعرض الورش التي تم تقديمها سابقاً</p>
         </div>
 
-        <div id="workshops-filter-bar" class="flex items-center justify-center gap-2 flex-wrap mb-8">
-            <button type="button" data-filter="all" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm">
-                الكل
-            </button>
-            <button type="button" data-filter="next" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
-                أونلاين
-            </button>
-            <button type="button" data-filter="in-person" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
-                حضوري
-            </button>
-            <button type="button" data-filter="archived" class="workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100">
-                أرشيف
-            </button>
+        <div id="workshops-container" class="max-w-xl mx-auto">
+            <div class="text-center text-slate-400 py-6 text-xs">جاري تحميل الورش...</div>
         </div>
 
-        <div id="workshops-container" class="grid md:grid-cols-2 gap-6">
-            <div class="col-span-2 text-center text-slate-400 py-6 text-xs">جاري تحميل الورش...</div>
+        <div id="workshops-more-wrap" class="hidden pt-6 text-center">
+            <a href="workshops.html" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                <span>إظهار المزيد</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
         </div>
     </section>
 
@@ -542,7 +534,7 @@
         });
     </script>
 
-    <!-- سكريبت جلب الورش المدمج ومرتب من الأحدث للأقدم مع الفلترة -->
+    <!-- سكريبت عرض أول ورشة فقط في الرئيسية + زر إظهار المزيد -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -560,8 +552,6 @@
         const db = getFirestore(app);
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTbrHTeoucxGOQshdTp6JGocVcij6l6Xlt7fmSM503WuU0sLOg5uitYBAyZGvyKlcQqp4TFUbTFAoNA/pub?gid=0&single=true&output=csv';
 
-        let allWorkshopsCache = [];
-        let activeWorkshopFilter = 'all';
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         function buildInPersonMetaHtml(w) {
@@ -577,86 +567,14 @@
             return lines.join('');
         }
 
-        function renderWorkshopsList(filterType = 'all') {
+        async function loadLatestWorkshop() {
             const container = document.getElementById('workshops-container');
+            const moreWrap = document.getElementById('workshops-more-wrap');
             if (!container) return;
-            const filtered = filterType === 'all' ? allWorkshopsCache : allWorkshopsCache.filter(w => w.type === filterType);
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش ضمن هذا التصنيف حالياً.</div>';
-                return;
-            }
-            let htmlContent = '';
-            filtered.forEach(w => {
-                if (w.type === 'next' || w.type === 'in-person') {
-                    const isInPerson = w.type === 'in-person';
-                    const modeLabel = isInPerson ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري' : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
-                    const metaBoxContent = isInPerson ? buildInPersonMetaHtml(w) : `<p>${esc(w.platform || 'غير محدد')}</p>`;
-                    htmlContent += `
-                    <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
-                                </span>
-                                <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
-                            </div>
-                            <div class="space-y-3">
-                                <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
-                                <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
-                                <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            <a href="${esc(w.link || 'https://t.me/BioMedHubA')}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
-                                سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
-                            </a>
-                        </div>
-                    </div>`;
-                } else {
-                    htmlContent += `
-                    <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${esc(w.speaker || 'أرشيف')}</span>
-                                <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
-                            </div>
-                            <div class="space-y-3">
-                                <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${esc(w.details || w.platform || '')}</p>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            ${w.link ? `<a href="${esc(w.link)}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
-                            <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">انتهت الورشة بنجاح</div>
-                        </div>
-                    </div>`;
-                }
-            });
-            container.innerHTML = htmlContent;
-        }
 
-        function setupFilterButtons() {
-            const buttons = document.querySelectorAll('.workshop-filter-btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    activeWorkshopFilter = btn.dataset.filter || 'all';
-                    buttons.forEach(b => {
-                        const isActive = b.dataset.filter === activeWorkshopFilter;
-                        b.className = isActive
-                            ? 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow-sm'
-                            : 'workshop-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100';
-                    });
-                    renderWorkshopsList(activeWorkshopFilter);
-                });
-            });
-        }
-
-        async function loadAllWorkshopsTogether() {
-            const container = document.getElementById('workshops-container');
-            if (!container) return;
             let firebaseWorkshops = [];
             let sheetWorkshops = [];
+
             try {
                 const querySnapshot = await getDocs(collection(db, "workshops"));
                 querySnapshot.forEach((docSnap) => firebaseWorkshops.push({ id: docSnap.id, ...docSnap.data() }));
@@ -695,15 +613,64 @@
                 }
             } catch (error) { console.error('خطأ في جلب بيانات قوقل شيت:', error); }
 
-            allWorkshopsCache = [...firebaseWorkshops, ...sheetWorkshops];
-            if (allWorkshopsCache.length === 0) {
-                container.innerHTML = '<div class="col-span-2 text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
+            const allWorkshops = [...firebaseWorkshops, ...sheetWorkshops];
+            if (allWorkshops.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs">لا توجد ورش معروضة حالياً.</div>';
                 return;
             }
-            setupFilterButtons();
-            renderWorkshopsList(activeWorkshopFilter);
+
+            if (allWorkshops.length > 1 && moreWrap) {
+                moreWrap.classList.remove('hidden');
+            }
+
+            const w = allWorkshops[0];
+            if (w.type === 'next' || w.type === 'in-person') {
+                const isInPerson = w.type === 'in-person';
+                const modeLabel = isInPerson ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري' : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
+                const metaBoxContent = isInPerson ? buildInPersonMetaHtml(w) : `<p>${esc(w.platform || 'غير محدد')}</p>`;
+                container.innerHTML = `
+                <div class="bg-white rounded-3xl border border-purple-100 p-6 shadow-sm flex flex-col justify-between relative hover:border-purple-300 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> التسجيل مفتوح
+                            </span>
+                            <span class="text-slate-400 text-xs font-medium">${modeLabel}</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
+                            <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
+                            <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
+                            <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="${esc(w.link || 'https://t.me/BioMedHubA')}" target="_blank" class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm shadow-purple-200">
+                            سجل حضورك / انضم الآن <i class="fa-solid fa-arrow-left mr-1"></i>
+                        </a>
+                    </div>
+                </div>`;
+            } else {
+                container.innerHTML = `
+                <div class="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full">${esc(w.speaker || 'أرشيف')}</span>
+                            <span class="text-slate-400 text-xs"><i class="fa-solid fa-circle-check ml-1"></i> أرشيف</span>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">${esc(w.details || w.platform || '')}</p>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        ${w.link ? `<a href="${esc(w.link)}" target="_blank" class="block w-full text-center bg-purple-100 text-purple-700 text-xs font-bold py-3 rounded-xl mb-2 transition hover:bg-purple-200">رابط الورشة / التسجيل</a>` : ''}
+                        <div class="w-full text-center bg-slate-200 text-slate-600 text-xs font-bold py-3 rounded-xl select-none">انتهت الورشة بنجاح</div>
+                    </div>
+                </div>`;
+            }
         }
-        loadAllWorkshopsTogether();
+        loadLatestWorkshop();
     </script>
 
     <!-- سكريبت عرض أول بوست فقط من تغطية الفعاليات + زر إظهار المزيد -->
