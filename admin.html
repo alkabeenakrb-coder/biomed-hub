@@ -25,6 +25,7 @@
         .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
         .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
         .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
+        .hint { font-size: 11px; color: #777; margin-top: -10px; margin-bottom: 14px; }
     </style>
 </head>
 <body>
@@ -124,8 +125,12 @@
                 <label>عنوان التغطية:</label>
                 <input type="text" id="pTitle" placeholder="مثال: تغطية مشاركة BioMed Hub في معرض بغداد الدولي...">
 
-                <label>رابط الصورة (اختياري):</label>
-                <input type="text" id="pImageUrl" placeholder="https://...">
+                <label>التاريخ (تكتبه أنت):</label>
+                <input type="text" id="pDate" placeholder="مثال: 15 تشرين الثاني 2026 أو 2026/11/15">
+
+                <label>روابط الصور (اختياري - تقدر تضيف أكثر من صورة):</label>
+                <textarea id="pImageUrls" rows="3" placeholder="حط كل رابط صورة بسطر جديد...&#10;https://...&#10;https://..."></textarea>
+                <p class="hint">تقدر تلصق رابط واحد أو عدة روابط، كل رابط بسطر مستقل.</p>
 
                 <label>تفاصيل التغطية:</label>
                 <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية أو التغطية..."></textarea>
@@ -170,6 +175,23 @@
         let localPosts = [];
 
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        function parseImageUrls(raw) {
+            if (Array.isArray(raw)) {
+                return raw.map(u => String(u || '').trim()).filter(Boolean);
+            }
+            if (!raw) return [];
+            return String(raw)
+                .split(/[\n,]+/)
+                .map(u => u.trim())
+                .filter(Boolean);
+        }
+
+        function getPostImages(post) {
+            const fromArray = parseImageUrls(post.imageUrls);
+            if (fromArray.length) return fromArray;
+            return parseImageUrls(post.imageUrl);
+        }
 
         // التحقق عند التحميل
         if (localStorage.getItem('biomed_admin_logged') === 'true') {
@@ -421,7 +443,8 @@
             const editPostId = document.getElementById('editPostId').value;
             const tag = document.getElementById('pTag').value;
             const title = document.getElementById('pTitle').value;
-            const imageUrl = document.getElementById('pImageUrl').value.trim();
+            const postDate = document.getElementById('pDate').value.trim();
+            const imageUrls = parseImageUrls(document.getElementById('pImageUrls').value);
             const body = document.getElementById('pBody').value;
 
             if (!title.trim() || !body.trim()) {
@@ -429,7 +452,14 @@
                 return;
             }
 
-            const payload = { tag, title, imageUrl, body };
+            const payload = {
+                tag,
+                title,
+                postDate,
+                imageUrls,
+                imageUrl: imageUrls[0] || '',
+                body
+            };
 
             try {
                 if (editPostId) {
@@ -454,10 +484,13 @@
             const p = localPosts.find(item => item.id === id);
             if (!p) return;
 
+            const imgs = getPostImages(p);
+
             document.getElementById('editPostId').value = p.id;
             document.getElementById('pTag').value = p.tag || 'معرض';
             document.getElementById('pTitle').value = p.title || '';
-            document.getElementById('pImageUrl').value = p.imageUrl || '';
+            document.getElementById('pDate').value = p.postDate || '';
+            document.getElementById('pImageUrls').value = imgs.join('\n');
             document.getElementById('pBody').value = p.body || '';
 
             document.getElementById('postFormTitleText').innerText = 'تعديل التغطية';
@@ -471,7 +504,8 @@
             document.getElementById('editPostId').value = '';
             document.getElementById('pTag').value = 'معرض';
             document.getElementById('pTitle').value = '';
-            document.getElementById('pImageUrl').value = '';
+            document.getElementById('pDate').value = '';
+            document.getElementById('pImageUrls').value = '';
             document.getElementById('pBody').value = '';
 
             document.getElementById('postFormTitleText').innerText = 'إضافة تغطية معرض / مؤتمر / ورشة';
@@ -512,11 +546,14 @@
 
                 container.innerHTML = '';
                 localPosts.forEach(p => {
+                    const imgs = getPostImages(p);
+                    const dateDisplay = p.postDate || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
                     container.innerHTML += `
                         <div class="workshop-item">
                             <h4>${esc(p.title)} <span style="font-size: 11px; padding: 2px 6px; background: #ede9fe; color: #5b21b6; border-radius: 4px;">${esc(p.tag || 'تغطية')}</span></h4>
+                            ${dateDisplay ? `<p><strong>التاريخ:</strong> ${esc(dateDisplay)}</p>` : ''}
                             <p>${esc(p.body || '')}</p>
-                            ${p.imageUrl ? `<p><strong>الصورة:</strong> <a href="${esc(p.imageUrl)}" target="_blank">عرض الصورة</a></p>` : ''}
+                            ${imgs.length ? `<p><strong>الصور:</strong> ${imgs.length} صورة</p>` : ''}
                             <button class="btn-edit" onclick="editPost('${p.id}')">تعديل التغطية</button>
                             <button class="btn-danger" onclick="deletePost('${p.id}')">حذف التغطية</button>
                         </div>
