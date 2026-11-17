@@ -348,12 +348,30 @@
         </div>
     </div>
 
-    <!-- نافذة عرض الصورة كاملة (Lightbox) -->
-    <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 10000; justify-content: center; align-items: center; padding: 20px;">
-        <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 20px; cursor: pointer;">
+    <!-- نافذة عرض الصورة كاملة مع أزرار التنقل (Lightbox) -->
+    <div id="image-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 10000; justify-content: center; align-items: center; padding: 20px; user-select: none;">
+        <!-- زر الإغلاق -->
+        <button id="lightbox-close" type="button" aria-label="إغلاق" style="position: fixed; top: 18px; left: 18px; width: 42px; height: 42px; border-radius: 9999px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); font-size: 22px; cursor: pointer; z-index: 10002;">
             &times;
         </button>
-        <img id="lightbox-img" src="" alt="" style="max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6);">
+
+        <!-- عداد الصور -->
+        <div id="lightbox-counter" style="position: fixed; top: 22px; right: 20px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 9999px; font-size: 13px; font-weight: bold; z-index: 10002;">
+            1 / 1
+        </div>
+
+        <!-- زر الصورة السابقة (يمين في العربي) -->
+        <button id="lightbox-prev" type="button" aria-label="السابق" style="position: fixed; right: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- الصورة المعروضة -->
+        <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 14px; box-shadow: 0 10px 35px rgba(0,0,0,0.6); transition: opacity 0.15s ease;">
+
+        <!-- زر الصورة التالية (يسار في العربي) -->
+        <button id="lightbox-next" type="button" aria-label="التالي" style="position: fixed; left: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 9999px; background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 18px; cursor: pointer; z-index: 10002; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
     </div>
 
     <!-- نافذة التحقق المنبثقة (Popup) -->
@@ -714,11 +732,87 @@
 
         const lightbox = document.getElementById('image-lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
-        function openLightbox(src, alt = '') { if (!lightbox || !lightboxImg) return; lightboxImg.src = src; lightboxImg.alt = alt; lightbox.style.display = 'flex'; }
-        function closeLightbox() { if (!lightbox || !lightboxImg) return; lightbox.style.display = 'none'; lightboxImg.src = ''; }
-        document.getElementById('lightbox-close')?.addEventListener('click', closeLightbox);
-        lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const lightboxCounter = document.getElementById('lightbox-counter');
+
+        let currentGallery = [];
+        let currentIndex = 0;
+        let currentAlt = '';
+
+        function updateLightboxView() {
+            if (!lightboxImg || !currentGallery.length) return;
+            lightboxImg.src = currentGallery[currentIndex];
+            lightboxImg.alt = currentAlt;
+
+            const hasMultiple = currentGallery.length > 1;
+            if (lightboxPrev) lightboxPrev.style.display = hasMultiple ? 'flex' : 'none';
+            if (lightboxNext) lightboxNext.style.display = hasMultiple ? 'flex' : 'none';
+            if (lightboxCounter) {
+                lightboxCounter.style.display = hasMultiple ? 'block' : 'none';
+                lightboxCounter.innerText = `${currentIndex + 1} / ${currentGallery.length}`;
+            }
+        }
+
+        function openLightbox(gallery, startIndex = 0, alt = '') {
+            if (!lightbox || !gallery.length) return;
+            currentGallery = gallery;
+            currentIndex = startIndex;
+            currentAlt = alt;
+            updateLightboxView();
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            if (!lightbox || !lightboxImg) return;
+            lightbox.style.display = 'none';
+            lightboxImg.src = '';
+            currentGallery = [];
+        }
+
+        function showNextImage() {
+            if (currentGallery.length <= 1) return;
+            currentIndex = (currentIndex + 1) % currentGallery.length;
+            updateLightboxView();
+        }
+
+        function showPrevImage() {
+            if (currentGallery.length <= 1) return;
+            currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+            updateLightboxView();
+        }
+
+        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+        if (lightboxNext) lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); showNextImage(); });
+        if (lightboxPrev) lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrevImage(); });
+
+        if (lightbox) {
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            // دعم السحب (Swipe) على شاشات اللمس للموبايل
+            let touchStartX = 0;
+            lightbox.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            lightbox.addEventListener('touchend', (e) => {
+                const diff = e.changedTouches[0].screenX - touchStartX;
+                if (Math.abs(diff) > 45) {
+                    if (diff > 0) showNextImage();
+                    else showPrevImage();
+                }
+            }, { passive: true });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox || lightbox.style.display !== 'flex') return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') showNextImage();
+            else if (e.key === 'ArrowRight') showPrevImage();
+        });
 
         async function loadPosts() {
             const section = document.getElementById('posts');
@@ -753,8 +847,15 @@
                     </article>`;
                 }).join('');
 
-                container.querySelectorAll('.post-zoomable-img').forEach(imgEl => {
-                    imgEl.addEventListener('click', () => openLightbox(imgEl.src, imgEl.alt));
+                container.querySelectorAll('article').forEach(articleEl => {
+                    const articleImgs = Array.from(articleEl.querySelectorAll('.post-zoomable-img'));
+                    const galleryUrls = articleImgs.map(img => img.src);
+
+                    articleImgs.forEach((imgEl, idx) => {
+                        imgEl.addEventListener('click', () => {
+                            openLightbox(galleryUrls, idx, imgEl.alt);
+                        });
+                    });
                 });
             } catch (e) {
                 console.error('خطأ في جلب التغطيات:', e);
