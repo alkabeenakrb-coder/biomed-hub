@@ -108,6 +108,38 @@
                 <div id="workshopsList">جاري جلب الورش...</div>
             </div>
 
+            <!-- قسم إدارة تغطية المعارض والمؤتمرات والورش -->
+            <div class="card">
+                <h2 id="postFormTitleText">إضافة تغطية معرض / مؤتمر / ورشة</h2>
+
+                <input type="hidden" id="editPostId" value="">
+
+                <label>نوع التغطية:</label>
+                <select id="pTag">
+                    <option value="معرض">معرض</option>
+                    <option value="مؤتمر">مؤتمر</option>
+                    <option value="ورشة">ورشة</option>
+                </select>
+
+                <label>عنوان التغطية:</label>
+                <input type="text" id="pTitle" placeholder="مثال: تغطية مشاركة BioMed Hub في معرض بغداد الدولي...">
+
+                <label>رابط الصورة (اختياري):</label>
+                <input type="text" id="pImageUrl" placeholder="https://...">
+
+                <label>تفاصيل التغطية:</label>
+                <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية أو التغطية..."></textarea>
+
+                <button id="submitPostBtn">نشر التغطية</button>
+                <button id="cancelPostBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
+                <p id="msgPost" class="msg"></p>
+            </div>
+
+            <div class="card">
+                <h2>التغطيات المنشورة حالياً</h2>
+                <div id="postsList">جاري جلب التغطيات...</div>
+            </div>
+
         </div>
     </div>
 
@@ -135,6 +167,9 @@
 
         const secretPassword = "biomed2026";
         let localWorkshops = [];
+        let localPosts = [];
+
+        const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         // التحقق عند التحميل
         if (localStorage.getItem('biomed_admin_logged') === 'true') {
@@ -156,6 +191,9 @@
         document.getElementById('wType').addEventListener('change', toggleTypeFields);
         document.getElementById('submitBtn').addEventListener('click', saveWorkshop);
         document.getElementById('cancelBtn').addEventListener('click', resetForm);
+
+        document.getElementById('submitPostBtn').addEventListener('click', savePost);
+        document.getElementById('cancelPostBtn').addEventListener('click', resetPostForm);
 
         function checkPassword() {
             const enteredPass = document.getElementById('passwordInput').value;
@@ -181,6 +219,7 @@
             }
             toggleTypeFields();
             renderWorkshops();
+            renderPosts();
         }
 
         async function saveNewTitle() {
@@ -357,15 +396,15 @@
 
                     container.innerHTML += `
                         <div class="workshop-item">
-                            <h4>${w.title} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
-                            <p><strong>المحاضر:</strong> ${w.speaker || 'غير محدد'}</p>
-                            <p><strong>التفاصيل:</strong> ${w.details || 'لا توجد تفاصيل'}</p>
+                            <h4>${esc(w.title)} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
+                            <p><strong>المحاضر:</strong> ${esc(w.speaker || 'غير محدد')}</p>
+                            <p><strong>التفاصيل:</strong> ${esc(w.details || 'لا توجد تفاصيل')}</p>
                             ${w.type === 'in-person'
-                                ? `<p><strong>موقع الورشة:</strong> ${venueText}</p>
-                                   <p><strong>التاريخ والوقت:</strong> ${w.dateTime || 'غير محدد'}</p>`
-                                : `<p><strong>المنصة:</strong> ${w.platform || 'غير محدد'}</p>`
+                                ? `<p><strong>موقع الورشة:</strong> ${esc(venueText)}</p>
+                                   <p><strong>التاريخ والوقت:</strong> ${esc(w.dateTime || 'غير محدد')}</p>`
+                                : `<p><strong>المنصة:</strong> ${esc(w.platform || 'غير محدد')}</p>`
                             }
-                            ${w.link ? `<p><strong>الرابط:</strong> <a href="${w.link}" target="_blank">${w.link}</a></p>` : ''}
+                            ${w.link ? `<p><strong>الرابط:</strong> <a href="${esc(w.link)}" target="_blank">${esc(w.link)}</a></p>` : ''}
                             <button class="btn-edit" onclick="editWorkshop('${w.id}')">تعديل الورشة</button>
                             <button class="btn-danger" onclick="deleteWorkshop('${w.id}')">حذف هذه الورشة</button>
                         </div>
@@ -373,6 +412,118 @@
                 });
             } catch (error) {
                 container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض الورش.</p>';
+            }
+        }
+
+        // إدارة تغطية المعارض والمؤتمرات والورش (posts)
+        async function savePost() {
+            if (!db) return;
+            const editPostId = document.getElementById('editPostId').value;
+            const tag = document.getElementById('pTag').value;
+            const title = document.getElementById('pTitle').value;
+            const imageUrl = document.getElementById('pImageUrl').value.trim();
+            const body = document.getElementById('pBody').value;
+
+            if (!title.trim() || !body.trim()) {
+                alert('الرجاء كتابة عنوان التغطية والتفاصيل!');
+                return;
+            }
+
+            const payload = { tag, title, imageUrl, body };
+
+            try {
+                if (editPostId) {
+                    await updateDoc(doc(db, "posts", editPostId), payload);
+                    document.getElementById('msgPost').innerText = 'تم تعديل التغطية بنجاح! ✅';
+                } else {
+                    await addDoc(collection(db, "posts"), {
+                        ...payload,
+                        createdAt: Date.now()
+                    });
+                    document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح! ✅';
+                }
+                resetPostForm();
+                setTimeout(() => document.getElementById('msgPost').innerText = '', 3000);
+                renderPosts();
+            } catch (error) {
+                alert('خطأ أثناء حفظ التغطية: ' + error.message);
+            }
+        }
+
+        window.editPost = function(id) {
+            const p = localPosts.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('editPostId').value = p.id;
+            document.getElementById('pTag').value = p.tag || 'معرض';
+            document.getElementById('pTitle').value = p.title || '';
+            document.getElementById('pImageUrl').value = p.imageUrl || '';
+            document.getElementById('pBody').value = p.body || '';
+
+            document.getElementById('postFormTitleText').innerText = 'تعديل التغطية';
+            document.getElementById('submitPostBtn').innerText = 'حفظ تعديلات التغطية';
+            document.getElementById('submitPostBtn').style.backgroundColor = '#3b82f6';
+            document.getElementById('cancelPostBtn').classList.remove('hidden');
+            document.getElementById('postFormTitleText').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetPostForm() {
+            document.getElementById('editPostId').value = '';
+            document.getElementById('pTag').value = 'معرض';
+            document.getElementById('pTitle').value = '';
+            document.getElementById('pImageUrl').value = '';
+            document.getElementById('pBody').value = '';
+
+            document.getElementById('postFormTitleText').innerText = 'إضافة تغطية معرض / مؤتمر / ورشة';
+            document.getElementById('submitPostBtn').innerText = 'نشر التغطية';
+            document.getElementById('submitPostBtn').style.backgroundColor = '#6366f1';
+            document.getElementById('cancelPostBtn').classList.add('hidden');
+        }
+
+        window.deletePost = async function(id) {
+            if (!db) return;
+            if (!confirm('هل أنت متأكد من حذف هذه التغطية؟')) return;
+            try {
+                await deleteDoc(doc(db, "posts", id));
+                renderPosts();
+            } catch (error) {
+                alert('خطأ أثناء الحذف: ' + error.message);
+            }
+        }
+
+        async function renderPosts() {
+            const container = document.getElementById('postsList');
+            if (!container) return;
+            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل التغطيات...</p>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "posts"));
+                localPosts = [];
+                querySnapshot.forEach((docSnap) => {
+                    localPosts.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                if (localPosts.length === 0) {
+                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد تغطيات منشورة بعد.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                localPosts.forEach(p => {
+                    container.innerHTML += `
+                        <div class="workshop-item">
+                            <h4>${esc(p.title)} <span style="font-size: 11px; padding: 2px 6px; background: #ede9fe; color: #5b21b6; border-radius: 4px;">${esc(p.tag || 'تغطية')}</span></h4>
+                            <p>${esc(p.body || '')}</p>
+                            ${p.imageUrl ? `<p><strong>الصورة:</strong> <a href="${esc(p.imageUrl)}" target="_blank">عرض الصورة</a></p>` : ''}
+                            <button class="btn-edit" onclick="editPost('${p.id}')">تعديل التغطية</button>
+                            <button class="btn-danger" onclick="deletePost('${p.id}')">حذف التغطية</button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض التغطيات.</p>';
             }
         }
     </script>
