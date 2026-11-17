@@ -284,7 +284,7 @@
         });
     </script>
 
-    <!-- جلب وعرض جميع الورش مع البحث والفلترة -->
+    <!-- جلب وعرض جميع الورش مع المحاور الكاملة والبحث والفلترة -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -320,6 +320,28 @@
             return lines.join('');
         }
 
+        function buildTopicsHtml(w, idx, fadeBgClass = 'from-white') {
+            const raw = String(w.details || '').trim();
+            if (!raw) return '';
+
+            const isLong = raw.length > 260 || raw.split('\n').length > 5;
+            const boxId = `topics-body-${idx}`;
+
+            return `
+            <div class="pt-2 border-t border-purple-100/70 space-y-1.5">
+                <p class="text-xs font-extrabold text-purple-900">المحاور</p>
+                <div id="${boxId}" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line break-words ${isLong ? 'max-h-28 overflow-hidden relative' : ''}">
+                    ${esc(raw)}
+                    ${isLong ? `<div class="topics-fade absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t ${fadeBgClass} to-transparent pointer-events-none"></div>` : ''}
+                </div>
+                ${isLong ? `
+                <button type="button" data-target="${boxId}" class="toggle-topics-btn text-[11px] font-extrabold text-purple-700 hover:text-purple-900 inline-flex items-center gap-1">
+                    <span>عرض المحاور كاملة</span>
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </button>` : ''}
+            </div>`;
+        }
+
         function renderWorkshopsList() {
             const container = document.getElementById('workshops-container');
             const badge = document.getElementById('workshops-total-badge');
@@ -347,7 +369,7 @@
             }
 
             let htmlContent = '';
-            filtered.forEach(w => {
+            filtered.forEach((w, idx) => {
                 if (w.type === 'next' || w.type === 'in-person') {
                     const isInPerson = w.type === 'in-person';
                     const modeLabel = isInPerson ? '<i class="fa-solid fa-location-dot ml-1"></i> حضوري' : '<i class="fa-regular fa-clock ml-1"></i> أونلاين';
@@ -365,7 +387,7 @@
                                 <h3 class="text-lg font-black text-purple-900">${esc(w.title)}</h3>
                                 <p class="text-xs text-purple-700 font-bold"><i class="fa-solid fa-user-gear"></i> ${esc(w.speaker || 'غير محدد')}</p>
                                 <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-100/50 text-xs text-slate-600 space-y-1.5">${metaBoxContent}</div>
-                                <p class="text-xs text-slate-600 leading-relaxed">${esc(w.details || '')}</p>
+                                ${buildTopicsHtml(w, idx, 'from-white')}
                             </div>
                         </div>
                         <div class="pt-6">
@@ -384,7 +406,7 @@
                             </div>
                             <div class="space-y-3">
                                 <h3 class="text-lg font-bold text-slate-800">${esc(w.title)}</h3>
-                                <p class="text-xs text-slate-500 leading-relaxed">${esc(w.details || w.platform || '')}</p>
+                                ${buildTopicsHtml(w, idx, 'from-slate-50') || `<p class="text-xs text-slate-500 leading-relaxed">${esc(w.platform || '')}</p>`}
                             </div>
                         </div>
                         <div class="pt-6">
@@ -395,6 +417,22 @@
                 }
             });
             container.innerHTML = htmlContent;
+
+            container.querySelectorAll('.toggle-topics-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = document.getElementById(btn.dataset.target);
+                    if (!target) return;
+                    const isCollapsed = target.classList.contains('max-h-28');
+                    target.classList.toggle('max-h-28', !isCollapsed);
+                    target.classList.toggle('overflow-hidden', !isCollapsed);
+                    target.classList.toggle('relative', !isCollapsed);
+                    const fade = target.querySelector('.topics-fade');
+                    if (fade) fade.classList.toggle('hidden', isCollapsed);
+                    btn.innerHTML = isCollapsed
+                        ? '<span>إخفاء</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>'
+                        : '<span>عرض المحاور كاملة</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>';
+                });
+            });
         }
 
         function setupControls() {
