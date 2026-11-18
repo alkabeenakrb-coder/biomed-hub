@@ -5,27 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة | BioMed Hub</title>
     <link rel="icon" type="image/png" href="M.png">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        purple: { 50: '#f5f3ff', 100: '#ede9fe', 600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95' }
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
                     }
                 }
             }
         }
     </script>
-    <style> body { font-family: 'Tajawal', sans-serif; } </style>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
 </head>
 <body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
 
+    <!-- 1. شاشة تسجيل الدخول للإدارة -->
     <main id="loginCard" class="flex-1 flex items-center justify-center p-6">
         <div class="bg-white rounded-3xl border border-purple-200 p-8 sm:p-10 shadow-xl shadow-purple-900/5 max-w-md w-full space-y-6 relative overflow-hidden">
             <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-purple-600 via-purple-800 to-purple-600"></div>
+
             <div class="text-center space-y-3">
                 <div class="w-16 h-16 bg-purple-50 border border-purple-100 rounded-2xl flex items-center justify-center mx-auto p-2.5 shadow-sm">
                     <img src="M.png" alt="BioMed Hub" class="w-full h-full object-contain">
@@ -35,101 +49,226 @@
                         <i class="fa-solid fa-shield-halved ml-1"></i> بوابة الإدارة المحمية
                     </span>
                     <h1 class="text-2xl font-black text-purple-900">تسجيل الدخول للإدارة</h1>
+                    <p class="text-xs text-slate-500 mt-1">أدخل بيانات حساب المشرف للوصول إلى لوحة تحكم BioMed Hub</p>
                 </div>
             </div>
+
             <form id="adminLoginForm" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني للإدارة *</label>
                     <input type="email" id="adminEmail" required dir="ltr" placeholder="mujtaba.mm85@gmail.com"
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm text-left transition">
                 </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">كلمة المرور *</label>
                     <input type="password" id="adminPassword" required dir="ltr" placeholder="••••••••"
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm text-left transition">
                 </div>
+
                 <p id="loginMsg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 border border-red-100 py-2.5 px-3 rounded-xl"></p>
+
                 <button type="submit" id="loginBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-purple-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> <span>دخول إلى لوحة التحكم</span>
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>دخول إلى لوحة التحكم</span>
                 </button>
             </form>
+
+            <div class="pt-2 border-t border-slate-100 text-center">
+                <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-700 transition">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>العودة إلى الموقع الرئيسي</span>
+                </a>
+            </div>
         </div>
     </main>
 
+    <!-- 2. لوحة التحكم الشاملة -->
     <div id="adminCard" class="hidden flex-1 flex flex-col">
+        
         <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50 shadow-sm">
             <div class="max-w-5xl mx-auto flex justify-between items-center gap-3 flex-wrap">
                 <div class="flex items-center gap-3">
                     <img src="M.png" alt="BioMed Hub" class="w-10 h-10 object-contain">
                     <div>
-                        <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub <span class="bg-purple-100 text-purple-800 text-[10px] px-2.5 py-0.5 rounded-full">لوحة الإدارة</span></h1>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
+                            <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">لوحة الإدارة</span>
+                        </div>
                         <p id="admin-user-email-display" class="text-xs text-slate-500 font-medium"></p>
                     </div>
                 </div>
-                <button id="logoutBtn" type="button" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-right-from-bracket"></i> <span>تسجيل الخروج</span>
-                </button>
+
+                <div class="flex items-center gap-2.5">
+                    <a href="index.html" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-globe text-purple-600"></i>
+                        <span>معاينة الموقع</span>
+                    </a>
+                    <button id="logoutBtn" type="button" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </div>
             </div>
         </nav>
 
         <main class="max-w-5xl w-full mx-auto py-8 px-6 space-y-6 flex-1">
-            
-            <!-- منشئ الاستمارات الذكي المطور -->
+
+            <!-- قسم إدارة حسابات الأعضاء والصلاحيات -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-users-gear text-purple-600"></i>
+                            <span>إدارة حسابات الأعضاء وصلاحيات الإدارة</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">إضافة أعضاء جدد، ترقية أي عضو ليكون مشرفاً مساعداً، إرسال رابط تغيير الرمز، أو الحذف.</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button type="button" id="toggleAddMemberBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>إضافة عضو جديد</span>
+                        </button>
+                        <input type="text" id="memberSearchInput" placeholder="بحث بالاسم أو الإيميل..."
+                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-48">
+                        <span id="members-count-badge" class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-2 rounded-xl shrink-0">0</span>
+                    </div>
+                </div>
+
+                <!-- نموذج إضافة عضو جديد -->
+                <div id="addMemberPanel" class="hidden bg-purple-50/60 border border-purple-200 rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-purple-200/60 pb-2.5">
+                        <h3 class="text-sm font-black text-purple-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-check text-purple-600"></i>
+                            <span>إنشاء حساب عضو / مشرف جديد</span>
+                        </h3>
+                        <button type="button" id="closeAddMemberBtn" class="text-slate-400 hover:text-red-600 text-xs font-bold">
+                            <i class="fa-solid fa-xmark"></i> إغلاق
+                        </button>
+                    </div>
+
+                    <form id="addMemberForm" class="space-y-3">
+                        <div class="grid sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
+                                <input type="text" id="newMemberName" required placeholder="الاسم الثلاثي..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
+                                <input type="email" id="newMemberEmail" required dir="ltr" placeholder="name@gmail.com"
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور (6 أحرف فأكثر) *</label>
+                                <input type="text" id="newMemberPassword" required minlength="6" dir="ltr" placeholder="Biomed2026"
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة</label>
+                                <input type="text" id="newMemberUni" placeholder="جامعة ذي قار..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+                                <input type="text" id="newMemberCity" placeholder="كربلاء / بغداد..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label>
+                                <input type="text" id="newMemberPhone" dir="ltr" placeholder="077..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">نوع الحساب</label>
+                                <select id="newMemberRole" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs font-bold">
+                                    <option value="member">عضو عادي (Member)</option>
+                                    <option value="admin">مشرف مساعد (Admin)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 gap-3 flex-wrap">
+                            <p id="addMemberMsg" class="text-xs font-bold"></p>
+                            <button type="submit" id="saveNewMemberBtn" class="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5 mr-auto">
+                                <i class="fa-solid fa-check"></i>
+                                <span>إنشاء الحساب وحفظ البيانات</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="membersListContainer" class="overflow-x-auto">
+                    <p class="text-slate-400 text-center text-xs py-6">جاري جلب الأعضاء...</p>
+                </div>
+            </section>
+
+            <!-- قسم منشئ الاستمارات الذكي (Google Forms البديل) -->
             <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-4">
                     <div>
                         <h2 class="text-lg font-black text-purple-900 flex items-center gap-2">
                             <i class="fa-solid fa-wpforms text-purple-600"></i>
-                            <span>منشئ الاستمارات الذكي المطور</span>
+                            <span>منشئ الاستمارات الذكي (بديل جوجل فورم)</span>
                         </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">أنشئ استمارات مع خيارات متقدمة (نص، بريد، قوائم منسدلة، نعم/لا).</p>
+                        <p class="text-xs text-slate-500 mt-0.5">أنشئ استمارات تسجيل مخصصة للورش أو الفعاليات واجمع الردود مباشرة داخل موقعك.</p>
                     </div>
-                    <button type="button" id="toggleNewFormBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i> <span>إنشاء استمارة جديدة</span>
+                    <button type="button" id="toggleNewFormBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5 shrink-0">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>إنشاء استمارة جديدة</span>
                     </button>
                 </div>
 
+                <!-- نموذج إنشاء استمارة جديدة -->
                 <div id="formBuilderPanel" class="hidden bg-purple-50/50 border border-purple-200 rounded-2xl p-5 space-y-4">
                     <h3 class="text-sm font-black text-purple-900 border-b border-purple-200/60 pb-2">تفاصيل الاستمارة والأسئلة</h3>
                     
                     <div class="grid sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الاستمارة *</label>
-                            <input type="text" id="formTitleInput" placeholder="استمارة ورشة العمل..."
+                            <input type="text" id="formTitleInput" placeholder="استمارة تسجيـل ورشة..."
                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">وصف الاستمارة / التعليمات</label>
-                            <input type="text" id="formDescInput" placeholder="يرجى تعبئة الحقول أدناه..."
+                            <input type="text" id="formDescInput" placeholder="يرجى ملء الحقول أدناه بدقة..."
                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
                         </div>
                     </div>
 
                     <div class="space-y-3 pt-2">
                         <div class="flex items-center justify-between">
-                            <label class="text-xs font-extrabold text-purple-900">أسئلة الاستمارة:</label>
+                            <label class="text-xs font-extrabold text-purple-900">أسئلة الاستمارة (الحقول):</label>
                             <button type="button" id="addQuestionBtn" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                                <i class="fa-solid fa-circle-plus"></i> إضافة سؤال جديد
+                                <i class="fa-solid fa-circle-plus"></i> إضافة حقل جديد
                             </button>
                         </div>
                         
-                        <div id="questionsContainer" class="space-y-3">
-                            <!-- سؤال افتراضي 1 -->
-                            <div class="bg-white p-4 rounded-xl border border-purple-100 space-y-2">
-                                <div class="flex items-center gap-2">
-                                    <input type="text" value="الاسم الثلاثي" class="q-label-input flex-1 px-3 py-2 rounded-lg border border-slate-200 text-xs font-bold" placeholder="نص السؤال...">
-                                    <select class="q-type-input px-3 py-2 rounded-lg border border-slate-200 text-xs bg-slate-50 font-bold" onchange="handleQuestionTypeChange(this)">
-                                        <option value="text" selected>نص قصير</option>
-                                        <option value="email">بريد إلكتروني</option>
-                                        <option value="select">خيارات متعددة (قائمة)</option>
-                                        <option value="yesno">نعم / لا</option>
-                                    </select>
-                                    <button type="button" onclick="this.closest('div.bg-white').remove()" class="text-red-500 hover:text-red-700 px-2"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                                <div class="options-wrapper hidden pt-2 border-t border-slate-100">
-                                    <label class="block text-[11px] font-bold text-slate-500 mb-1">الخيارات (افصل بينها بفارزة أو سطر جديد، مثلاً: بغداد, كربلاء, بابل):</label>
-                                    <input type="text" placeholder="خيار 1, خيار 2, خيار 3" class="q-options-input w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
-                                </div>
+                        <div id="questionsContainer" class="space-y-2.5">
+                            <!-- الأسئلة الافتراضية الاستاندرد -->
+                            <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-purple-100">
+                                <input type="text" value="الاسم الكامل ثلاثي" class="q-label-input flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold" placeholder="نص السؤال...">
+                                <select class="q-type-input px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-slate-50">
+                                    <option value="text">نص قصير</option>
+                                </select>
+                                <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-1 rounded font-bold">إلزامي</span>
+                            </div>
+                            <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-purple-100">
+                                <input type="text" value="البريد الإلكتروني" class="q-label-input flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold" placeholder="نص السؤال...">
+                                <select class="q-type-input px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-slate-50">
+                                    <option value="email">إيميل</option>
+                                </select>
+                                <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-1 rounded font-bold">إلزامي</span>
+                            </div>
+                            <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-purple-100">
+                                <input type="text" value="رقم الهاتف (واتساب)" class="q-label-input flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold" placeholder="نص السؤال...">
+                                <select class="q-type-input px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-slate-50">
+                                    <option value="text">رقم هاتف</option>
+                                </select>
+                                <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-1 rounded font-bold">إلزامي</span>
                             </div>
                         </div>
                     </div>
@@ -143,6 +282,7 @@
                     </div>
                 </div>
 
+                <!-- قائمة الاستمارات المنشورة -->
                 <div class="pt-2">
                     <h3 class="text-sm font-extrabold text-purple-900 mb-3">الاستمارات النشطة</h3>
                     <div id="formsListContainer" class="grid sm:grid-cols-2 gap-3">
@@ -150,7 +290,7 @@
                     </div>
                 </div>
 
-                <!-- نافذة الردود -->
+                <!-- نافذة استعراض ردود الاستمارة المحددة -->
                 <div id="formResponsesModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-purple-100">
                         <div class="p-4 bg-purple-900 text-white flex justify-between items-center">
@@ -169,13 +309,184 @@
                 </div>
             </section>
 
+            <!-- عنوان ورشة الحضور الحالية -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+                    <span>عنوان ورشة الحضور الحالية</span>
+                </h2>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني..."
+                           class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    <button id="saveTitleBtn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm shrink-0">
+                        حفظ العنوان
+                    </button>
+                </div>
+                <p id="msgTitle" class="text-xs text-emerald-700 font-bold"></p>
+            </section>
+
+            <!-- إدارة الورش -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 id="formTitleText" class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard-user text-purple-600"></i>
+                    <span>إضافة ورشة جديدة / أرشيف</span>
+                </h2>
+                <input type="hidden" id="editId" value="">
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع الحالة:</label>
+                        <select id="wType" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                            <option value="next">ورشة جديدة / قادمة (Next)</option>
+                            <option value="in-person">حضوري (In-Person)</option>
+                            <option value="archived">أرشيف (Archived)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الورشة:</label>
+                        <input type="text" id="wTitle" placeholder="عنوان الورشة..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المحاضر:</label>
+                    <input type="text" id="wSpeaker" placeholder="تقديم المهندس..."
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المحاور والتفاصيل:</label>
+                    <textarea id="wDetails" rows="4" placeholder="اكتب محاور الورشة بالتفصيل..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm"></textarea>
+                </div>
+
+                <div id="inPersonContainer" class="hidden grid sm:grid-cols-3 gap-4 bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة:</label>
+                        <input type="text" id="wGovernorate" placeholder="كربلاء / بغداد..."
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">موقع الورشة:</label>
+                        <input type="text" id="wLocation" placeholder="نقابة المهندسين..."
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التاريخ والوقت:</label>
+                        <input type="text" id="wDateTime" placeholder="السبت 10:00 صباحاً"
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div id="platformContainer">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">المنصة / الوقت:</label>
+                        <input type="text" id="wPlatform" placeholder="Google Meet / الساعة..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                    <div id="linkContainer">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">رابط الورشة أو الانضمام:</label>
+                        <input type="text" id="wLink" dir="ltr" placeholder="https://t.me/..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
+                </div>
+
+                <label id="notifyWorkshopRow" class="flex items-center gap-2 text-xs font-bold text-purple-900 cursor-pointer pt-1">
+                    <input type="checkbox" id="notifyWorkshopCheck" checked class="rounded text-purple-600 focus:ring-purple-500">
+                    <span>إرسال إشعار تلقائي للأعضاء عند إضافة الورشة</span>
+                </label>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button id="submitBtn" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                        إضافة الورشة للقائمة
+                    </button>
+                    <button id="cancelBtn" type="button" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-3 rounded-xl text-xs font-bold transition">
+                        إلغاء التعديل
+                    </button>
+                </div>
+                <p id="msgWorkshop" class="text-xs text-emerald-700 font-bold text-center"></p>
+
+                <div class="pt-4 border-t border-purple-100">
+                    <h3 class="text-sm font-extrabold text-purple-900 mb-3">الورش المضافة حالياً</h3>
+                    <div id="workshopsList" class="grid sm:grid-cols-2 gap-3">جاري جلب الورش...</div>
+                </div>
+            </section>
+
+            <!-- إدارة التغطيات والفعاليات -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 id="postFormTitleText" class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper text-purple-600"></i>
+                    <span>إضافة تغطية معرض / مؤتمر / ورشة</span>
+                </h2>
+                <input type="hidden" id="editPostId" value="">
+
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع التغطية:</label>
+                        <select id="pTag" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                            <option value="معرض">معرض</option>
+                            <option value="مؤتمر">مؤتمر</option>
+                            <option value="ورشة">ورشة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عنوان التغطية:</label>
+                        <input type="text" id="pTitle" placeholder="عنوان الفعالية..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التاريخ:</label>
+                        <input type="text" id="pDate" placeholder="مثال: 2026/11/18"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">روابط الصور (كل رابط بسطر مستقل):</label>
+                    <textarea id="pImageUrls" rows="2" dir="ltr" placeholder="https://..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-xs text-left"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل التغطية:</label>
+                    <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm"></textarea>
+                </div>
+
+                <label id="notifyPostRow" class="flex items-center gap-2 text-xs font-bold text-purple-900 cursor-pointer pt-1">
+                    <input type="checkbox" id="notifyPostCheck" checked class="rounded text-purple-600 focus:ring-purple-500">
+                    <span>إرسال إشعار تلقائي للأعضاء عند نشر التغطية</span>
+                </label>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button id="submitPostBtn" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                        نشر التغطية
+                    </button>
+                    <button id="cancelPostBtn" type="button" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-3 rounded-xl text-xs font-bold transition">
+                        إلغاء التعديل
+                    </button>
+                </div>
+                <p id="msgPost" class="text-xs text-emerald-700 font-bold text-center"></p>
+
+                <div class="pt-4 border-t border-purple-100">
+                    <h3 class="text-sm font-extrabold text-purple-900 mb-3">التغطيات المنشورة حالياً</h3>
+                    <div id="postsList" class="grid sm:grid-cols-2 gap-3">جاري جلب التغطيات...</div>
+                </div>
+            </section>
+
         </main>
+
+        <footer class="py-6 px-6 text-center bg-white border-t border-purple-100 mt-10">
+            <p class="text-slate-400 text-xs">BioMed Hub Admin Portal &copy; 2026</p>
+        </footer>
     </div>
 
+    <!-- Firebase Scripts -->
     <script type="module">
-        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { initializeApp, getApps, deleteApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -189,9 +500,14 @@
         const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
         const MASTER_ADMIN = "mujtaba.mm85@gmail.com";
 
+        let localWorkshops = [];
+        let localPosts = [];
+        let localMembers = [];
         let localForms = [];
+
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         onAuthStateChanged(auth, async (user) => {
@@ -202,22 +518,27 @@
             if (user) {
                 const email = (user.email || '').toLowerCase();
                 let isAuthorized = email === MASTER_ADMIN.toLowerCase();
+
                 if (!isAuthorized) {
                     try {
                         const memberSnap = await getDoc(doc(db, "members", user.uid));
-                        if (memberSnap.exists() && memberSnap.data().role === 'admin') isAuthorized = true;
+                        if (memberSnap.exists() && memberSnap.data().role === 'admin') {
+                            isAuthorized = true;
+                        }
                     } catch (e) {}
                 }
+
                 if (!isAuthorized) {
                     await signOut(auth);
                     loginMsg.innerText = 'عذراً، هذا الحساب لا يملك صلاحيات الإدارة المساعدة.';
                     loginMsg.classList.remove('hidden');
                     return;
                 }
+
                 loginCard.classList.add('hidden');
                 adminCard.classList.remove('hidden');
                 document.getElementById('admin-user-email-display').innerText = user.email;
-                renderForms();
+                loadAdminData();
             } else {
                 loginCard.classList.remove('hidden');
                 adminCard.classList.add('hidden');
@@ -230,27 +551,159 @@
             const password = document.getElementById('adminPassword').value;
             const loginBtn = document.getElementById('loginBtn');
             const msgEl = document.getElementById('loginMsg');
+
             msgEl.classList.add('hidden');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التحقق...</span>';
+
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
                 msgEl.innerText = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
                 msgEl.classList.remove('hidden');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> <span>دخول إلى لوحة التحكم</span>';
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', async () => await signOut(auth));
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
 
-        // التحكم بإظهار حقل الخيارات إذا اخترنا Select
-        window.handleQuestionTypeChange = function(selectEl) {
-            const wrapper = selectEl.closest('.bg-white').querySelector('.options-wrapper');
-            if (selectEl.value === 'select') {
-                wrapper.classList.remove('hidden');
-            } else {
-                wrapper.classList.add('hidden');
+        async function loadAdminData() {
+            try {
+                const titleSnap = await getDoc(doc(db, "settings", "current_workshop_title"));
+                if (titleSnap.exists()) {
+                    document.getElementById('titleInput').value = titleSnap.data().title || '';
+                }
+            } catch (e) {}
+
+            toggleTypeFields();
+            renderMembers();
+            renderWorkshops();
+            renderPosts();
+            renderForms();
+        }
+
+        // --- إدارة الأعضاء ---
+        const addMemberPanel = document.getElementById('addMemberPanel');
+        document.getElementById('toggleAddMemberBtn').addEventListener('click', () => addMemberPanel.classList.toggle('hidden'));
+        document.getElementById('closeAddMemberBtn').addEventListener('click', () => addMemberPanel.classList.add('hidden'));
+
+        document.getElementById('addMemberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('newMemberName').value.trim();
+            const email = document.getElementById('newMemberEmail').value.trim();
+            const password = document.getElementById('newMemberPassword').value;
+            const university = document.getElementById('newMemberUni').value.trim();
+            const city = document.getElementById('newMemberCity').value.trim();
+            const phone = document.getElementById('newMemberPhone').value.trim();
+            const role = document.getElementById('newMemberRole').value;
+
+            const btn = document.getElementById('saveNewMemberBtn');
+            const msgEl = document.getElementById('addMemberMsg');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإنشاء...</span>';
+            msgEl.innerText = '';
+
+            let secondaryApp = null;
+            try {
+                secondaryApp = initializeApp(firebaseConfig, "SecondaryMemberCreator_" + Date.now());
+                const secondaryAuth = getAuth(secondaryApp);
+                const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                await setDoc(doc(db, "members", userCred.user.uid), { fullName, email, university, city, phone, role, createdAt: Date.now() });
+                await signOut(secondaryAuth);
+                await deleteApp(secondaryApp);
+
+                msgEl.className = "text-xs font-bold text-emerald-700";
+                msgEl.innerText = `تم إنشاء حساب (${fullName}) بنجاح!`;
+                document.getElementById('addMemberForm').reset();
+                renderMembers();
+                setTimeout(() => { msgEl.innerText = ''; }, 4000);
+            } catch (err) {
+                if (secondaryApp) { try { await deleteApp(secondaryApp); } catch (e) {} }
+                msgEl.className = "text-xs font-bold text-red-600";
+                msgEl.innerText = err.code === 'auth/email-already-in-use' ? 'الإيميل مسجل مسبقاً.' : 'حدث خطأ: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>إنشاء الحساب وحفظ البيانات</span>';
             }
+        });
+
+        function drawMembersTable(list) {
+            const container = document.getElementById('membersListContainer');
+            document.getElementById('members-count-badge').innerText = `${list.length} عضو`;
+            if (!list.length) { container.innerHTML = '<p class="text-slate-400 text-center text-xs py-6">لا توجد نتائج مطابقة.</p>'; return; }
+
+            container.innerHTML = `
+                <table class="w-full text-right border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-purple-50 text-purple-900 border-b border-purple-200">
+                            <th class="p-3 rounded-tr-xl">الاسم الكامل</th>
+                            <th class="p-3">البريد الإلكتروني</th>
+                            <th class="p-3">الجامعة / المحافظة</th>
+                            <th class="p-3 text-center">الصلاحية</th>
+                            <th class="p-3 text-center rounded-tl-xl">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        ${list.map(m => {
+                            const isAdmin = m.role === 'admin';
+                            return `
+                            <tr class="hover:bg-purple-50/30 transition">
+                                <td class="p-3 font-bold text-slate-800">${esc(m.fullName || 'بدون اسم')}</td>
+                                <td class="p-3 text-slate-600" dir="ltr">${esc(m.email)}</td>
+                                <td class="p-3 text-slate-600">${esc(m.university || '-')} ${m.city ? `(${esc(m.city)})` : ''}</td>
+                                <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isAdmin ? 'مشرف (Admin)' : 'عضو عادي'}</span></td>
+                                <td class="p-3">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" onclick="toggleAdminRole('${m.id}', '${isAdmin ? 'member' : 'admin'})" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-shield-heart"></i></button>
+                                        <button type="button" onclick="resetUserPassword('${esc(m.email)}')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-key"></i></button>
+                                        <button type="button" onclick="deleteMemberDoc('${m.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>`;
+        }
+
+        async function renderMembers() {
+            try {
+                const snap = await getDocs(collection(db, "members"));
+                localMembers = [];
+                snap.forEach(d => localMembers.push({ id: d.id, ...d.data() }));
+                localMembers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                drawMembersTable(localMembers);
+            } catch (err) {}
+        }
+
+        document.getElementById('memberSearchInput')?.addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            if (!q) { drawMembersTable(localMembers); return; }
+            drawMembersTable(localMembers.filter(m => (m.fullName || '').toLowerCase().includes(q) || (m.email || '').toLowerCase().includes(q)));
+        });
+
+        window.toggleAdminRole = async function(id, newRole) {
+            await updateDoc(doc(db, "members", id), { role: newRole });
+            renderMembers();
         };
 
+        window.resetUserPassword = async function(email) {
+            if (!confirm(`إرسال رابط تغيير الرمز إلى ${email}؟`)) return;
+            await sendPasswordResetEmail(auth, email);
+            alert('تم الإرسال بنجاح.');
+        };
+
+        window.deleteMemberDoc = async function(id) {
+            if (!confirm('حذف هذا العضو؟')) return;
+            await deleteDoc(doc(db, "members", id));
+            renderMembers();
+        };
+
+        // --- منشئ الاستمارات الذكي (Form Builder) ---
         const formBuilderPanel = document.getElementById('formBuilderPanel');
         document.getElementById('toggleNewFormBtn').addEventListener('click', () => formBuilderPanel.classList.toggle('hidden'));
         document.getElementById('cancelFormBtn').addEventListener('click', () => formBuilderPanel.classList.add('hidden'));
@@ -258,22 +711,14 @@
         document.getElementById('addQuestionBtn').addEventListener('click', () => {
             const container = document.getElementById('questionsContainer');
             const div = document.createElement('div');
-            div.className = "bg-white p-4 rounded-xl border border-purple-100 space-y-2";
+            div.className = "flex items-center gap-2 bg-white p-3 rounded-xl border border-purple-100";
             div.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <input type="text" placeholder="نص السؤال الجديد..." class="q-label-input flex-1 px-3 py-2 rounded-lg border border-slate-200 text-xs font-bold">
-                    <select class="q-type-input px-3 py-2 rounded-lg border border-slate-200 text-xs bg-slate-50 font-bold" onchange="handleQuestionTypeChange(this)">
-                        <option value="text">نص قصير</option>
-                        <option value="email">بريد إلكتروني</option>
-                        <option value="select">خيارات متعددة (قائمة)</option>
-                        <option value="yesno">نعم / لا</option>
-                    </select>
-                    <button type="button" onclick="this.closest('div.bg-white').remove()" class="text-red-500 hover:text-red-700 px-2"><i class="fa-solid fa-trash"></i></button>
-                </div>
-                <div class="options-wrapper hidden pt-2 border-t border-slate-100">
-                    <label class="block text-[11px] font-bold text-slate-500 mb-1">الخيارات (افصل بينها بفارزة، مثل: خيار 1, خيار 2):</label>
-                    <input type="text" placeholder="خيار 1, خيار 2" class="q-options-input w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
-                </div>
+                <input type="text" placeholder="نص السؤال الجديد..." class="q-label-input flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold">
+                <select class="q-type-input px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-slate-50">
+                    <option value="text">نص</option>
+                    <option value="number">رقم</option>
+                </select>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 px-2"><i class="fa-solid fa-trash text-xs"></i></button>
             `;
             container.appendChild(div);
         });
@@ -289,13 +734,13 @@
             document.querySelectorAll('#questionsContainer > div').forEach(row => {
                 const label = row.querySelector('.q-label-input').value.trim();
                 const type = row.querySelector('.q-type-input').value;
-                const optionsRaw = row.querySelector('.q-options-input')?.value || '';
-                const options = type === 'select' ? optionsRaw.split(',').map(o => o.trim()).filter(Boolean) : [];
-                if (label) questions.push({ label, type, options });
+                if (label) questions.push({ label, type });
             });
 
             try {
-                await addDoc(collection(db, "custom_forms"), { title, description, questions, createdAt: Date.now() });
+                await addDoc(collection(db, "custom_forms"), {
+                    title, description, questions, createdAt: Date.now()
+                });
                 msgEl.className = "text-xs font-bold text-emerald-700";
                 msgEl.innerText = 'تم نشر الاستمارة بنجاح!';
                 document.getElementById('formTitleInput').value = '';
@@ -339,7 +784,9 @@
                         </div>
                     </div>
                 `).join('');
-            } catch (err) {}
+            } catch (err) {
+                container.innerHTML = '<p class="text-red-500 text-xs col-span-2 text-center">تعذر جلب الاستمارات.</p>';
+            }
         }
 
         window.deleteCustomForm = async function(id) {
@@ -363,10 +810,11 @@
                 const snap = await getDocs(collection(db, "custom_forms", formId, "responses"));
                 const responses = [];
                 snap.forEach(d => responses.push(d.data()));
+
                 countEl.innerText = `${responses.length} رد مسجل حتى الآن`;
 
                 if (!responses.length) {
-                    contentEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-8">لا توجد ردود مسجلة حتى الآن.</p>';
+                    contentEl.innerHTML = '<p class="text-center text-xs text-slate-400 py-8">لا توجد ردود مسجلة لهذه الاستمارة حتى الآن.</p>';
                     return;
                 }
 
@@ -394,7 +842,231 @@
             }
         };
 
-        document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('formResponsesModal').classList.add('hidden'));
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.getElementById('formResponsesModal').classList.add('hidden');
+        });
+
+        // --- أدوات الورش والتغطيات ---
+        document.getElementById('saveTitleBtn').addEventListener('click', async () => {
+            const newTitle = document.getElementById('titleInput').value.trim();
+            if (!newTitle) return;
+            await setDoc(doc(db, "settings", "current_workshop_title"), { title: newTitle });
+            const msg = document.getElementById('msgTitle');
+            msg.innerText = 'تم حفظ العنوان بنجاح.';
+            setTimeout(() => msg.innerText = '', 3000);
+        });
+
+        function toggleTypeFields() {
+            const type = document.getElementById('wType').value;
+            document.getElementById('linkContainer').classList.toggle('hidden', type === 'archived');
+            document.getElementById('inPersonContainer').classList.toggle('hidden', type !== 'in-person');
+            document.getElementById('platformContainer').classList.toggle('hidden', type === 'in-person');
+        }
+        document.getElementById('wType').addEventListener('change', toggleTypeFields);
+
+        async function publishAnnouncement({ title, body, link = '' }) {
+            await addDoc(collection(db, "announcements"), { title, body, link, createdAt: Date.now() });
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            const editId = document.getElementById('editId').value;
+            const type = document.getElementById('wType').value;
+            const title = document.getElementById('wTitle').value.trim();
+            const speaker = document.getElementById('wSpeaker').value.trim();
+            const details = document.getElementById('wDetails').value.trim();
+            const shouldNotify = document.getElementById('notifyWorkshopCheck')?.checked;
+
+            const governorate = type === 'in-person' ? document.getElementById('wGovernorate').value.trim() : '';
+            const location = type === 'in-person' ? document.getElementById('wLocation').value.trim() : '';
+            const dateTime = type === 'in-person' ? document.getElementById('wDateTime').value.trim() : '';
+            const platform = type === 'in-person' ? [governorate, location].filter(Boolean).join(' - ') : document.getElementById('wPlatform').value.trim();
+            const link = type === 'archived' ? '' : document.getElementById('wLink').value.trim();
+
+            if (!title) { alert('يرجى كتابة عنوان الورشة'); return; }
+
+            const payload = { type, title, speaker, details, governorate, location, dateTime, platform, link };
+
+            if (editId) {
+                await updateDoc(doc(db, "workshops", editId), payload);
+                document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح.';
+            } else {
+                await addDoc(collection(db, "workshops"), { ...payload, createdAt: Date.now() });
+                if (shouldNotify) {
+                    await publishAnnouncement({ title: `ورشة جديدة: ${title}`, body: details || `ورشة جديدة (${speaker || 'BioMed Hub'}).`, link: link || 'https://biomedhubiq.com/#workshops' });
+                }
+                document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح.';
+            }
+
+            resetWorkshopForm();
+            setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
+            renderWorkshops();
+        });
+
+        function resetWorkshopForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('wType').value = 'next';
+            document.getElementById('wTitle').value = '';
+            document.getElementById('wSpeaker').value = '';
+            document.getElementById('wDetails').value = '';
+            document.getElementById('wGovernorate').value = '';
+            document.getElementById('wLocation').value = '';
+            document.getElementById('wDateTime').value = '';
+            document.getElementById('wPlatform').value = '';
+            document.getElementById('wLink').value = '';
+            toggleTypeFields();
+            document.getElementById('notifyWorkshopRow').classList.remove('hidden');
+            document.getElementById('formTitleText').innerHTML = '<i class="fa-solid fa-chalkboard-user text-purple-600"></i> <span>إضافة ورشة جديدة / أرشيف</span>';
+            document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        document.getElementById('cancelBtn').addEventListener('click', resetWorkshopForm);
+
+        window.editWorkshop = function(id) {
+            const w = localWorkshops.find(x => x.id === id);
+            if (!w) return;
+            document.getElementById('editId').value = w.id;
+            document.getElementById('wType').value = w.type;
+            document.getElementById('wTitle').value = w.title;
+            document.getElementById('wSpeaker').value = w.speaker || '';
+            document.getElementById('wDetails').value = w.details || '';
+            document.getElementById('wGovernorate').value = w.governorate || '';
+            document.getElementById('wLocation').value = w.location || '';
+            document.getElementById('wDateTime').value = w.dateTime || '';
+            document.getElementById('wPlatform').value = w.platform || '';
+            document.getElementById('wLink').value = w.link || '';
+            toggleTypeFields();
+            document.getElementById('notifyWorkshopRow').classList.add('hidden');
+            document.getElementById('formTitleText').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> <span>تعديل بيانات الورشة</span>';
+            document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            document.getElementById('formTitleText').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.deleteWorkshop = async function(id) {
+            if (!confirm('حذف هذه الورشة؟')) return;
+            await deleteDoc(doc(db, "workshops", id));
+            renderWorkshops();
+        };
+
+        async function renderWorkshops() {
+            const container = document.getElementById('workshopsList');
+            const snap = await getDocs(collection(db, "workshops"));
+            localWorkshops = [];
+            snap.forEach(d => localWorkshops.push({ id: d.id, ...d.data() }));
+            localWorkshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (!localWorkshops.length) { container.innerHTML = '<p class="col-span-2 text-slate-400 text-center text-xs py-4">لا توجد ورش مضافة بعد.</p>'; return; }
+
+            container.innerHTML = localWorkshops.map(w => `
+                <div class="bg-purple-50/40 border border-purple-100 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">${esc(w.type)}</span>
+                        <h4 class="font-extrabold text-sm text-purple-900 mt-1.5">${esc(w.title)}</h4>
+                        <p class="text-xs text-slate-600 mt-1">${esc(w.speaker || '')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
+                        <button type="button" onclick="editWorkshop('${w.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deleteWorkshop('${w.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- إدارة التغطيات ---
+        function parseImageUrls(raw) {
+            return String(raw || '').split(/[\n,]+/).map(u => u.trim()).filter(Boolean);
+        }
+
+        document.getElementById('submitPostBtn').addEventListener('click', async () => {
+            const editPostId = document.getElementById('editPostId').value;
+            const tag = document.getElementById('pTag').value;
+            const title = document.getElementById('pTitle').value.trim();
+            const postDate = document.getElementById('pDate').value.trim();
+            const imageUrls = parseImageUrls(document.getElementById('pImageUrls').value);
+            const body = document.getElementById('pBody').value.trim();
+            const shouldNotify = document.getElementById('notifyPostCheck')?.checked;
+
+            if (!title || !body) { alert('يرجى كتابة العنوان والتفاصيل'); return; }
+
+            const payload = { tag, title, postDate, imageUrls, imageUrl: imageUrls[0] || '', body };
+
+            if (editPostId) {
+                await updateDoc(doc(db, "posts", editPostId), payload);
+                document.getElementById('msgPost').innerText = 'تم تعديل التغطية بنجاح.';
+            } else {
+                await addDoc(collection(db, "posts"), { ...payload, createdAt: Date.now() });
+                if (shouldNotify) {
+                    await publishAnnouncement({ title: `تغطية جديدة: ${title}`, body: body.slice(0, 160), link: 'https://biomedhubiq.com/#posts' });
+                }
+                document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح.';
+            }
+
+            resetPostForm();
+            setTimeout(() => document.getElementById('msgPost').innerText = '', 3000);
+            renderPosts();
+        });
+
+        function resetPostForm() {
+            document.getElementById('editPostId').value = '';
+            document.getElementById('pTag').value = 'معرض';
+            document.getElementById('pTitle').value = '';
+            document.getElementById('pDate').value = '';
+            document.getElementById('pImageUrls').value = '';
+            document.getElementById('pBody').value = '';
+            document.getElementById('notifyPostRow').classList.remove('hidden');
+            document.getElementById('postFormTitleText').innerHTML = '<i class="fa-solid fa-newspaper text-purple-600"></i> <span>إضافة تغطية معرض / مؤتمر / ورشة</span>';
+            document.getElementById('submitPostBtn').innerText = 'نشر التغطية';
+            document.getElementById('cancelPostBtn').classList.add('hidden');
+        }
+
+        document.getElementById('cancelPostBtn').addEventListener('click', resetPostForm);
+
+        window.editPost = function(id) {
+            const p = localPosts.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('editPostId').value = p.id;
+            document.getElementById('pTag').value = p.tag || 'معرض';
+            document.getElementById('pTitle').value = p.title || '';
+            document.getElementById('pDate').value = p.postDate || '';
+            document.getElementById('pImageUrls').value = (Array.isArray(p.imageUrls) ? p.imageUrls : [p.imageUrl]).filter(Boolean).join('\n');
+            document.getElementById('pBody').value = p.body || '';
+            document.getElementById('notifyPostRow').classList.add('hidden');
+            document.getElementById('postFormTitleText').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> <span>تعديل التغطية</span>';
+            document.getElementById('submitPostBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('cancelPostBtn').classList.remove('hidden');
+            document.getElementById('postFormTitleText').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.deletePost = async function(id) {
+            if (!confirm('حذف هذه التغطية؟')) return;
+            await deleteDoc(doc(db, "posts", id));
+            renderPosts();
+        };
+
+        async function renderPosts() {
+            const container = document.getElementById('postsList');
+            const snap = await getDocs(collection(db, "posts"));
+            localPosts = [];
+            snap.forEach(d => localPosts.push({ id: d.id, ...d.data() }));
+            localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (!localPosts.length) { container.innerHTML = '<p class="col-span-2 text-slate-400 text-center text-xs py-4">لا توجد تغطيات منشورة.</p>'; return; }
+
+            container.innerHTML = localPosts.map(p => `
+                <div class="bg-purple-50/40 border border-purple-100 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">${esc(p.tag || 'تغطية')}</span>
+                        <h4 class="font-extrabold text-sm text-purple-900 mt-1.5">${esc(p.title)}</h4>
+                        <p class="text-xs text-slate-500 mt-1 line-clamp-2">${esc(p.body || '')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
+                        <button type="button" onclick="editPost('${p.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deletePost('${p.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
