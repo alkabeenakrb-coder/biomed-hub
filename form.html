@@ -52,10 +52,21 @@
     <!-- محتوى الاستمارة -->
     <main class="max-w-2xl w-full mx-auto py-10 px-4 flex-1">
         
-        <!-- حالة التحميل أو الخطأ -->
+        <!-- حالات التحميل والخطأ والإغلاق -->
         <div id="loadingState" class="bg-white rounded-3xl border border-purple-200 p-8 text-center shadow-sm space-y-3">
             <i class="fa-solid fa-spinner fa-spin text-purple-600 text-3xl"></i>
             <p class="text-xs text-slate-500 font-bold">جاري تحميل الاستمارة...</p>
+        </div>
+
+        <div id="closedState" class="hidden bg-white rounded-3xl border border-amber-200 p-10 text-center shadow-sm space-y-4">
+            <div class="w-16 h-16 bg-amber-50 text-amber-600 border border-amber-100 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-sm">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-black text-purple-900">عذراً، توقف استلام الردود حالياً</h1>
+                <p class="text-xs text-slate-500 mt-1">تم إغلاق هذه الاستمارة من قبل الإدارة ولم تعد تقبل تسجيلاً جديداً.</p>
+            </div>
+            <a href="index.html" class="inline-block bg-purple-100 hover:bg-purple-200 text-purple-900 px-5 py-2.5 rounded-xl text-xs font-bold transition">العودة للرئيسية</a>
         </div>
 
         <div id="errorState" class="hidden bg-white rounded-3xl border border-red-200 p-8 text-center shadow-sm space-y-3">
@@ -84,7 +95,7 @@
                     <!-- يتم توليد الحقول ديناميكياً هنا -->
                 </div>
 
-                <p id="formMsg" class="hidden text-xs font-bold text-center py-2.5 px-3 rounded-xl"></p>
+                <p id="formMsg" class="hidden text-xs font-extrabold text-center bg-red-50 border border-red-200 text-red-600 py-3 px-4 rounded-xl"></p>
 
                 <button type="submit" id="submitFormBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-purple-200 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-paper-plane"></i>
@@ -133,6 +144,7 @@
         const formId = urlParams.get('id');
 
         const loadingState = document.getElementById('loadingState');
+        const closedState = document.getElementById('closedState');
         const errorState = document.getElementById('errorState');
         const formCard = document.getElementById('formCard');
         const formTitle = document.getElementById('formTitle');
@@ -161,19 +173,49 @@
                 }
 
                 currentFormSchema = docSnap.data();
+
+                // التحقق مما إذا كانت الاستمارة مغلقة من لوحة الإدارة
+                if (currentFormSchema.isClosed) {
+                    loadingState.classList.add('hidden');
+                    closedState.classList.remove('hidden');
+                    return;
+                }
+
                 formTitle.innerText = currentFormSchema.title || 'استمارة تسجيل';
                 formDesc.innerText = currentFormSchema.description || '';
 
                 const questions = currentFormSchema.questions || [];
-                fieldsContainer.innerHTML = questions.map((q, index) => `
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-bold text-slate-700">
-                            ${q.label} <span class="text-purple-600">*</span>
-                        </label>
-                        <input type="${q.type || 'text'}" name="q_${index}" required placeholder="اكتب إجابتك هنا..."
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm transition bg-white">
-                    </div>
-                `).join('');
+                fieldsContainer.innerHTML = questions.map((q, index) => {
+                    let inputHtml = '';
+                    if (q.type === 'select') {
+                        inputHtml = `
+                            <select name="q_${index}" data-label="${q.label}" data-type="${q.type}" class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white font-bold">
+                                <option value="">-- اختر من القائمة --</option>
+                                ${(q.options || []).map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                            </select>`;
+                    } else if (q.type === 'yesno') {
+                        inputHtml = `
+                            <select name="q_${index}" data-label="${q.label}" data-type="${q.type}" class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white font-bold">
+                                <option value="">-- اختر الإجابة --</option>
+                                <option value="نعم">نعم</option>
+                                <option value="لا">لا</option>
+                            </select>`;
+                    } else {
+                        const inputType = q.type === 'email' ? 'email' : 'text';
+                        inputHtml = `
+                            <input type="${inputType}" name="q_${index}" data-label="${q.label}" data-type="${q.type}" placeholder="اكتب إجابتك هنا..."
+                                   class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white">`;
+                    }
+
+                    return `
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">
+                                ${q.label} <span class="text-purple-600">*</span>
+                            </label>
+                            ${inputHtml}
+                        </div>
+                    `;
+                }).join('');
 
                 loadingState.classList.add('hidden');
                 formCard.classList.remove('hidden');
@@ -187,16 +229,41 @@
             e.preventDefault();
             if (!currentFormSchema) return;
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
             formMsg.classList.add('hidden');
-
-            const formData = new FormData(dynamicForm);
+            const fields = dynamicForm.querySelectorAll('.form-field');
             const answers = {};
 
-            currentFormSchema.questions.forEach((q, index) => {
-                answers[q.label] = formData.get(`q_${index}`) || '';
-            });
+            for (let field of fields) {
+                const val = field.value.trim();
+                const label = field.getAttribute('data-label');
+                const type = field.getAttribute('data-type');
+
+                // التحقق من الحقول الفارغة برسالة عربية واضحة
+                if (!val) {
+                    formMsg.innerText = `عذراً، حقل (${label}) فارغ. يرجى ملء جميع الحقول المطلوبة للمتابعة.`;
+                    formMsg.classList.remove('hidden');
+                    field.focus();
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                // التحقق من صحة البريد الإلكتروني برسالة عربية
+                if (type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(val)) {
+                        formMsg.innerText = `البريد الإلكتروني المدخل في حقل (${label}) غير صحيح أو ناقص. يرجى كتابته بشكل سليم (مثل: name@gmail.com).`;
+                        formMsg.classList.remove('hidden');
+                        field.focus();
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
+                }
+
+                answers[label] = val;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
 
             try {
                 await addDoc(collection(db, "custom_forms", formId, "responses"), {
@@ -207,8 +274,7 @@
                 dynamicForm.classList.add('hidden');
                 successState.classList.remove('hidden');
             } catch (err) {
-                formMsg.className = "text-xs font-bold text-red-600 text-center bg-red-50 border border-red-100 py-2.5 px-3 rounded-xl";
-                formMsg.innerText = 'حدث خطأ أثناء إرسال الرد: ' + err.message;
+                formMsg.innerText = 'حدث خطأ أثناء إرسال الرد، يرجى المحاولة مرة أخرى.';
                 formMsg.classList.remove('hidden');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال الرد الآن</span>';
