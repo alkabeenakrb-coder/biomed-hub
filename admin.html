@@ -56,7 +56,7 @@
             <form id="adminLoginForm" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني للإدارة *</label>
-                    <input type="email" id="adminEmail" required dir="ltr" placeholder="m......@gmail.com"
+                    <input type="email" id="adminEmail" required dir="ltr" placeholder="mujtaba.mm85@gmail.com"
                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm text-left transition">
                 </div>
 
@@ -122,13 +122,83 @@
                             <i class="fa-solid fa-users-gear text-purple-600"></i>
                             <span>إدارة حسابات الأعضاء وصلاحيات الإدارة</span>
                         </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">يمكنك ترقية أي عضو ليكون "مشرفاً مساعداً (Admin)"، تغيير رمز السر، أو حذف الحساب.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">إضافة أعضاء جدد، ترقية أي عضو ليكون مشرفاً مساعداً، إرسال رابط تغيير الرمز، أو الحذف.</p>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button type="button" id="toggleAddMemberBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>إضافة عضو جديد</span>
+                        </button>
                         <input type="text" id="memberSearchInput" placeholder="بحث بالاسم أو الإيميل..."
-                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-56">
+                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-48">
                         <span id="members-count-badge" class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-2 rounded-xl shrink-0">0</span>
                     </div>
+                </div>
+
+                <!-- نموذج إضافة عضو جديد (مخفي افتراضياً ويفتح عند الضغط على الزر) -->
+                <div id="addMemberPanel" class="hidden bg-purple-50/60 border border-purple-200 rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-purple-200/60 pb-2.5">
+                        <h3 class="text-sm font-black text-purple-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-check text-purple-600"></i>
+                            <span>إنشاء حساب عضو / مشرف جديد</span>
+                        </h3>
+                        <button type="button" id="closeAddMemberBtn" class="text-slate-400 hover:text-red-600 text-xs font-bold">
+                            <i class="fa-solid fa-xmark"></i> إغلاق
+                        </button>
+                    </div>
+
+                    <form id="addMemberForm" class="space-y-3">
+                        <div class="grid sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
+                                <input type="text" id="newMemberName" required placeholder="الاسم الثلاثي..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني *</label>
+                                <input type="email" id="newMemberEmail" required dir="ltr" placeholder="name@gmail.com"
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور (6 أحرف فأكثر) *</label>
+                                <input type="text" id="newMemberPassword" required minlength="6" dir="ltr" placeholder="Biomed2026"
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة</label>
+                                <input type="text" id="newMemberUni" placeholder="جامعة ذي قار..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+                                <input type="text" id="newMemberCity" placeholder="كربلاء / بغداد..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label>
+                                <input type="text" id="newMemberPhone" dir="ltr" placeholder="077..."
+                                       class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs text-left">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">نوع الحساب</label>
+                                <select id="newMemberRole" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs font-bold">
+                                    <option value="member">عضو عادي (Member)</option>
+                                    <option value="admin">مشرف مساعد (Admin)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 gap-3 flex-wrap">
+                            <p id="addMemberMsg" class="text-xs font-bold"></p>
+                            <button type="submit" id="saveNewMemberBtn" class="bg-purple-700 hover:bg-purple-800 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5 mr-auto">
+                                <i class="fa-solid fa-check"></i>
+                                <span>إنشاء الحساب وحفظ البيانات</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <div id="membersListContainer" class="overflow-x-auto">
@@ -311,8 +381,8 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
-        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { initializeApp, getApps, deleteApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -347,7 +417,6 @@
                 const email = (user.email || '').toLowerCase();
                 let isAuthorized = email === MASTER_ADMIN.toLowerCase();
 
-                // فحص إذا كان العضو مسجلاً ولديه role == 'admin' في قاعدة البيانات
                 if (!isAuthorized) {
                     try {
                         const memberSnap = await getDoc(doc(db, "members", user.uid));
@@ -413,6 +482,80 @@
             renderWorkshops();
             renderPosts();
         }
+
+        // --- إظهار / إخفاء نموذج إضافة عضو جديد ---
+        const addMemberPanel = document.getElementById('addMemberPanel');
+        document.getElementById('toggleAddMemberBtn').addEventListener('click', () => {
+            addMemberPanel.classList.toggle('hidden');
+        });
+        document.getElementById('closeAddMemberBtn').addEventListener('click', () => {
+            addMemberPanel.classList.add('hidden');
+        });
+
+        // --- إنشاء عضو جديد من لوحة الإدارة دون تسجيل خروج الأدمن ---
+        document.getElementById('addMemberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('newMemberName').value.trim();
+            const email = document.getElementById('newMemberEmail').value.trim();
+            const password = document.getElementById('newMemberPassword').value;
+            const university = document.getElementById('newMemberUni').value.trim();
+            const city = document.getElementById('newMemberCity').value.trim();
+            const phone = document.getElementById('newMemberPhone').value.trim();
+            const role = document.getElementById('newMemberRole').value;
+
+            const btn = document.getElementById('saveNewMemberBtn');
+            const msgEl = document.getElementById('addMemberMsg');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري إنشاء الحساب...</span>';
+            msgEl.innerText = '';
+
+            let secondaryApp = null;
+            try {
+                // إنشاء تطبيق ثانوي مؤقت لكي لا يتأثر تسجيل دخول الأدمن الحالي
+                secondaryApp = initializeApp(firebaseConfig, "SecondaryMemberCreator_" + Date.now());
+                const secondaryAuth = getAuth(secondaryApp);
+
+                const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                const newUid = userCred.user.uid;
+
+                // حفظ بيانات العضو في Firestore بنفس UID الحساب
+                await setDoc(doc(db, "members", newUid), {
+                    fullName,
+                    email,
+                    university,
+                    city,
+                    phone,
+                    role,
+                    createdAt: Date.now()
+                });
+
+                await signOut(secondaryAuth);
+                await deleteApp(secondaryApp);
+                secondaryApp = null;
+
+                msgEl.className = "text-xs font-bold text-emerald-700";
+                msgEl.innerText = `تم إنشاء حساب (${fullName}) بنجاح!`;
+                document.getElementById('addMemberForm').reset();
+                renderMembers();
+                setTimeout(() => { msgEl.innerText = ''; }, 4000);
+            } catch (err) {
+                if (secondaryApp) {
+                    try { await deleteApp(secondaryApp); } catch (e) {}
+                }
+                msgEl.className = "text-xs font-bold text-red-600";
+                if (err.code === 'auth/email-already-in-use') {
+                    msgEl.innerText = 'هذا البريد الإلكتروني مسجل مسبقاً في النظام.';
+                } else if (err.code === 'auth/weak-password') {
+                    msgEl.innerText = 'كلمة المرور ضعيفة، يجب أن تكون 6 أحرف أو أرقام على الأقل.';
+                } else {
+                    msgEl.innerText = 'حدث خطأ: ' + err.message;
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>إنشاء الحساب وحفظ البيانات</span>';
+            }
+        });
 
         // --- إدارة الأعضاء والصلاحيات ---
         function drawMembersTable(list) {
@@ -500,11 +643,10 @@
             drawMembersTable(filtered);
         });
 
-        // ترقية أو تخفيض صلاحية المشرف المساعد
         window.toggleAdminRole = async function(id, newRole) {
             try {
                 await updateDoc(doc(db, "members", id), { role: newRole });
-                alert(newRole === 'admin' ? 'تمت ترقية العضو ليصبح مشرفاً مساعداً بنجاح! 🛡️' : 'تمت إزالة صلاحية الإشراف عن العضو.');
+                alert(newRole === 'admin' ? 'تمت ترقية العضو ليصبح مشرفاً مساعداً بنجاح!' : 'تمت إزالة صلاحية الإشراف عن العضو.');
                 renderMembers();
             } catch (err) {
                 alert('خطأ أثناء تحديث الصلاحية: ' + err.message);
