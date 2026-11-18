@@ -1,167 +1,318 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الشاملة - BioMed Hub</title>
+    <title>لوحة الإدارة | BioMed Hub</title>
+    <link rel="icon" type="image/png" href="M.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; padding: 30px 15px; margin: 0; color: #333; }
-        .container { max-width: 650px; margin: 0 auto; }
-        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #eaeaea; margin-bottom: 20px; }
-        h2 { color: #581c87; margin-top: 0; font-size: 20px; border-bottom: 2px solid #f3e8ff; padding-bottom: 10px; }
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 15px 0; font-size: 14px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
-        input:focus, select:focus, textarea:focus { border-color: #6366f1; }
-        button { background-color: #6366f1; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
-        button:hover { background-color: #4f46e5; }
-        .btn-edit { background-color: #3b82f6; margin-top: 5px; }
-        .btn-edit:hover { background-color: #2563eb; }
-        .btn-danger { background-color: #ef4444; margin-top: 5px; }
-        .btn-danger:hover { background-color: #dc2626; }
-        .btn-cancel { background-color: #6b7280; margin-top: 5px; }
-        .btn-cancel:hover { background-color: #4b5563; }
-        .msg { margin-top: 10px; color: green; font-weight: bold; font-size: 13px; text-align: center; }
-        .hidden { display: none; }
-        .workshop-item { background: #fdfcff; border: 1px solid #e9d5ff; padding: 15px; border-radius: 10px; margin-bottom: 12px; position: relative; }
-        .workshop-item h4 { margin: 0 0 5px 0; color: #581c87; }
-        .workshop-item p { margin: 3px 0; font-size: 12px; color: #666; }
-        .pre-line { white-space: pre-line; }
-        .hint { font-size: 11px; color: #777; margin-top: -10px; margin-bottom: 14px; }
-        .check-row { display: flex; align-items: center; gap: 8px; margin: 6px 0 14px 0; font-size: 13px; font-weight: bold; color: #4c1d95; }
-        .check-row input[type="checkbox"] { width: auto; margin: 0; }
+        body { font-family: 'Tajawal', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-purple-50/30 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <div class="container">
-        <!-- 1. شاشة تسجيل الدخول -->
-        <div class="card" id="loginCard">
-            <h2>تسجيل الدخول للإدارة</h2>
-            <p style="color: #666; font-size: 13px;">أدخل رمز المرور للوصول إلى لوحة التحكم.</p>
-            <input type="password" id="passwordInput" placeholder="أدخل رمز المرور...">
-            <button id="loginBtn">دخول</button>
-            <p id="loginMsg" style="color: red; margin-top: 10px; text-align: center;"></p>
+    <!-- 1. شاشة تسجيل الدخول للإدارة -->
+    <main id="loginCard" class="flex-1 flex items-center justify-center p-6">
+        <div class="bg-white rounded-3xl border border-purple-200 p-8 sm:p-10 shadow-xl shadow-purple-900/5 max-w-md w-full space-y-6 relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-purple-600 via-purple-800 to-purple-600"></div>
+
+            <div class="text-center space-y-3">
+                <div class="w-16 h-16 bg-purple-50 border border-purple-100 rounded-2xl flex items-center justify-center mx-auto p-2.5 shadow-sm">
+                    <img src="M.png" alt="BioMed Hub" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <span class="bg-purple-100 text-purple-800 text-[11px] font-extrabold px-3 py-1 rounded-full inline-block mb-1.5">
+                        <i class="fa-solid fa-shield-halved ml-1"></i> بوابة الإدارة المحمية
+                    </span>
+                    <h1 class="text-2xl font-black text-purple-900">تسجيل الدخول للإدارة</h1>
+                    <p class="text-xs text-slate-500 mt-1">أدخل بيانات حساب المشرف للوصول إلى لوحة تحكم BioMed Hub</p>
+                </div>
+            </div>
+
+            <form id="adminLoginForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني للإدارة *</label>
+                    <input type="email" id="adminEmail" required dir="ltr" placeholder="mujtaba.mm85@gmail.com"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm text-left transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">كلمة المرور *</label>
+                    <input type="password" id="adminPassword" required dir="ltr" placeholder="••••••••"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm text-left transition">
+                </div>
+
+                <p id="loginMsg" class="hidden text-xs text-red-600 font-bold text-center bg-red-50 border border-red-100 py-2.5 px-3 rounded-xl"></p>
+
+                <button type="submit" id="loginBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-purple-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>دخول إلى لوحة التحكم</span>
+                </button>
+            </form>
+
+            <div class="pt-2 border-t border-slate-100 text-center">
+                <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-purple-700 transition">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>العودة إلى الموقع الرئيسي</span>
+                </a>
+            </div>
         </div>
+    </main>
 
-        <!-- 2. لوحة التحكم الرئيسية -->
-        <div id="adminCard" class="hidden">
-            
-            <div style="text-align: left; margin-bottom: 10px;">
-                <button id="logoutBtn" style="background-color: #6b7280; width: auto; padding: 6px 15px; font-size: 12px;">تسجيل الخروج 🚪</button>
+    <!-- 2. لوحة التحكم الشاملة -->
+    <div id="adminCard" class="hidden flex-1 flex flex-col">
+        
+        <nav class="w-full bg-white border-b border-purple-100 py-4 px-6 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-5xl mx-auto flex justify-between items-center gap-3 flex-wrap">
+                <div class="flex items-center gap-3">
+                    <img src="M.png" alt="BioMed Hub" class="w-10 h-10 object-contain">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-extrabold text-lg text-purple-900">BioMed Hub</h1>
+                            <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">لوحة الإدارة</span>
+                        </div>
+                        <p id="admin-user-email-display" class="text-xs text-slate-500 font-medium"></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                    <a href="index.html" target="_blank" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-globe text-purple-600"></i>
+                        <span>معاينة الموقع</span>
+                    </a>
+                    <button id="logoutBtn" type="button" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </div>
             </div>
+        </nav>
 
-            <div class="card">
-                <h2>عنوان ورشة الحضور الحالية</h2>
-                <label>عنوان الورشة الذي يظهر في الاستمارة:</label>
-                <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني...">
-                <button id="saveTitleBtn">حفظ عنوان ورشة الحضور</button>
-                <p id="msgTitle" class="msg"></p>
-            </div>
+        <main class="max-w-5xl w-full mx-auto py-8 px-6 space-y-6 flex-1">
 
-            <div class="card">
-                <h2 id="formTitleText">إضافة ورشة جديدة / أرشيف</h2>
-                
+            <!-- قسم إدارة حسابات الأعضاء والصلاحيات -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-users-gear text-purple-600"></i>
+                            <span>إدارة حسابات الأعضاء وصلاحيات الإدارة</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">يمكنك ترقية أي عضو ليكون "مشرفاً مساعداً (Admin)"، تغيير رمز السر، أو حذف الحساب.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="memberSearchInput" placeholder="بحث بالاسم أو الإيميل..."
+                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-56">
+                        <span id="members-count-badge" class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-2 rounded-xl shrink-0">0</span>
+                    </div>
+                </div>
+
+                <div id="membersListContainer" class="overflow-x-auto">
+                    <p class="text-slate-400 text-center text-xs py-6">جاري جلب الأعضاء...</p>
+                </div>
+            </section>
+
+            <!-- عنوان ورشة الحضور الحالية -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+                    <span>عنوان ورشة الحضور الحالية</span>
+                </h2>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="titleInput" placeholder="مثال: ورشة أساسيات البورد الإلكتروني..."
+                           class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    <button id="saveTitleBtn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition shadow-sm shrink-0">
+                        حفظ العنوان
+                    </button>
+                </div>
+                <p id="msgTitle" class="text-xs text-emerald-700 font-bold"></p>
+            </section>
+
+            <!-- إدارة الورش -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 id="formTitleText" class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard-user text-purple-600"></i>
+                    <span>إضافة ورشة جديدة / أرشيف</span>
+                </h2>
                 <input type="hidden" id="editId" value="">
 
-                <label>نوع الحالة:</label>
-                <select id="wType">
-                    <option value="next">ورشة جديدة / قادمة (Next)</option>
-                    <option value="in-person">حضوري (In-Person)</option>
-                    <option value="archived">أرشيف (Archived)</option>
-                </select>
-
-                <label>عنوان الورشة (title):</label>
-                <input type="text" id="wTitle" placeholder="عنوان الورشة...">
-
-                <label>المحاضر (speaker):</label>
-                <input type="text" id="wSpeaker" placeholder="تقديم المهندس...">
-
-                <label>المحاور (details):</label>
-                <textarea id="wDetails" rows="6" placeholder="اكتب محاور الورشة بالتفصيل (تستقبل عدد حروف كبير وأسطر متعددة)..."></textarea>
-                <p class="hint">تستقبل نصاً طويلاً بدون حد لعدد الحروف، وتظهر تحت قسم «المحاور» في صفحة الورش.</p>
-
-                <div id="inPersonContainer" class="hidden">
-                    <label>المحافظة:</label>
-                    <input type="text" id="wGovernorate" placeholder="مثال: كربلاء المقدسة / بغداد / نينوى...">
-
-                    <label>موقع الورشة:</label>
-                    <input type="text" id="wLocation" placeholder="مثال: نقابة المهندسين - فرع بابل / دائرة الرعاية العلمية...">
-
-                    <label>تاريخ ووقت الورشة:</label>
-                    <input type="text" id="wDateTime" placeholder="مثال: السبت 22/11/2026 - الساعة 10:00 صباحاً">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع الحالة:</label>
+                        <select id="wType" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                            <option value="next">ورشة جديدة / قادمة (Next)</option>
+                            <option value="in-person">حضوري (In-Person)</option>
+                            <option value="archived">أرشيف (Archived)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عنوان الورشة:</label>
+                        <input type="text" id="wTitle" placeholder="عنوان الورشة..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
                 </div>
 
-                <div id="platformContainer">
-                    <label>المنصة / الوقت (platform):</label>
-                    <input type="text" id="wPlatform" placeholder="Google Meet / الساعة...">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المحاضر:</label>
+                    <input type="text" id="wSpeaker" placeholder="تقديم المهندس..."
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
                 </div>
 
-                <div id="linkContainer">
-                    <label>رابط الورشة أو الانضمام (link):</label>
-                    <input type="text" id="wLink" placeholder="https://t.me/...">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المحاور والتفاصيل:</label>
+                    <textarea id="wDetails" rows="4" placeholder="اكتب محاور الورشة بالتفصيل..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm"></textarea>
                 </div>
 
-                <label class="check-row" id="notifyWorkshopRow">
-                    <input type="checkbox" id="notifyWorkshopCheck" checked>
+                <div id="inPersonContainer" class="hidden grid sm:grid-cols-3 gap-4 bg-purple-50/50 p-4 rounded-2xl border border-purple-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة:</label>
+                        <input type="text" id="wGovernorate" placeholder="كربلاء / بغداد..."
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">موقع الورشة:</label>
+                        <input type="text" id="wLocation" placeholder="نقابة المهندسين..."
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التاريخ والوقت:</label>
+                        <input type="text" id="wDateTime" placeholder="السبت 10:00 صباحاً"
+                               class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white outline-none text-xs">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div id="platformContainer">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">المنصة / الوقت:</label>
+                        <input type="text" id="wPlatform" placeholder="Google Meet / الساعة..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                    <div id="linkContainer">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">رابط الورشة أو الانضمام:</label>
+                        <input type="text" id="wLink" dir="ltr" placeholder="https://t.me/..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                    </div>
+                </div>
+
+                <label id="notifyWorkshopRow" class="flex items-center gap-2 text-xs font-bold text-purple-900 cursor-pointer pt-1">
+                    <input type="checkbox" id="notifyWorkshopCheck" checked class="rounded text-purple-600 focus:ring-purple-500">
                     <span>إرسال إشعار تلقائي للأعضاء عند إضافة الورشة</span>
                 </label>
 
-                <button id="submitBtn">إضافة الورشة للقائمة</button>
-                <button id="cancelBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
-                <p id="msgWorkshop" class="msg"></p>
-            </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button id="submitBtn" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                        إضافة الورشة للقائمة
+                    </button>
+                    <button id="cancelBtn" type="button" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-3 rounded-xl text-xs font-bold transition">
+                        إلغاء التعديل
+                    </button>
+                </div>
+                <p id="msgWorkshop" class="text-xs text-emerald-700 font-bold text-center"></p>
 
-            <div class="card">
-                <h2>الورش المضافة حالياً</h2>
-                <div id="workshopsList">جاري جلب الورش...</div>
-            </div>
+                <div class="pt-4 border-t border-purple-100">
+                    <h3 class="text-sm font-extrabold text-purple-900 mb-3">الورش المضافة حالياً</h3>
+                    <div id="workshopsList" class="grid sm:grid-cols-2 gap-3">جاري جلب الورش...</div>
+                </div>
+            </section>
 
-            <!-- قسم إدارة تغطية المعارض والمؤتمرات والورش -->
-            <div class="card">
-                <h2 id="postFormTitleText">إضافة تغطية معرض / مؤتمر / ورشة</h2>
-
+            <!-- إدارة التغطيات والفعاليات -->
+            <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-4">
+                <h2 id="postFormTitleText" class="text-lg font-black text-purple-900 border-b border-purple-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper text-purple-600"></i>
+                    <span>إضافة تغطية معرض / مؤتمر / ورشة</span>
+                </h2>
                 <input type="hidden" id="editPostId" value="">
 
-                <label>نوع التغطية:</label>
-                <select id="pTag">
-                    <option value="معرض">معرض</option>
-                    <option value="مؤتمر">مؤتمر</option>
-                    <option value="ورشة">ورشة</option>
-                </select>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع التغطية:</label>
+                        <select id="pTag" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                            <option value="معرض">معرض</option>
+                            <option value="مؤتمر">مؤتمر</option>
+                            <option value="ورشة">ورشة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عنوان التغطية:</label>
+                        <input type="text" id="pTitle" placeholder="عنوان الفعالية..."
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التاريخ:</label>
+                        <input type="text" id="pDate" placeholder="مثال: 2026/11/18"
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
+                    </div>
+                </div>
 
-                <label>عنوان التغطية:</label>
-                <input type="text" id="pTitle" placeholder="مثال: تغطية مشاركة BioMed Hub في معرض بغداد الدولي...">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">روابط الصور (كل رابط بسطر مستقل):</label>
+                    <textarea id="pImageUrls" rows="2" dir="ltr" placeholder="https://..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-xs text-left"></textarea>
+                </div>
 
-                <label>التاريخ (تكتبه أنت):</label>
-                <input type="text" id="pDate" placeholder="مثال: 15 تشرين الثاني 2026 أو 2026/11/15">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل التغطية:</label>
+                    <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية..."
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm"></textarea>
+                </div>
 
-                <label>روابط الصور (اختياري - تقدر تضيف أكثر من صورة):</label>
-                <textarea id="pImageUrls" rows="3" placeholder="حط كل رابط صورة بسطر جديد...&#10;https://...&#10;https://..."></textarea>
-                <p class="hint">تقدر تلصق رابط واحد أو عدة روابط، كل رابط بسطر مستقل.</p>
-
-                <label>تفاصيل التغطية:</label>
-                <textarea id="pBody" rows="3" placeholder="اكتب ملخص الفعالية أو التغطية..."></textarea>
-
-                <label class="check-row" id="notifyPostRow">
-                    <input type="checkbox" id="notifyPostCheck" checked>
+                <label id="notifyPostRow" class="flex items-center gap-2 text-xs font-bold text-purple-900 cursor-pointer pt-1">
+                    <input type="checkbox" id="notifyPostCheck" checked class="rounded text-purple-600 focus:ring-purple-500">
                     <span>إرسال إشعار تلقائي للأعضاء عند نشر التغطية</span>
                 </label>
 
-                <button id="submitPostBtn">نشر التغطية</button>
-                <button id="cancelPostBtn" class="btn-cancel hidden" style="margin-top: 8px;">إلغاء التعديل</button>
-                <p id="msgPost" class="msg"></p>
-            </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <button id="submitPostBtn" type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl text-xs font-extrabold transition shadow-sm">
+                        نشر التغطية
+                    </button>
+                    <button id="cancelPostBtn" type="button" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-3 rounded-xl text-xs font-bold transition">
+                        إلغاء التعديل
+                    </button>
+                </div>
+                <p id="msgPost" class="text-xs text-emerald-700 font-bold text-center"></p>
 
-            <div class="card">
-                <h2>التغطيات المنشورة حالياً</h2>
-                <div id="postsList">جاري جلب التغطيات...</div>
-            </div>
+                <div class="pt-4 border-t border-purple-100">
+                    <h3 class="text-sm font-extrabold text-purple-900 mb-3">التغطيات المنشورة حالياً</h3>
+                    <div id="postsList" class="grid sm:grid-cols-2 gap-3">جاري جلب التغطيات...</div>
+                </div>
+            </section>
 
-        </div>
+        </main>
+
+        <footer class="py-6 px-6 text-center bg-white border-t border-purple-100 mt-10">
+            <p class="text-slate-400 text-xs">BioMed Hub Admin Portal &copy; 2026</p>
+        </footer>
     </div>
 
+    <!-- Firebase Scripts -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -173,219 +324,275 @@
             appId: "1:780975186763:web:36411ce118e70749d37ece"
         };
 
-        let db = null;
-        try {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-        } catch (e) {
-            console.error("Firebase error:", e);
-        }
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        const secretPassword = "biomed2026";
+        // البريد الأساسي المالك للمنصة
+        const MASTER_ADMIN = "mujtaba.mm85@gmail.com";
+
         let localWorkshops = [];
         let localPosts = [];
+        let localMembers = [];
 
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-        async function publishAnnouncement({ title, body, link = '' }) {
-            if (!db) return;
-            try {
-                await addDoc(collection(db, "announcements"), {
-                    title,
-                    body,
-                    link,
-                    createdAt: Date.now()
-                });
-            } catch (err) {
-                console.error("Error publishing announcement:", err);
-            }
-        }
+        // التحقق من صلاحيات المشرف أو المشرف المساعد
+        onAuthStateChanged(auth, async (user) => {
+            const loginCard = document.getElementById('loginCard');
+            const adminCard = document.getElementById('adminCard');
+            const loginMsg = document.getElementById('loginMsg');
 
-        function parseImageUrls(raw) {
-            if (Array.isArray(raw)) {
-                return raw.map(u => String(u || '').trim()).filter(Boolean);
-            }
-            if (!raw) return [];
-            return String(raw)
-                .split(/[\n,]+/)
-                .map(u => u.trim())
-                .filter(Boolean);
-        }
+            if (user) {
+                const email = (user.email || '').toLowerCase();
+                let isAuthorized = email === MASTER_ADMIN.toLowerCase();
 
-        function getPostImages(post) {
-            const fromArray = parseImageUrls(post.imageUrls);
-            if (fromArray.length) return fromArray;
-            return parseImageUrls(post.imageUrl);
-        }
+                // فحص إذا كان العضو مسجلاً ولديه role == 'admin' في قاعدة البيانات
+                if (!isAuthorized) {
+                    try {
+                        const memberSnap = await getDoc(doc(db, "members", user.uid));
+                        if (memberSnap.exists() && memberSnap.data().role === 'admin') {
+                            isAuthorized = true;
+                        }
+                    } catch (e) {}
+                }
 
-        if (localStorage.getItem('biomed_admin_logged') === 'true') {
-            document.getElementById('loginCard').classList.add('hidden');
-            document.getElementById('adminCard').classList.remove('hidden');
-            if (db) loadAdminData();
-        }
+                if (!isAuthorized) {
+                    await signOut(auth);
+                    loginMsg.innerText = 'عذراً، هذا الحساب لا يملك صلاحيات الإدارة المساعدة.';
+                    loginMsg.classList.remove('hidden');
+                    return;
+                }
 
-        document.getElementById('loginBtn').addEventListener('click', checkPassword);
-        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkPassword();
-        });
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('biomed_admin_logged');
-            location.reload();
-        });
-        document.getElementById('saveTitleBtn').addEventListener('click', saveNewTitle);
-        document.getElementById('wType').addEventListener('change', toggleTypeFields);
-        document.getElementById('submitBtn').addEventListener('click', saveWorkshop);
-        document.getElementById('cancelBtn').addEventListener('click', resetForm);
-
-        document.getElementById('submitPostBtn').addEventListener('click', savePost);
-        document.getElementById('cancelPostBtn').addEventListener('click', resetPostForm);
-
-        function checkPassword() {
-            const enteredPass = document.getElementById('passwordInput').value;
-            if (enteredPass === secretPassword) {
-                localStorage.setItem('biomed_admin_logged', 'true');
-                document.getElementById('loginCard').classList.add('hidden');
-                document.getElementById('adminCard').classList.remove('hidden');
-                if (db) loadAdminData();
+                loginCard.classList.add('hidden');
+                adminCard.classList.remove('hidden');
+                document.getElementById('admin-user-email-display').innerText = user.email;
+                loadAdminData();
             } else {
-                document.getElementById('loginMsg').innerText = 'رمز المرور غير صحيح! ❌';
+                loginCard.classList.remove('hidden');
+                adminCard.classList.add('hidden');
             }
-        }
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const msgEl = document.getElementById('loginMsg');
+
+            msgEl.classList.add('hidden');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التحقق...</span>';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                msgEl.innerText = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                msgEl.classList.remove('hidden');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> <span>دخول إلى لوحة التحكم</span>';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
 
         async function loadAdminData() {
             try {
-                const titleDocRef = doc(db, "settings", "current_workshop_title");
-                const titleSnap = await getDoc(titleDocRef);
+                const titleSnap = await getDoc(doc(db, "settings", "current_workshop_title"));
                 if (titleSnap.exists()) {
                     document.getElementById('titleInput').value = titleSnap.data().title || '';
                 }
-            } catch (error) {
-                console.log("Error loading title:", error);
-            }
+            } catch (e) {}
+
             toggleTypeFields();
+            renderMembers();
             renderWorkshops();
             renderPosts();
         }
 
-        async function saveNewTitle() {
-            if (!db) return;
-            const newTitle = document.getElementById('titleInput').value;
-            if (!newTitle.trim()) {
-                alert('الرجاء كتابة العنوان أولاً!');
+        // --- إدارة الأعضاء والصلاحيات ---
+        function drawMembersTable(list) {
+            const container = document.getElementById('membersListContainer');
+            document.getElementById('members-count-badge').innerText = `${list.length} عضو`;
+
+            if (!list.length) {
+                container.innerHTML = '<p class="text-slate-400 text-center text-xs py-6">لا توجد نتائج مطابقة.</p>';
                 return;
             }
+
+            container.innerHTML = `
+                <table class="w-full text-right border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-purple-50 text-purple-900 border-b border-purple-200">
+                            <th class="p-3 rounded-tr-xl">الاسم الكامل</th>
+                            <th class="p-3">البريد الإلكتروني</th>
+                            <th class="p-3">الجامعة / المحافظة</th>
+                            <th class="p-3 text-center">الصلاحية</th>
+                            <th class="p-3 text-center rounded-tl-xl">إجراءات التحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        ${list.map(m => {
+                            const isAdmin = m.role === 'admin';
+                            return `
+                            <tr class="hover:bg-purple-50/30 transition">
+                                <td class="p-3 font-bold text-slate-800">${esc(m.fullName || 'بدون اسم')}</td>
+                                <td class="p-3 text-slate-600" dir="ltr">${esc(m.email)}</td>
+                                <td class="p-3 text-slate-600">${esc(m.university || '-')} ${m.city ? `(${esc(m.city)})` : ''}</td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">
+                                        ${isAdmin ? 'مشرف (Admin)' : 'عضو عادي'}
+                                    </span>
+                                </td>
+                                <td class="p-3">
+                                    <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                        <button type="button" onclick="toggleAdminRole('${m.id}', '${isAdmin ? 'member' : 'admin'}')"
+                                                class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1" title="تبديل صلاحية المشرف">
+                                            <i class="fa-solid fa-shield-heart"></i>
+                                            <span>${isAdmin ? 'إلغاء الأدمن' : 'ترقية لأدمن'}</span>
+                                        </button>
+                                        <button type="button" onclick="resetUserPassword('${esc(m.email)}')"
+                                                class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg font-bold transition" title="إرسال رابط تغيير الرمز">
+                                            <i class="fa-solid fa-key"></i>
+                                        </button>
+                                        <button type="button" onclick="deleteMemberDoc('${m.id}')"
+                                                class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg font-bold transition" title="حذف الحساب">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;}).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        async function renderMembers() {
+            const container = document.getElementById('membersListContainer');
             try {
-                await setDoc(doc(db, "settings", "current_workshop_title"), { title: newTitle });
-                const msg = document.getElementById('msgTitle');
-                msg.innerText = 'تم حفظ عنوان ورشة الحضور بنجاح! 🎉';
-                setTimeout(() => msg.innerText = '', 3000);
-            } catch (error) {
-                alert('خطأ أثناء الحفظ: ' + error.message);
+                const snap = await getDocs(collection(db, "members"));
+                localMembers = [];
+                snap.forEach(d => localMembers.push({ id: d.id, ...d.data() }));
+                localMembers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                drawMembersTable(localMembers);
+            } catch (err) {
+                container.innerHTML = '<p class="text-red-500 text-center text-xs py-4">تعذر تحميل قائمة الأعضاء.</p>';
             }
         }
+
+        document.getElementById('memberSearchInput')?.addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            if (!q) {
+                drawMembersTable(localMembers);
+                return;
+            }
+            const filtered = localMembers.filter(m =>
+                (m.fullName || '').toLowerCase().includes(q) ||
+                (m.email || '').toLowerCase().includes(q) ||
+                (m.phone || '').includes(q) ||
+                (m.university || '').toLowerCase().includes(q)
+            );
+            drawMembersTable(filtered);
+        });
+
+        // ترقية أو تخفيض صلاحية المشرف المساعد
+        window.toggleAdminRole = async function(id, newRole) {
+            try {
+                await updateDoc(doc(db, "members", id), { role: newRole });
+                alert(newRole === 'admin' ? 'تمت ترقية العضو ليصبح مشرفاً مساعداً بنجاح! 🛡️' : 'تمت إزالة صلاحية الإشراف عن العضو.');
+                renderMembers();
+            } catch (err) {
+                alert('خطأ أثناء تحديث الصلاحية: ' + err.message);
+            }
+        };
+
+        window.resetUserPassword = async function(email) {
+            if (!email) return;
+            if (!confirm(`إرسال رابط إعادة تعيين رمز السر إلى البريد:\n${email}؟`)) return;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert(`تم إرسال رابط تغيير رمز السر بنجاح إلى: ${email}`);
+            } catch (err) {
+                alert('تعذر الإرسال: ' + err.message);
+            }
+        };
+
+        window.deleteMemberDoc = async function(id) {
+            if (!confirm('هل أنت متأكد من حذف سجل هذا العضو من قاعدة البيانات؟')) return;
+            try {
+                await deleteDoc(doc(db, "members", id));
+                renderMembers();
+            } catch (err) {
+                alert('خطأ أثناء الحذف: ' + err.message);
+            }
+        };
+
+        // --- أدوات الورش والتغطيات ---
+        document.getElementById('saveTitleBtn').addEventListener('click', async () => {
+            const newTitle = document.getElementById('titleInput').value.trim();
+            if (!newTitle) return;
+            await setDoc(doc(db, "settings", "current_workshop_title"), { title: newTitle });
+            const msg = document.getElementById('msgTitle');
+            msg.innerText = 'تم حفظ العنوان بنجاح.';
+            setTimeout(() => msg.innerText = '', 3000);
+        });
 
         function toggleTypeFields() {
             const type = document.getElementById('wType').value;
-            const linkContainer = document.getElementById('linkContainer');
-            const inPersonContainer = document.getElementById('inPersonContainer');
-            const platformContainer = document.getElementById('platformContainer');
+            document.getElementById('linkContainer').classList.toggle('hidden', type === 'archived');
+            document.getElementById('inPersonContainer').classList.toggle('hidden', type !== 'in-person');
+            document.getElementById('platformContainer').classList.toggle('hidden', type === 'in-person');
+        }
+        document.getElementById('wType').addEventListener('change', toggleTypeFields);
 
-            if (type === 'archived') {
-                linkContainer.classList.add('hidden');
-                document.getElementById('wLink').value = '';
-            } else {
-                linkContainer.classList.remove('hidden');
-            }
-
-            if (type === 'in-person') {
-                inPersonContainer.classList.remove('hidden');
-                platformContainer.classList.add('hidden');
-            } else {
-                inPersonContainer.classList.add('hidden');
-                platformContainer.classList.remove('hidden');
-            }
+        async function publishAnnouncement({ title, body, link = '' }) {
+            await addDoc(collection(db, "announcements"), { title, body, link, createdAt: Date.now() });
         }
 
-        async function saveWorkshop() {
-            if (!db) return;
+        document.getElementById('submitBtn').addEventListener('click', async () => {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('wType').value;
-            const title = document.getElementById('wTitle').value;
-            const speaker = document.getElementById('wSpeaker').value;
-            const details = document.getElementById('wDetails').value;
+            const title = document.getElementById('wTitle').value.trim();
+            const speaker = document.getElementById('wSpeaker').value.trim();
+            const details = document.getElementById('wDetails').value.trim();
             const shouldNotify = document.getElementById('notifyWorkshopCheck')?.checked;
 
-            const governorate = type === 'in-person' ? document.getElementById('wGovernorate').value : '';
-            const location = type === 'in-person' ? document.getElementById('wLocation').value : '';
-            const dateTime = type === 'in-person' ? document.getElementById('wDateTime').value : '';
+            const governorate = type === 'in-person' ? document.getElementById('wGovernorate').value.trim() : '';
+            const location = type === 'in-person' ? document.getElementById('wLocation').value.trim() : '';
+            const dateTime = type === 'in-person' ? document.getElementById('wDateTime').value.trim() : '';
+            const platform = type === 'in-person' ? [governorate, location].filter(Boolean).join(' - ') : document.getElementById('wPlatform').value.trim();
+            const link = type === 'archived' ? '' : document.getElementById('wLink').value.trim();
 
-            const platform = type === 'in-person'
-                ? [governorate, location].filter(Boolean).join(' - ')
-                : document.getElementById('wPlatform').value;
-
-            const link = type === 'archived' ? '' : document.getElementById('wLink').value;
-
-            if (!title.trim()) {
-                alert('الرجاء كتابة عنوان الورشة على الأقل!');
-                return;
-            }
+            if (!title) { alert('يرجى كتابة عنوان الورشة'); return; }
 
             const payload = { type, title, speaker, details, governorate, location, dateTime, platform, link };
 
-            try {
-                if (editId) {
-                    await updateDoc(doc(db, "workshops", editId), payload);
-                    document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح! ✅';
-                } else {
-                    await addDoc(collection(db, "workshops"), {
-                        ...payload,
-                        createdAt: Date.now()
+            if (editId) {
+                await updateDoc(doc(db, "workshops", editId), payload);
+                document.getElementById('msgWorkshop').innerText = 'تم تعديل الورشة بنجاح.';
+            } else {
+                await addDoc(collection(db, "workshops"), { ...payload, createdAt: Date.now() });
+                if (shouldNotify) {
+                    await publishAnnouncement({
+                        title: `ورشة جديدة: ${title}`,
+                        body: details || `تمت إضافة ورشة جديدة (${speaker || 'BioMed Hub'}).`,
+                        link: link || 'https://biomedhubiq.com/#workshops'
                     });
-
-                    if (shouldNotify) {
-                        await publishAnnouncement({
-                            title: `ورشة جديدة: ${title.trim()}`,
-                            body: details.trim() || `تمت إضافة ورشة جديدة (${speaker.trim() || 'BioMed Hub'}). اضغط للتفاصيل والتسجيل.`,
-                            link: link.trim() || 'https://biomedhubiq.com/#workshops'
-                        });
-                    }
-
-                    document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح! ✅';
                 }
-                resetForm();
-                setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
-                renderWorkshops();
-            } catch (error) {
-                alert('خطأ أثناء الحفظ: ' + error.message);
+                document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح.';
             }
-        }
 
-        window.editWorkshop = function(id) {
-            const w = localWorkshops.find(item => item.id === id);
-            if (!w) return;
+            resetWorkshopForm();
+            setTimeout(() => document.getElementById('msgWorkshop').innerText = '', 3000);
+            renderWorkshops();
+        });
 
-            document.getElementById('editId').value = w.id;
-            document.getElementById('wType').value = w.type;
-            document.getElementById('wTitle').value = w.title;
-            document.getElementById('wSpeaker').value = w.speaker || '';
-            document.getElementById('wDetails').value = w.details || '';
-            document.getElementById('wGovernorate').value = w.governorate || '';
-            document.getElementById('wLocation').value = w.location || '';
-            document.getElementById('wDateTime').value = w.dateTime || '';
-            document.getElementById('wPlatform').value = w.platform || '';
-            document.getElementById('wLink').value = w.link || '';
-
-            toggleTypeFields();
-
-            document.getElementById('notifyWorkshopRow').classList.add('hidden');
-            document.getElementById('formTitleText').innerText = 'تعديل بيانات الورشة';
-            document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
-            document.getElementById('submitBtn').style.backgroundColor = '#3b82f6';
-            document.getElementById('cancelBtn').classList.remove('hidden');
-            window.scrollTo({ top: 200, behavior: 'smooth' });
-        }
-
-        function resetForm() {
+        function resetWorkshopForm() {
             document.getElementById('editId').value = '';
             document.getElementById('wType').value = 'next';
             document.getElementById('wTitle').value = '';
@@ -397,156 +604,105 @@
             document.getElementById('wPlatform').value = '';
             document.getElementById('wLink').value = '';
             toggleTypeFields();
-
             document.getElementById('notifyWorkshopRow').classList.remove('hidden');
-            if (document.getElementById('notifyWorkshopCheck')) {
-                document.getElementById('notifyWorkshopCheck').checked = true;
-            }
-            document.getElementById('formTitleText').innerText = 'إضافة ورشة جديدة / أرشيف';
+            document.getElementById('formTitleText').innerHTML = '<i class="fa-solid fa-chalkboard-user text-purple-600"></i> <span>إضافة ورشة جديدة / أرشيف</span>';
             document.getElementById('submitBtn').innerText = 'إضافة الورشة للقائمة';
-            document.getElementById('submitBtn').style.backgroundColor = '#6366f1';
             document.getElementById('cancelBtn').classList.add('hidden');
         }
 
+        document.getElementById('cancelBtn').addEventListener('click', resetWorkshopForm);
+
+        window.editWorkshop = function(id) {
+            const w = localWorkshops.find(x => x.id === id);
+            if (!w) return;
+            document.getElementById('editId').value = w.id;
+            document.getElementById('wType').value = w.type;
+            document.getElementById('wTitle').value = w.title;
+            document.getElementById('wSpeaker').value = w.speaker || '';
+            document.getElementById('wDetails').value = w.details || '';
+            document.getElementById('wGovernorate').value = w.governorate || '';
+            document.getElementById('wLocation').value = w.location || '';
+            document.getElementById('wDateTime').value = w.dateTime || '';
+            document.getElementById('wPlatform').value = w.platform || '';
+            document.getElementById('wLink').value = w.link || '';
+            toggleTypeFields();
+            document.getElementById('notifyWorkshopRow').classList.add('hidden');
+            document.getElementById('formTitleText').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> <span>تعديل بيانات الورشة</span>';
+            document.getElementById('submitBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            document.getElementById('formTitleText').scrollIntoView({ behavior: 'smooth' });
+        };
+
         window.deleteWorkshop = async function(id) {
-            if (!db) return;
-            if (!confirm('هل أنت متأكد من حذف هذه الورشة؟')) return;
-            try {
-                await deleteDoc(doc(db, "workshops", id));
-                renderWorkshops();
-            } catch (error) {
-                alert('خطأ أثناء الحذف: ' + error.message);
-            }
-        }
+            if (!confirm('حذف هذه الورشة؟')) return;
+            await deleteDoc(doc(db, "workshops", id));
+            renderWorkshops();
+        };
 
         async function renderWorkshops() {
             const container = document.getElementById('workshopsList');
-            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل الورش...</p>';
+            const snap = await getDocs(collection(db, "workshops"));
+            localWorkshops = [];
+            snap.forEach(d => localWorkshops.push({ id: d.id, ...d.data() }));
+            localWorkshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-            try {
-                const querySnapshot = await getDocs(collection(db, "workshops"));
-                localWorkshops = [];
-                querySnapshot.forEach((docSnap) => {
-                    localWorkshops.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                localWorkshops.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                if (localWorkshops.length === 0) {
-                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد ورش مضافة بعد.</p>';
-                    return;
-                }
-
-                const typeLabels = {
-                    'next': 'ورشة جديدة',
-                    'in-person': 'حضوري',
-                    'archived': 'أرشيف'
-                };
-                const typeColors = {
-                    'next': 'background: #dcfce7; color: #166534;',
-                    'in-person': 'background: #ede9fe; color: #5b21b6;',
-                    'archived': 'background: #f3f4f6; color: #374151;'
-                };
-
-                container.innerHTML = '';
-                localWorkshops.forEach(w => {
-                    const badgeStyle = typeColors[w.type] || typeColors.archived;
-                    const badgeText = typeLabels[w.type] || 'أرشيف';
-                    const venueText = [w.governorate, w.location].filter(Boolean).join(' - ') || w.platform || 'غير محدد';
-
-                    container.innerHTML += `
-                        <div class="workshop-item">
-                            <h4>${esc(w.title)} <span style="font-size: 11px; padding: 2px 6px; ${badgeStyle} border-radius: 4px;">${badgeText}</span></h4>
-                            <p><strong>المحاضر:</strong> ${esc(w.speaker || 'غير محدد')}</p>
-                            <p class="pre-line"><strong>المحاور:</strong> ${esc(w.details || 'لا توجد محاور')}</p>
-                            ${w.type === 'in-person'
-                                ? `<p><strong>موقع الورشة:</strong> ${esc(venueText)}</p>
-                                   <p><strong>التاريخ والوقت:</strong> ${esc(w.dateTime || 'غير محدد')}</p>`
-                                : `<p><strong>المنصة:</strong> ${esc(w.platform || 'غير محدد')}</p>`
-                            }
-                            ${w.link ? `<p><strong>الرابط:</strong> <a href="${esc(w.link)}" target="_blank">${esc(w.link)}</a></p>` : ''}
-                            <button class="btn-edit" onclick="editWorkshop('${w.id}')">تعديل الورشة</button>
-                            <button class="btn-danger" onclick="deleteWorkshop('${w.id}')">حذف هذه الورشة</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض الورش.</p>';
-            }
-        }
-
-        async function savePost() {
-            if (!db) return;
-            const editPostId = document.getElementById('editPostId').value;
-            const tag = document.getElementById('pTag').value;
-            const title = document.getElementById('pTitle').value;
-            const postDate = document.getElementById('pDate').value.trim();
-            const imageUrls = parseImageUrls(document.getElementById('pImageUrls').value);
-            const body = document.getElementById('pBody').value;
-            const shouldNotify = document.getElementById('notifyPostCheck')?.checked;
-
-            if (!title.trim() || !body.trim()) {
-                alert('الرجاء كتابة عنوان التغطية والتفاصيل!');
+            if (!localWorkshops.length) {
+                container.innerHTML = '<p class="col-span-2 text-slate-400 text-center text-xs py-4">لا توجد ورش مضافة بعد.</p>';
                 return;
             }
 
-            const payload = {
-                tag,
-                title,
-                postDate,
-                imageUrls,
-                imageUrl: imageUrls[0] || '',
-                body
-            };
+            container.innerHTML = localWorkshops.map(w => `
+                <div class="bg-purple-50/40 border border-purple-100 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">${esc(w.type)}</span>
+                        <h4 class="font-extrabold text-sm text-purple-900 mt-1.5">${esc(w.title)}</h4>
+                        <p class="text-xs text-slate-600 mt-1">${esc(w.speaker || '')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
+                        <button type="button" onclick="editWorkshop('${w.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deleteWorkshop('${w.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            try {
-                if (editPostId) {
-                    await updateDoc(doc(db, "posts", editPostId), payload);
-                    document.getElementById('msgPost').innerText = 'تم تعديل التغطية بنجاح! ✅';
-                } else {
-                    await addDoc(collection(db, "posts"), {
-                        ...payload,
-                        createdAt: Date.now()
+        // --- إدارة التغطيات ---
+        function parseImageUrls(raw) {
+            return String(raw || '').split(/[\n,]+/).map(u => u.trim()).filter(Boolean);
+        }
+
+        document.getElementById('submitPostBtn').addEventListener('click', async () => {
+            const editPostId = document.getElementById('editPostId').value;
+            const tag = document.getElementById('pTag').value;
+            const title = document.getElementById('pTitle').value.trim();
+            const postDate = document.getElementById('pDate').value.trim();
+            const imageUrls = parseImageUrls(document.getElementById('pImageUrls').value);
+            const body = document.getElementById('pBody').value.trim();
+            const shouldNotify = document.getElementById('notifyPostCheck')?.checked;
+
+            if (!title || !body) { alert('يرجى كتابة العنوان والتفاصيل'); return; }
+
+            const payload = { tag, title, postDate, imageUrls, imageUrl: imageUrls[0] || '', body };
+
+            if (editPostId) {
+                await updateDoc(doc(db, "posts", editPostId), payload);
+                document.getElementById('msgPost').innerText = 'تم تعديل التغطية بنجاح.';
+            } else {
+                await addDoc(collection(db, "posts"), { ...payload, createdAt: Date.now() });
+                if (shouldNotify) {
+                    await publishAnnouncement({
+                        title: `تغطية جديدة: ${title}`,
+                        body: body.slice(0, 160),
+                        link: 'https://biomedhubiq.com/#posts'
                     });
-
-                    if (shouldNotify) {
-                        await publishAnnouncement({
-                            title: `تغطية فعالية جديدة: ${title.trim()}`,
-                            body: body.trim().slice(0, 180) + (body.trim().length > 180 ? '...' : ''),
-                            link: 'https://biomedhubiq.com/#posts'
-                        });
-                    }
-
-                    document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح! ✅';
                 }
-                resetPostForm();
-                setTimeout(() => document.getElementById('msgPost').innerText = '', 3000);
-                renderPosts();
-            } catch (error) {
-                alert('خطأ أثناء حفظ التغطية: ' + error.message);
+                document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح.';
             }
-        }
 
-        window.editPost = function(id) {
-            const p = localPosts.find(item => item.id === id);
-            if (!p) return;
-
-            const imgs = getPostImages(p);
-
-            document.getElementById('editPostId').value = p.id;
-            document.getElementById('pTag').value = p.tag || 'معرض';
-            document.getElementById('pTitle').value = p.title || '';
-            document.getElementById('pDate').value = p.postDate || '';
-            document.getElementById('pImageUrls').value = imgs.join('\n');
-            document.getElementById('pBody').value = p.body || '';
-
-            document.getElementById('notifyPostRow').classList.add('hidden');
-            document.getElementById('postFormTitleText').innerText = 'تعديل التغطية';
-            document.getElementById('submitPostBtn').innerText = 'حفظ تعديلات التغطية';
-            document.getElementById('submitPostBtn').style.backgroundColor = '#3b82f6';
-            document.getElementById('cancelPostBtn').classList.remove('hidden');
-            document.getElementById('postFormTitleText').scrollIntoView({ behavior: 'smooth' });
-        }
+            resetPostForm();
+            setTimeout(() => document.getElementById('msgPost').innerText = '', 3000);
+            renderPosts();
+        });
 
         function resetPostForm() {
             document.getElementById('editPostId').value = '';
@@ -555,65 +711,61 @@
             document.getElementById('pDate').value = '';
             document.getElementById('pImageUrls').value = '';
             document.getElementById('pBody').value = '';
-
             document.getElementById('notifyPostRow').classList.remove('hidden');
-            if (document.getElementById('notifyPostCheck')) {
-                document.getElementById('notifyPostCheck').checked = true;
-            }
-            document.getElementById('postFormTitleText').innerText = 'إضافة تغطية معرض / مؤتمر / ورشة';
+            document.getElementById('postFormTitleText').innerHTML = '<i class="fa-solid fa-newspaper text-purple-600"></i> <span>إضافة تغطية معرض / مؤتمر / ورشة</span>';
             document.getElementById('submitPostBtn').innerText = 'نشر التغطية';
-            document.getElementById('submitPostBtn').style.backgroundColor = '#6366f1';
             document.getElementById('cancelPostBtn').classList.add('hidden');
         }
 
+        document.getElementById('cancelPostBtn').addEventListener('click', resetPostForm);
+
+        window.editPost = function(id) {
+            const p = localPosts.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('editPostId').value = p.id;
+            document.getElementById('pTag').value = p.tag || 'معرض';
+            document.getElementById('pTitle').value = p.title || '';
+            document.getElementById('pDate').value = p.postDate || '';
+            document.getElementById('pImageUrls').value = (Array.isArray(p.imageUrls) ? p.imageUrls : [p.imageUrl]).filter(Boolean).join('\n');
+            document.getElementById('pBody').value = p.body || '';
+            document.getElementById('notifyPostRow').classList.add('hidden');
+            document.getElementById('postFormTitleText').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> <span>تعديل التغطية</span>';
+            document.getElementById('submitPostBtn').innerText = 'حفظ التعديلات';
+            document.getElementById('cancelPostBtn').classList.remove('hidden');
+            document.getElementById('postFormTitleText').scrollIntoView({ behavior: 'smooth' });
+        };
+
         window.deletePost = async function(id) {
-            if (!db) return;
-            if (!confirm('هل أنت متأكد من حذف هذه التغطية؟')) return;
-            try {
-                await deleteDoc(doc(db, "posts", id));
-                renderPosts();
-            } catch (error) {
-                alert('خطأ أثناء الحذف: ' + error.message);
-            }
-        }
+            if (!confirm('حذف هذه التغطية؟')) return;
+            await deleteDoc(doc(db, "posts", id));
+            renderPosts();
+        };
 
         async function renderPosts() {
             const container = document.getElementById('postsList');
-            if (!container) return;
-            container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">جاري تحميل التغطيات...</p>';
+            const snap = await getDocs(collection(db, "posts"));
+            localPosts = [];
+            snap.forEach(d => localPosts.push({ id: d.id, ...d.data() }));
+            localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-            try {
-                const querySnapshot = await getDocs(collection(db, "posts"));
-                localPosts = [];
-                querySnapshot.forEach((docSnap) => {
-                    localPosts.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                localPosts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                if (localPosts.length === 0) {
-                    container.innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">لا توجد تغطيات منشورة بعد.</p>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                localPosts.forEach(p => {
-                    const imgs = getPostImages(p);
-                    const dateDisplay = p.postDate || (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-IQ') : '');
-                    container.innerHTML += `
-                        <div class="workshop-item">
-                            <h4>${esc(p.title)} <span style="font-size: 11px; padding: 2px 6px; background: #ede9fe; color: #5b21b6; border-radius: 4px;">${esc(p.tag || 'تغطية')}</span></h4>
-                            ${dateDisplay ? `<p><strong>التاريخ:</strong> ${esc(dateDisplay)}</p>` : ''}
-                            <p>${esc(p.body || '')}</p>
-                            ${imgs.length ? `<p><strong>الصور:</strong> ${imgs.length} صورة</p>` : ''}
-                            <button class="btn-edit" onclick="editPost('${p.id}')">تعديل التغطية</button>
-                            <button class="btn-danger" onclick="deletePost('${p.id}')">حذف التغطية</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                container.innerHTML = '<p style="color: red; text-align: center; font-size: 13px;">تعذر عرض التغطيات.</p>';
+            if (!localPosts.length) {
+                container.innerHTML = '<p class="col-span-2 text-slate-400 text-center text-xs py-4">لا توجد تغطيات منشورة.</p>';
+                return;
             }
+
+            container.innerHTML = localPosts.map(p => `
+                <div class="bg-purple-50/40 border border-purple-100 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">${esc(p.tag || 'تغطية')}</span>
+                        <h4 class="font-extrabold text-sm text-purple-900 mt-1.5">${esc(p.title)}</h4>
+                        <p class="text-xs text-slate-500 mt-1 line-clamp-2">${esc(p.body || '')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
+                        <button type="button" onclick="editPost('${p.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deletePost('${p.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                    </div>
+                </div>
+            `).join('');
         }
     </script>
 </body>
