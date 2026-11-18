@@ -5,37 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>استمارة التسجيل | BioMed Hub</title>
     <link rel="icon" type="image/png" href="M.png">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        purple: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        }
+                        purple: { 50: '#f5f3ff', 100: '#ede9fe', 600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95' }
                     }
                 }
             }
         }
     </script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-    </style>
+    <style> body { font-family: 'Tajawal', sans-serif; } </style>
 </head>
 <body class="bg-purple-50/40 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- رأس الصفحة -->
     <header class="w-full bg-white border-b border-purple-100 py-4 px-6 shadow-sm">
         <div class="max-w-2xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -43,16 +30,13 @@
                 <span class="font-extrabold text-lg text-purple-900">BioMed Hub</span>
             </div>
             <a href="index.html" class="text-xs font-bold text-purple-700 hover:text-purple-900 transition flex items-center gap-1">
-                <i class="fa-solid fa-house"></i>
-                <span>الرئيسية</span>
+                <i class="fa-solid fa-house"></i> <span>الرئيسية</span>
             </a>
         </div>
     </header>
 
-    <!-- محتوى الاستمارة -->
     <main class="max-w-2xl w-full mx-auto py-10 px-4 flex-1">
         
-        <!-- حالة التحميل أو الخطأ -->
         <div id="loadingState" class="bg-white rounded-3xl border border-purple-200 p-8 text-center shadow-sm space-y-3">
             <i class="fa-solid fa-spinner fa-spin text-purple-600 text-3xl"></i>
             <p class="text-xs text-slate-500 font-bold">جاري تحميل الاستمارة...</p>
@@ -67,7 +51,6 @@
             <a href="index.html" class="inline-block bg-purple-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition mt-2">العودة للرئيسية</a>
         </div>
 
-        <!-- بطاقة الاستمارة الفعلية -->
         <div id="formCard" class="hidden bg-white rounded-3xl border border-purple-200 shadow-xl shadow-purple-900/5 overflow-hidden relative">
             <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-purple-600 via-purple-800 to-purple-600"></div>
 
@@ -80,19 +63,16 @@
             </div>
 
             <form id="dynamicForm" class="p-6 sm:p-10 space-y-5">
-                <div id="formFieldsContainer" class="space-y-4">
-                    <!-- يتم توليد الحقول ديناميكياً هنا -->
-                </div>
+                <div id="formFieldsContainer" class="space-y-4"></div>
 
-                <p id="formMsg" class="hidden text-xs font-bold text-center py-2.5 px-3 rounded-xl"></p>
+                <!-- تنبيهات الأخطاء بالعربي بالكامل -->
+                <p id="formMsg" class="hidden text-xs font-extrabold text-center bg-red-50 border border-red-200 text-red-600 py-3 px-4 rounded-xl"></p>
 
                 <button type="submit" id="submitFormBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-purple-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>إرسال الرد الآن</span>
+                    <i class="fa-solid fa-paper-plane"></i> <span>إرسال الرد الآن</span>
                 </button>
             </form>
 
-            <!-- رسالة النجاح بعد الإرسال -->
             <div id="successState" class="hidden p-10 text-center space-y-4">
                 <div class="w-16 h-16 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-sm">
                     <i class="fa-solid fa-circle-check"></i>
@@ -112,7 +92,6 @@
         <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026 - جميع الحقوق محفوظة</p>
     </footer>
 
-    <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -165,15 +144,37 @@
                 formDesc.innerText = currentFormSchema.description || '';
 
                 const questions = currentFormSchema.questions || [];
-                fieldsContainer.innerHTML = questions.map((q, index) => `
-                    <div class="space-y-1.5">
-                        <label class="block text-xs font-bold text-slate-700">
-                            ${q.label} <span class="text-purple-600">*</span>
-                        </label>
-                        <input type="${q.type || 'text'}" name="q_${index}" required placeholder="اكتب إجابتك هنا..."
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 focus:ring-2 focus:ring-purple-100 outline-none text-sm transition bg-white">
-                    </div>
-                `).join('');
+                fieldsContainer.innerHTML = questions.map((q, index) => {
+                    let inputHtml = '';
+                    if (q.type === 'select') {
+                        inputHtml = `
+                            <select name="q_${index}" data-label="${q.label}" class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white font-bold">
+                                <option value="">-- اختر من القائمة --</option>
+                                ${(q.options || []).map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                            </select>`;
+                    } else if (q.type === 'yesno') {
+                        inputHtml = `
+                            <select name="q_${index}" data-label="${q.label}" class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white font-bold">
+                                <option value="">-- اختر الإجابة --</option>
+                                <option value="نعم">نعم</option>
+                                <option value="لا">لا</option>
+                            </select>`;
+                    } else {
+                        const inputType = q.type === 'email' ? 'email' : 'text';
+                        inputHtml = `
+                            <input type="${inputType}" name="q_${index}" data-label="${q.label}" data-type="${q.type}" placeholder="اكتب إجابتك هنا..."
+                                   class="form-field w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm transition bg-white">`;
+                    }
+
+                    return `
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">
+                                ${q.label} <span class="text-purple-600">*</span>
+                            </label>
+                            ${inputHtml}
+                        </div>
+                    `;
+                }).join('');
 
                 loadingState.classList.add('hidden');
                 formCard.classList.remove('hidden');
@@ -187,16 +188,40 @@
             e.preventDefault();
             if (!currentFormSchema) return;
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
             formMsg.classList.add('hidden');
-
-            const formData = new FormData(dynamicForm);
+            const fields = dynamicForm.querySelectorAll('.form-field');
             const answers = {};
 
-            currentFormSchema.questions.forEach((q, index) => {
-                answers[q.label] = formData.get(`q_${index}`) || '';
-            });
+            // التحقق من الحقول الفارغة والبريد الإلكتروني بالعربي
+            for (let field of fields) {
+                const val = field.value.trim();
+                const label = field.getAttribute('data-label');
+                const type = field.getAttribute('data-type');
+
+                if (!val) {
+                    formMsg.innerText = `عذراً، حقل (${label}) فارغ. يرجى ملء جميع الحقول المطلوبة للمتابعة.`;
+                    formMsg.classList.remove('hidden');
+                    field.focus();
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                if (type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(val)) {
+                        formMsg.innerText = `البريد الإلكتروني المدخل في حقل (${label}) غير صحيح أو ناقص. يرجى كتابته بشكل سليم (مثل: name@gmail.com).`;
+                        formMsg.classList.remove('hidden');
+                        field.focus();
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
+                }
+
+                answers[label] = val;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الإرسال...</span>';
 
             try {
                 await addDoc(collection(db, "custom_forms", formId, "responses"), {
@@ -207,8 +232,7 @@
                 dynamicForm.classList.add('hidden');
                 successState.classList.remove('hidden');
             } catch (err) {
-                formMsg.className = "text-xs font-bold text-red-600 text-center bg-red-50 border border-red-100 py-2.5 px-3 rounded-xl";
-                formMsg.innerText = 'حدث خطأ أثناء إرسال الرد: ' + err.message;
+                formMsg.innerText = 'حدث خطأ أثناء إرسال الرد، يرجى المحاولة مرة أخرى.';
                 formMsg.classList.remove('hidden');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال الرد الآن</span>';
