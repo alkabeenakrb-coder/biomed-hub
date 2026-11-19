@@ -662,9 +662,14 @@
                                 <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isAdmin ? 'مشرف (Admin)' : 'عضو عادي'}</span></td>
                                 <td class="p-3">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <button type="button" onclick="toggleAdminRole('${m.id}', '${isAdmin ? 'member' : 'admin'})" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-shield-heart"></i></button>
-                                        <button type="button" onclick="resetUserPassword('${esc(m.email)}')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-key"></i></button>
-                                        <button type="button" onclick="deleteMemberDoc('${m.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button" onclick="toggleAdminRole('${esc(m.id)}', '${isAdmin ? 'member' : 'admin'}', this)"
+                                                class="${isAdmin ? 'bg-amber-100 hover:bg-amber-200 text-amber-900' : 'bg-purple-100 hover:bg-purple-200 text-purple-800'} px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                title="${isAdmin ? 'إزالة صلاحية المشرف' : 'ترقية إلى مشرف'}">
+                                            <i class="fa-solid fa-shield-heart"></i>
+                                            <span>${isAdmin ? 'تنزيل' : 'ترقية'}</span>
+                                        </button>
+                                        <button type="button" onclick="resetUserPassword('${esc(m.email)}')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg font-bold transition" title="إرسال رابط تغيير الرمز"><i class="fa-solid fa-key"></i></button>
+                                        <button type="button" onclick="deleteMemberDoc('${esc(m.id)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg font-bold transition" title="حذف العضو"><i class="fa-solid fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>`;
@@ -680,7 +685,10 @@
                 snap.forEach(d => localMembers.push({ id: d.id, ...d.data() }));
                 localMembers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 drawMembersTable(localMembers);
-            } catch (err) {}
+            } catch (err) {
+                console.error("Error loading members:", err);
+                document.getElementById('membersListContainer').innerHTML = '<p class="text-red-500 text-center text-xs py-6">تعذر جلب قائمة الأعضاء. تأكد من صلاحيات Firestore.</p>';
+            }
         }
 
         document.getElementById('memberSearchInput')?.addEventListener('input', (e) => {
@@ -689,21 +697,49 @@
             drawMembersTable(localMembers.filter(m => (m.fullName || '').toLowerCase().includes(q) || (m.email || '').toLowerCase().includes(q)));
         });
 
-        window.toggleAdminRole = async function(id, newRole) {
-            await updateDoc(doc(db, "members", id), { role: newRole });
-            renderMembers();
+        window.toggleAdminRole = async function(id, newRole, btnEl = null) {
+            const actionText = newRole === 'admin' ? 'ترقية هذا العضو إلى مشرف (Admin)' : 'إزالة صلاحية المشرف من هذا العضو';
+            if (!confirm(`هل أنت متأكد من ${actionText}؟`)) return;
+
+            const originalHtml = btnEl ? btnEl.innerHTML : '';
+            if (btnEl) {
+                btnEl.disabled = true;
+                btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            }
+
+            try {
+                await updateDoc(doc(db, "members", id), { role: newRole });
+                await renderMembers();
+                alert(newRole === 'admin' ? 'تمت ترقية العضو إلى مشرف بنجاح.' : 'تم تحويل الحساب إلى عضو عادي.');
+            } catch (err) {
+                console.error("Toggle role error:", err);
+                alert('تعذر تحديث الصلاحية: ' + (err.message || 'تأكد من صلاحيات Firestore Rules'));
+            } finally {
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = originalHtml;
+                }
+            }
         };
 
         window.resetUserPassword = async function(email) {
             if (!confirm(`إرسال رابط تغيير الرمز إلى ${email}؟`)) return;
-            await sendPasswordResetEmail(auth, email);
-            alert('تم الإرسال بنجاح.');
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert('تم الإرسال بنجاح.');
+            } catch (err) {
+                alert('تعذر إرسال الرابط: ' + err.message);
+            }
         };
 
         window.deleteMemberDoc = async function(id) {
             if (!confirm('حذف هذا العضو؟')) return;
-            await deleteDoc(doc(db, "members", id));
-            renderMembers();
+            try {
+                await deleteDoc(doc(db, "members", id));
+                renderMembers();
+            } catch (err) {
+                alert('تعذر حذف العضو: ' + err.message);
+            }
         };
 
         // --- منشئ الاستمارات الذكي المتقدم (Form Builder) ---
@@ -837,19 +873,19 @@
                             <p class="text-xs text-slate-500 mt-0.5">${esc(f.description || 'بدون وصف')}</p>
                         </div>
                         <div class="flex items-center gap-1.5 pt-2 border-t border-purple-100/60 flex-wrap">
-                            <button type="button" onclick="navigator.clipboard.writeText(window.location.origin + '/form.html?id=${f.id}'); alert('تم نسخ رابط الاستمارة!');" class="bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                            <button type="button" onclick="navigator.clipboard.writeText(window.location.origin + '/form.html?id=${esc(f.id)}'); alert('تم نسخ رابط الاستمارة!');" class="bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                                 <i class="fa-solid fa-copy"></i> نسخ
                             </button>
-                            <button type="button" onclick="toggleFormStatus('${f.id}', ${!isClosed})" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${isClosed ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">
+                            <button type="button" onclick="toggleFormStatus('${esc(f.id)}', ${!isClosed})" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${isClosed ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">
                                 ${isClosed ? 'فتح الاستمارة' : 'إيقاف الردود'}
                             </button>
-                            <button type="button" onclick="editCustomForm('${f.id}')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                            <button type="button" onclick="editCustomForm('${esc(f.id)}')" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
                                 تعديل
                             </button>
-                            <button type="button" onclick="viewFormResponses('${f.id}', '${esc(f.title)}')" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-center">
+                            <button type="button" onclick="viewFormResponses('${esc(f.id)}', '${esc(f.title)}')" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-xs font-extrabold transition text-center">
                                 الردود
                             </button>
-                            <button type="button" onclick="deleteCustomForm('${f.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" onclick="deleteCustomForm('${esc(f.id)}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;}).join('');
@@ -875,7 +911,7 @@
             document.getElementById('saveFormBtn').innerText = 'حفظ التعديلات';
 
             const container = document.getElementById('questionsContainer');
-            container.innerHTML = (form.questions || []).map((q, idx) => {
+            container.innerHTML = (form.questions || []).map((q) => {
                 const isSelect = q.type === 'select';
                 const optionsStr = (q.options || []).join(', ');
                 return `
@@ -1100,8 +1136,8 @@
                         <p class="text-xs text-slate-600 mt-1">${esc(w.speaker || '')}</p>
                     </div>
                     <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
-                        <button type="button" onclick="editWorkshop('${w.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
-                        <button type="button" onclick="deleteWorkshop('${w.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                        <button type="button" onclick="editWorkshop('${esc(w.id)}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deleteWorkshop('${esc(w.id)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
                     </div>
                 </div>
             `).join('');
@@ -1195,8 +1231,8 @@
                         <p class="text-xs text-slate-500 mt-1 line-clamp-2">${esc(p.body || '')}</p>
                     </div>
                     <div class="flex items-center gap-2 pt-2 border-t border-purple-100/60">
-                        <button type="button" onclick="editPost('${p.id}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
-                        <button type="button" onclick="deletePost('${p.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
+                        <button type="button" onclick="editPost('${esc(p.id)}')" class="flex-1 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 py-1.5 rounded-lg text-xs font-bold transition">تعديل</button>
+                        <button type="button" onclick="deletePost('${esc(p.id)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">حذف</button>
                     </div>
                 </div>
             `).join('');
