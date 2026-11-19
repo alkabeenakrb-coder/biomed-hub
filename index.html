@@ -22,7 +22,7 @@
     <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- خط Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -137,13 +137,28 @@
             transform: translateZ(20px);
             filter: drop-shadow(0 10px 16px rgba(76, 29, 149, 0.24));
         }
+
+        /* تصميم شارة الاعتماد الرسمية من وزارة الشباب والرياضة */
+        .bmh-ministry-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 243, 255, 0.95) 100%);
+            border: 1px solid rgba(124, 58, 237, 0.22);
+            box-shadow: 0 8px 24px -6px rgba(76, 29, 149, 0.14), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .bmh-ministry-badge:hover {
+            transform: translateY(-2px);
+            border-color: rgba(124, 58, 237, 0.42);
+            box-shadow: 0 12px 28px -6px rgba(76, 29, 149, 0.22), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+        }
+
         @keyframes bmhLogoGlow {
             0%, 100% { transform: scale(0.95); opacity: 0.78; }
             50% { transform: scale(1.08); opacity: 1; }
         }
         @media (prefers-reduced-motion: reduce) {
             .bmh-logo-3d-stage::before,
-            .bmh-logo-3d-card {
+            .bmh-logo-3d-card,
+            .bmh-ministry-badge {
                 animation: none !important;
                 transition: none !important;
             }
@@ -160,6 +175,19 @@
         html.dark .bmh-ecg-bar {
             background: linear-gradient(to bottom, rgba(15, 10, 30, 0.96), rgba(30, 16, 58, 0.8));
             border-bottom-color: rgba(167, 139, 250, 0.22);
+        }
+
+        /* شارة الوزارة في الوضع الداكن */
+        html.dark .bmh-ministry-badge {
+            background: linear-gradient(135deg, rgba(24, 16, 48, 0.95) 0%, rgba(36, 22, 72, 0.9) 100%);
+            border-color: rgba(167, 139, 250, 0.3);
+            box-shadow: 0 10px 26px -6px rgba(0, 0, 0, 0.55);
+        }
+        html.dark .bmh-ministry-badge .bmh-ministry-text {
+            color: #f3e8ff !important;
+        }
+        html.dark .bmh-ministry-badge .bmh-ministry-sub {
+            color: #c4b5fd !important;
         }
 
         /* تثبيت خلفيات اللوغو بيضاء حتى تبرز بالوضع الداكن */
@@ -313,9 +341,28 @@
             </div>
         </div>
 
-        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-bold px-4 py-1.5 rounded-full">
-            مبادرة تعليمية وتطويرية مستمرة
-        </span>
+        <!-- شارة الاعتماد الرسمية الثنائية (Dual-Logo Pill) -->
+        <div class="flex justify-center">
+            <div class="bmh-ministry-badge inline-flex items-center gap-3 px-4 py-2 rounded-2xl sm:rounded-full text-right max-w-full">
+                <div class="relative shrink-0">
+                    <div class="w-11 h-11 rounded-full bg-white p-1 shadow-sm border border-emerald-500/30 flex items-center justify-center">
+                        <img src="Ministry_of_Youth_and_Sports_(Iraq).png" alt="شعار وزارة الشباب والرياضة العراقية" class="w-full h-full object-contain">
+                    </div>
+                    <span class="absolute -bottom-0.5 -left-0.5 w-4 h-4 rounded-full bg-emerald-600 text-white text-[9px] flex items-center justify-center ring-2 ring-white" title="اعتماد رسمي">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+                </div>
+                <div class="leading-snug">
+                    <div class="bmh-ministry-text text-xs sm:text-[13px] font-extrabold text-purple-950">
+                        فريق معتمد من وزارة الشباب والرياضة العراقية
+                    </div>
+                    <div class="bmh-ministry-sub text-[11px] font-bold text-purple-700 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                        <span>دائرة الرعاية العلمية</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <h1 class="text-3xl sm:text-4xl font-black text-purple-900 leading-relaxed">
             مساحة تعليمية وتطويرية لمهندسي وطلبة الهندسة الطبية
@@ -486,7 +533,7 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="py-12 px-6 text-center bg-white">
+    <footer id="contact" class="py-12 px-6 text-center bg-white border-t border-purple-100">
         <div class="max-w-md mx-auto space-y-6">
             <h2 class="text-xl font-bold text-purple-900">تواصل وتطوّر معنا</h2>
             <p class="text-slate-500 text-xs">تابعنا عبر منصات التواصل الاجتماعي أو راسلنا على البريد:</p>
@@ -518,7 +565,14 @@
                 </a>
             </div>
 
-            <p class="text-slate-400 text-xs pt-6 border-t border-purple-100">BioMed Hub &copy; 2026</p>
+            <!-- ختم الاعتماد في الفوتر -->
+            <div class="pt-6 border-t border-purple-100 space-y-2">
+                <div class="inline-flex items-center justify-center gap-2 text-[11px] font-bold text-slate-600">
+                    <img src="Ministry_of_Youth_and_Sports_(Iraq).png" alt="وزارة الشباب والرياضة" class="w-5 h-5 object-contain rounded-full bg-white p-0.5 border border-slate-200">
+                    <span>فريق معتمد من وزارة الشباب والرياضة العراقية - دائرة الرعاية العلمية</span>
+                </div>
+                <p class="text-slate-400 text-xs">BioMed Hub &copy; 2026</p>
+            </div>
         </div>
     </footer>
 
