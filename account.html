@@ -1040,145 +1040,103 @@
             }
         });
 
+        function extractDriveFileId(rawUrl) {
+            const url = cleanCertText(rawUrl);
+            if (!url) return '';
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            return match && match[1] ? match[1] : '';
+        }
+
         function buildDriveLinks(rawUrl) {
             const url = cleanCertText(rawUrl);
-            if (!url) return { viewUrl: '', downloadUrl: '', directImageUrl: '' };
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
+            if (!url) return { viewUrl: '', downloadUrl: '' };
+            const id = extractDriveFileId(url);
+            if (id) {
                 return {
-                    viewUrl: `https://drive.google.com/file/d/${match[1]}/view`,
-                    downloadUrl: `https://drive.google.com/uc?export=download&id=${match[1]}`,
-                    directImageUrl: `https://drive.google.com/uc?export=view&id=${match[1]}`
+                    viewUrl: `https://drive.google.com/file/d/${id}/view`,
+                    downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`
                 };
             }
-            return { viewUrl: url, downloadUrl: url, directImageUrl: url };
+            return { viewUrl: url, downloadUrl: url };
         }
 
-        function drawWrappedCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
-            const words = String(text || '').split(/\s+/).filter(Boolean);
-            let line = '';
-            let currY = y;
-            for (const word of words) {
-                const testLine = line ? `${line} ${word}` : word;
-                if (ctx.measureText(testLine).width > maxWidth && line) {
-                    ctx.fillText(line, x, currY);
-                    line = word;
-                    currY += lineHeight;
-                } else {
-                    line = testLine;
+        async function fetchOriginalCertificateAsPngFile(certObj) {
+            const rawLink = cleanCertText(certObj.certLink);
+            if (!rawLink) return null;
+
+            const driveId = extractDriveFileId(rawLink);
+            const candidateUrls = driveId
+                ? [
+                    `https://drive.google.com/uc?export=view&id=${driveId}`,
+                    `https://lh3.googleusercontent.com/d/${driveId}=w1600`,
+                    rawLink
+                ]
+                : [rawLink];
+
+            for (const url of candidateUrls) {
+                try {
+                    const resp = await fetch(url, { mode: 'cors' });
+                    if (!resp.ok) continue;
+
+                    const blob = await resp.blob();
+                    if (!blob || !blob.type.startsWith('image/')) continue;
+
+                    const bitmap = await createImageBitmap(blob);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = bitmap.width;
+                    canvas.height = bitmap.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(bitmap, 0, 0);
+
+                    const pngBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1));
+                    if (!pngBlob) continue;
+
+                    const safeName = (cleanCertText(certObj.serialId) || 'certificate').replace(/[^\w\-]+/g, '_');
+                    return new File([pngBlob], `${safeName}.png`, { type: 'image/png' });
+                } catch (err) {
+                    // ننتقل للمرشح التالي
                 }
             }
-            if (line) {
-                ctx.fillText(line, x, currY);
-                currY += lineHeight;
-            }
-            return currY;
-        }
 
-        async function createCertificatePngFile(cert) {
-            const cleanName = cleanCertText(cert.name) || 'مشارك BioMed Hub';
-            const cleanWorkshop = cleanCertText(cert.workshop) || 'شهادة إتمام ومشاركة';
-            const cleanSerial = cleanCertText(cert.serialId) || 'BMH';
-            const cleanDate = cleanCertText(cert.date) || '';
-            const cleanLecturer = formatLecturerText(cert.lecturer);
-
-            const canvas = document.createElement('canvas');
-            canvas.width = 1080;
-            canvas.height = 1350;
-            const ctx = canvas.getContext('2d');
-
-            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350);
-            bgGrad.addColorStop(0, '#f5f3ff');
-            bgGrad.addColorStop(0.55, '#ffffff');
-            bgGrad.addColorStop(1, '#ede9fe');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, 1080, 1350);
-
-            // إطار زخرفي مناسب للستوري
-            ctx.strokeStyle = '#7c3aed';
-            ctx.lineWidth = 10;
-            ctx.strokeRect(42, 42, 996, 1266);
-
-            ctx.strokeStyle = 'rgba(124, 58, 237, 0.25)';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(64, 64, 952, 1222);
-
-            // محاولة رسم شعار المنصة إن توفر
-            try {
-                const logoImg = new Image();
-                logoImg.crossOrigin = 'anonymous';
-                logoImg.src = 'M.png';
-                await new Promise((resolve, reject) => {
-                    logoImg.onload = resolve;
-                    logoImg.onerror = reject;
-                });
-                ctx.drawImage(logoImg, 476, 110, 128, 128);
-            } catch (e) {}
-
-            ctx.fillStyle = '#4c1d95';
-            ctx.font = 'bold 42px Tajawal, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('BioMed Hub | منصة الهندسة الطبية', 540, 295);
-
-            ctx.fillStyle = '#6d28d9';
-            ctx.font = 'bold 25px Tajawal, sans-serif';
-            ctx.fillText('فريق معتمد من وزارة الشباب والرياضة العراقية - دائرة الرعاية العلمية', 540, 342);
-
-            ctx.fillStyle = '#5b21b6';
-            ctx.font = 'bold 52px Tajawal, sans-serif';
-            ctx.fillText('شهادة مشاركة وإتمام', 540, 445);
-
-            ctx.fillStyle = '#1e1b4b';
-            ctx.font = 'bold 62px Tajawal, sans-serif';
-            const afterNameY = drawWrappedCanvasText(ctx, cleanName, 540, 555, 880, 76);
-
-            ctx.fillStyle = '#334155';
-            ctx.font = 'bold 36px Tajawal, sans-serif';
-            const afterTitleY = drawWrappedCanvasText(ctx, cleanWorkshop, 540, afterNameY + 35, 880, 52);
-
-            ctx.fillStyle = '#475569';
-            ctx.font = 'bold 30px Tajawal, sans-serif';
-            let infoY = afterTitleY + 45;
-            if (cleanLecturer) {
-                ctx.fillText(`المحاضر: ${cleanLecturer}`, 540, infoY);
-                infoY += 50;
-            }
-            ctx.fillText(`رمز الشهادة: ${cleanSerial}${cleanDate ? '  |  التاريخ: ' + cleanDate : ''}`, 540, infoY);
-
-            ctx.fillStyle = '#7c3aed';
-            ctx.font = 'bold 28px Tajawal, sans-serif';
-            ctx.fillText('biomedhubiq.com', 540, 1225);
-
-            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1));
-            return new File([blob], `${cleanSerial}.png`, { type: 'image/png' });
+            return null;
         }
 
         window.shareCertificatePng = async function (certObj) {
             try {
-                const pngFile = await createCertificatePngFile(certObj);
-                if (navigator.canShare && navigator.canShare({ files: [pngFile] })) {
-                    await navigator.share({
-                        files: [pngFile],
-                        title: `شهادة ${cleanCertText(certObj.workshop || 'BioMed Hub')}`,
-                        text: `شهادتي من منصة BioMed Hub (${cleanCertText(certObj.serialId || '')})`
-                    });
+                const pngFile = await fetchOriginalCertificateAsPngFile(certObj);
+
+                if (pngFile) {
+                    if (navigator.canShare && navigator.canShare({ files: [pngFile] })) {
+                        await navigator.share({
+                            files: [pngFile],
+                            title: cleanCertText(certObj.workshop || 'شهادة BioMed Hub')
+                        });
+                        return;
+                    }
+
+                    const objectUrl = URL.createObjectURL(pngFile);
+                    const link = document.createElement('a');
+                    link.href = objectUrl;
+                    link.download = pngFile.name;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
                     return;
                 }
 
-                // بديل تلقائي: تحميل الصورة بصيغة PNG ليتمكن المستخدم من رفعها للستوري مباشرة
-                const objectUrl = URL.createObjectURL(pngFile);
-                const link = document.createElement('a');
-                link.href = objectUrl;
-                link.download = pngFile.name;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
-                alert('تم حفظ الشهادة بصيغة PNG على جهازك حتى ترفعها للستوري مباشرة.');
+                // إذا كانت الشهادة ملف PDF في Drive أو لا ترجع صورة مباشرة: افتح رابط الشهادة الأصلي
+                const fallbackLinks = buildDriveLinks(certObj.certLink);
+                const targetUrl = fallbackLinks.viewUrl || fallbackLinks.downloadUrl;
+                if (targetUrl) {
+                    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                } else {
+                    alert('رابط الشهادة غير متوفر حالياً.');
+                }
             } catch (err) {
                 if (err && err.name === 'AbortError') return;
-                console.error('PNG share error:', err);
-                alert('تعذر مشاركة صورة PNG حالياً، جرب مرة أخرى.');
+                console.error('Certificate share error:', err);
+                alert('تعذر مشاركة الشهادة حالياً.');
             }
         };
 
@@ -1226,7 +1184,8 @@
                         workshop: cert.workshop,
                         serialId: cert.serialId,
                         date: cert.date,
-                        lecturer: cert.lecturer
+                        lecturer: cert.lecturer,
+                        certLink: cert.certLink
                     }).replace(/'/g, '&#39;');
 
                     return `
@@ -1251,7 +1210,7 @@
                             ` : `
                                 <a href="${esc(verifyUrl)}" target="_blank" class="text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">عرض التوثيق</a>
                             `}
-                            <button type="button" onclick='shareCertificatePng(${sharePayload})' class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm flex items-center justify-center gap-1" title="مشاركة كصورة PNG للستوري">
+                            <button type="button" onclick='shareCertificatePng(${sharePayload})' class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm flex items-center justify-center gap-1" title="مشاركة الصورة الأصلية PNG للستوري">
                                 <i class="fa-solid fa-share-nodes"></i>
                                 <span>PNG</span>
                             </button>
