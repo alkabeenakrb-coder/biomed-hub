@@ -5,6 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BioMed Hub | منصة الهندسة الطبية</title>
     <link rel="icon" type="image/png" href="M.png">
+
+    <!-- أيقونات الشاشة الرئيسية للموبايل (iOS & Android) -->
+    <link id="apple-touch-icon-link" rel="apple-touch-icon" sizes="180x180" href="M.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BioMed Hub">
+    <meta name="application-name" content="BioMed Hub">
+    <meta name="theme-color" content="#7c3aed">
+
+    <!-- توليد أيقونة الشاشة الرئيسية بتصميم 3D تلقائياً من M.png -->
+    <script>
+        (function () {
+            const img = new Image();
+            img.src = 'M.png';
+            img.onload = function () {
+                const size = 512;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+
+                const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+                bgGrad.addColorStop(0, '#ffffff');
+                bgGrad.addColorStop(0.65, '#faf8ff');
+                bgGrad.addColorStop(1, '#ede9fe');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, size, size);
+
+                const radial = ctx.createRadialGradient(size / 2, size / 2, 20, size / 2, size / 2, size * 0.45);
+                radial.addColorStop(0, 'rgba(124, 58, 237, 0.14)');
+                radial.addColorStop(1, 'rgba(124, 58, 237, 0)');
+                ctx.fillStyle = radial;
+                ctx.fillRect(0, 0, size, size);
+
+                ctx.strokeStyle = 'rgba(124, 58, 237, 0.18)';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(3, 3, size - 6, size - 6);
+
+                ctx.save();
+                ctx.shadowColor = 'rgba(76, 29, 149, 0.28)';
+                ctx.shadowBlur = 24;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 12;
+
+                const pad = 76;
+                const maxDim = size - pad * 2;
+                const ratio = Math.min(maxDim / img.width, maxDim / img.height);
+                const w = img.width * ratio;
+                const h = img.height * ratio;
+                ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+                ctx.restore();
+
+                const dataUrl = canvas.toDataURL('image/png');
+
+                const appleLink = document.getElementById('apple-touch-icon-link');
+                if (appleLink) appleLink.href = dataUrl;
+
+                const manifest = {
+                    name: 'BioMed Hub | منصة الهندسة الطبية',
+                    short_name: 'BioMed Hub',
+                    start_url: './',
+                    display: 'standalone',
+                    background_color: '#ffffff',
+                    theme_color: '#7c3aed',
+                    icons: [{ src: dataUrl, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }]
+                };
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                const manifestLink = document.createElement('link');
+                manifestLink.rel = 'manifest';
+                manifestLink.href = URL.createObjectURL(manifestBlob);
+                document.head.appendChild(manifestLink);
+            };
+        })();
+    </script>
+
     <!-- تطبيق الوضع الداكن فوراً قبل الرسم لتجنب الوميض -->
     <script>
         (function () {
@@ -272,6 +347,12 @@
                     <span id="theme-toggle-text">داكن</span>
                 </button>
 
+                <!-- زر تفعيل إشعارات الجهاز -->
+                <button id="device-push-btn" type="button" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5" title="تفعيل إشعارات شريط الجهاز">
+                    <i id="device-push-icon" class="fa-solid fa-mobile-screen-button text-emerald-600"></i>
+                    <span id="device-push-text">تفعيل الإشعارات</span>
+                </button>
+
                 <!-- زر الإشعارات بصف تسجيل الدخول / حسابي -->
                 <button id="nav-notifications-btn" type="button" class="relative bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                     <i class="fa-solid fa-bell text-purple-600"></i>
@@ -309,6 +390,11 @@
             <button id="mobile-theme-toggle-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
                 <i id="mobile-theme-toggle-icon" class="fa-solid fa-moon text-purple-600"></i>
                 <span id="mobile-theme-toggle-text">الوضع الداكن</span>
+            </button>
+
+            <button id="mobile-device-push-btn" type="button" class="w-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+                <i id="mobile-device-push-icon" class="fa-solid fa-mobile-screen-button text-emerald-600"></i>
+                <span id="mobile-device-push-text">تفعيل إشعارات الجهاز</span>
             </button>
 
             <button id="mobile-notifications-btn" type="button" class="w-full bg-purple-50 text-purple-800 border border-purple-200 text-center py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
@@ -746,11 +832,11 @@
         });
     </script>
 
-    <!-- سكريبت حالة الجلسة وعداد الإشعارات بالشريط العلوي -->
+    <!-- سكريبت حالة الجلسة وعداد الإشعارات بالشريط العلوي + إشعارات شريط الجهاز -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, limit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -766,6 +852,298 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        let unsubUserNotifs = null;
+        let unsubAnnouncements = null;
+        let unsubWorkshopsPush = null;
+        let unsubPostsPush = null;
+
+        const PUSH_OPT_KEY = 'bmh_device_push_enabled_v1';
+        const NOTIFIED_IDS_KEY = 'bmh_pushed_doc_ids_v1';
+
+        function getNotifiedSet() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(NOTIFIED_IDS_KEY) || '[]');
+                return new Set(Array.isArray(raw) ? raw : []);
+            } catch (e) {
+                return new Set();
+            }
+        }
+
+        function markAsNotified(uniqueKey) {
+            const set = getNotifiedSet();
+            set.add(uniqueKey);
+            const arr = Array.from(set).slice(-150);
+            try {
+                localStorage.setItem(NOTIFIED_IDS_KEY, JSON.stringify(arr));
+            } catch (e) {}
+        }
+
+        function isDevicePushSupported() {
+            return typeof window !== 'undefined' && 'Notification' in window;
+        }
+
+        function syncDevicePushButtons() {
+            const dBtn = document.getElementById('device-push-btn');
+            const dIcon = document.getElementById('device-push-icon');
+            const dText = document.getElementById('device-push-text');
+            const mBtn = document.getElementById('mobile-device-push-btn');
+            const mIcon = document.getElementById('mobile-device-push-icon');
+            const mText = document.getElementById('mobile-device-push-text');
+
+            if (!isDevicePushSupported()) {
+                if (dText) dText.innerText = 'إشعارات غير مدعومة';
+                if (mText) mText.innerText = 'إشعارات الجهاز غير مدعومة';
+                return;
+            }
+
+            const perm = Notification.permission;
+            const optedIn = localStorage.getItem(PUSH_OPT_KEY) === '1';
+
+            let labelText = 'تفعيل الإشعارات';
+            let mobileLabelText = 'تفعيل إشعارات الجهاز';
+            let iconClass = 'fa-solid fa-mobile-screen-button text-emerald-600';
+            let activeStyle = false;
+
+            if (perm === 'granted' && optedIn) {
+                labelText = 'إشعارات الجهاز مفعّلة';
+                mobileLabelText = 'إشعارات الجهاز مفعّلة ✓';
+                iconClass = 'fa-solid fa-bell-ring text-emerald-600';
+                activeStyle = true;
+            } else if (perm === 'denied') {
+                labelText = 'الإشعارات محظورة';
+                mobileLabelText = 'الإشعارات محظورة من المتصفح';
+                iconClass = 'fa-solid fa-bell-slash text-rose-600';
+            }
+
+            if (dIcon) dIcon.className = iconClass;
+            if (dText) dText.innerText = labelText;
+            if (mIcon) mIcon.className = iconClass;
+            if (mText) mText.innerText = mobileLabelText;
+
+            [dBtn, mBtn].forEach(btn => {
+                if (!btn) return;
+                if (activeStyle) {
+                    btn.classList.remove('bg-emerald-50', 'hover:bg-emerald-100', 'text-emerald-800', 'border-emerald-200');
+                    btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white', 'border-emerald-600');
+                } else {
+                    btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'text-white', 'border-emerald-600');
+                    btn.classList.add('bg-emerald-50', 'hover:bg-emerald-100', 'text-emerald-800', 'border-emerald-200');
+                }
+            });
+        }
+
+        async function showSystemNotification({ title, body, url = './', tag = 'bmh-update' }) {
+            if (!isDevicePushSupported()) return;
+            if (Notification.permission !== 'granted') return;
+            if (localStorage.getItem(PUSH_OPT_KEY) !== '1') return;
+
+            const options = {
+                body: body || 'تحديث جديد متاح الآن في منصة BioMed Hub',
+                icon: 'M.png',
+                badge: 'M.png',
+                dir: 'rtl',
+                lang: 'ar',
+                tag,
+                renotify: true,
+                data: { url }
+            };
+
+            try {
+                if ('serviceWorker' in navigator) {
+                    const reg = await navigator.serviceWorker.getRegistration();
+                    if (reg && typeof reg.showNotification === 'function') {
+                        await reg.showNotification(title, options);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                const n = new Notification(title, options);
+                n.onclick = function (ev) {
+                    ev.preventDefault();
+                    window.focus();
+                    if (url && url !== './') window.location.href = url;
+                };
+            } catch (e) {
+                console.error('System notification error:', e);
+            }
+        }
+
+        async function toggleDeviceNotifications() {
+            if (!isDevicePushSupported()) {
+                alert('متصفحك الحالي لا يدعم إشعارات شريط الجهاز.');
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                alert('الإشعارات محظورة حالياً في إعدادات المتصفح. افتح إعدادات الموقع أو المتصفح واسمح بالإشعارات ثم أعد المحاولة.');
+                syncDevicePushButtons();
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                const currentlyEnabled = localStorage.getItem(PUSH_OPT_KEY) === '1';
+                const nextState = !currentlyEnabled;
+                localStorage.setItem(PUSH_OPT_KEY, nextState ? '1' : '0');
+                syncDevicePushButtons();
+                if (nextState) {
+                    await showSystemNotification({
+                        title: 'BioMed Hub | تم تفعيل الإشعارات',
+                        body: 'ستصلك تنبيهات الورش والإعلانات الجديدة على شريط إشعارات جهازك.',
+                        url: './',
+                        tag: 'bmh-push-test'
+                    });
+                }
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    localStorage.setItem(PUSH_OPT_KEY, '1');
+                    syncDevicePushButtons();
+                    await showSystemNotification({
+                        title: 'BioMed Hub | تم تفعيل الإشعارات',
+                        body: 'أهلاً بك! سننبهك فوراً عند نشر ورشة أو إعلان جديد.',
+                        url: './',
+                        tag: 'bmh-push-welcome'
+                    });
+                } else {
+                    localStorage.setItem(PUSH_OPT_KEY, '0');
+                    syncDevicePushButtons();
+                }
+            } catch (e) {
+                console.error('Permission request failed:', e);
+            }
+        }
+
+        function startLiveDeviceListeners(user) {
+            if (unsubUserNotifs) { unsubUserNotifs(); unsubUserNotifs = null; }
+            if (unsubAnnouncements) { unsubAnnouncements(); unsubAnnouncements = null; }
+            if (unsubWorkshopsPush) { unsubWorkshopsPush(); unsubWorkshopsPush = null; }
+            if (unsubPostsPush) { unsubPostsPush(); unsubPostsPush = null; }
+
+            let isFirstAnnSnap = true;
+            unsubAnnouncements = onSnapshot(
+                query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)),
+                (snap) => {
+                    if (isFirstAnnSnap) {
+                        snap.forEach(d => markAsNotified('ann_' + d.id));
+                        isFirstAnnSnap = false;
+                        return;
+                    }
+                    snap.docChanges().forEach((change) => {
+                        if (change.type === 'added') {
+                            const key = 'ann_' + change.doc.id;
+                            if (getNotifiedSet().has(key)) return;
+                            markAsNotified(key);
+                            const data = change.doc.data() || {};
+                            showSystemNotification({
+                                title: data.title ? `إعلان جديد: ${data.title}` : 'إعلان جديد في BioMed Hub',
+                                body: data.body || data.message || 'تم نشر إعلان جديد للمجتمع الطبي.',
+                                url: user ? 'account.html#notifications' : './',
+                                tag: key
+                            });
+                        }
+                    });
+                },
+                (err) => console.error('Announcements listener error:', err)
+            );
+
+            let isFirstWorkshopSnap = true;
+            unsubWorkshopsPush = onSnapshot(
+                collection(db, 'workshops'),
+                (snap) => {
+                    if (isFirstWorkshopSnap) {
+                        snap.forEach(d => markAsNotified('ws_' + d.id));
+                        isFirstWorkshopSnap = false;
+                        return;
+                    }
+                    snap.docChanges().forEach((change) => {
+                        if (change.type === 'added') {
+                            const key = 'ws_' + change.doc.id;
+                            if (getNotifiedSet().has(key)) return;
+                            markAsNotified(key);
+                            const data = change.doc.data() || {};
+                            showSystemNotification({
+                                title: data.title ? `ورشة جديدة: ${data.title}` : 'ورشة تدريبية جديدة متاحة',
+                                body: data.speaker ? `بمشاركة: ${data.speaker}` : (data.details || 'سجل حضورك الآن عبر منصة BioMed Hub.'),
+                                url: 'workshops.html',
+                                tag: key
+                            });
+                        }
+                    });
+                },
+                (err) => console.error('Workshops listener error:', err)
+            );
+
+            let isFirstPostSnap = true;
+            unsubPostsPush = onSnapshot(
+                collection(db, 'posts'),
+                (snap) => {
+                    if (isFirstPostSnap) {
+                        snap.forEach(d => markAsNotified('post_' + d.id));
+                        isFirstPostSnap = false;
+                        return;
+                    }
+                    snap.docChanges().forEach((change) => {
+                        if (change.type === 'added') {
+                            const key = 'post_' + change.doc.id;
+                            if (getNotifiedSet().has(key)) return;
+                            markAsNotified(key);
+                            const data = change.doc.data() || {};
+                            showSystemNotification({
+                                title: data.title ? `تغطية جديدة: ${data.title}` : 'تغطية فعالية جديدة في BioMed Hub',
+                                body: data.body || 'تم نشر تغطية جديدة للمعارض والفعاليات.',
+                                url: 'posts.html',
+                                tag: key
+                            });
+                        }
+                    });
+                },
+                (err) => console.error('Posts listener error:', err)
+            );
+
+            if (user) {
+                let isFirstUserNotifSnap = true;
+                unsubUserNotifs = onSnapshot(
+                    query(collection(db, 'members', user.uid, 'notifications'), orderBy('createdAt', 'desc'), limit(15)),
+                    (snap) => {
+                        if (isFirstUserNotifSnap) {
+                            snap.forEach(d => markAsNotified('un_' + d.id));
+                            isFirstUserNotifSnap = false;
+                            return;
+                        }
+                        snap.docChanges().forEach((change) => {
+                            if (change.type === 'added') {
+                                const data = change.doc.data() || {};
+                                if (data.read) return;
+                                const key = 'un_' + change.doc.id;
+                                if (getNotifiedSet().has(key)) return;
+                                markAsNotified(key);
+                                showSystemNotification({
+                                    title: data.title || 'إشعار جديد لحسابك',
+                                    body: data.body || data.message || 'لديك إشعار جديد في حسابك على BioMed Hub.',
+                                    url: 'account.html#notifications',
+                                    tag: key
+                                });
+                            }
+                        });
+                    },
+                    (err) => console.error('User notifications listener error:', err)
+                );
+            }
+        }
+
+        document.getElementById('device-push-btn')?.addEventListener('click', toggleDeviceNotifications);
+        document.getElementById('mobile-device-push-btn')?.addEventListener('click', async () => {
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            await toggleDeviceNotifications();
+        });
+
+        syncDevicePushButtons();
+        startLiveDeviceListeners(null);
 
         (function initFirstVisitWelcome() {
             const VISIT_KEY = 'bmh_first_visit_v1';
@@ -857,6 +1235,7 @@
 
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
+            startLiveDeviceListeners(user);
             if (user) {
                 document.getElementById('nav-auth-btn')?.classList.add('hidden');
                 document.getElementById('nav-account-btn')?.classList.remove('hidden');
