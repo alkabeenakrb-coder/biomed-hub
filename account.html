@@ -44,6 +44,36 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; }
 
+        /* تناسق بطاقات الشهادات والنصوص والأزرار */
+        .bmh-cert-card {
+            overflow: hidden;
+            word-break: break-word;
+        }
+        .bmh-cert-title {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+        .bmh-cert-meta {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .bmh-cert-actions {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 0.45rem;
+            align-items: center;
+        }
+        @media (max-width: 420px) {
+            .bmh-cert-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+            .bmh-cert-actions > a:first-child,
+            .bmh-cert-actions > button:first-child {
+                grid-column: 1 / -1;
+            }
+        }
+
         /* الوضع الداكن */
         html.dark {
             color-scheme: dark;
@@ -210,7 +240,7 @@
             جاري التحقق من الحساب...
         </div>
 
-        <!-- واجهة الزائر غير المسجل (تظهر مباشرة في صفحة account.html إذا لم يسجل دخول) -->
+        <!-- واجهة الزائر غير المسجل -->
         <section id="guest-login-box" class="hidden bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm max-w-lg mx-auto space-y-5">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto text-xl mb-2">
@@ -571,6 +601,23 @@
 
         const CERT_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNOhVQIEif-0FyS11UaWQlOOxVwu_lvMrV8zRUDTuqTRhCz5pcgNemtJlqZ-5lRE-6XiICy6MSeW-u/pub?gid=1069962653&single=true&output=csv';
         const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        function cleanCertText(val) {
+            return String(val ?? '')
+                .replace(/""+/g, '"')
+                .replace(/^"+|"+$/g, '')
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+        }
+
+        function formatLecturerText(val) {
+            const cleaned = cleanCertText(val);
+            if (!cleaned) return '';
+            if (/^https?:\/\//i.test(cleaned) || cleaned.includes('drive.google.com')) {
+                return 'محاضر الورشة';
+            }
+            return cleaned;
+        }
 
         let isRegisterMode = false;
         let currentUser = null;
@@ -994,17 +1041,146 @@
         });
 
         function buildDriveLinks(rawUrl) {
-            const url = String(rawUrl || '').trim();
-            if (!url) return { viewUrl: '', downloadUrl: '' };
+            const url = cleanCertText(rawUrl);
+            if (!url) return { viewUrl: '', downloadUrl: '', directImageUrl: '' };
             const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
             if (match && match[1]) {
                 return {
                     viewUrl: `https://drive.google.com/file/d/${match[1]}/view`,
-                    downloadUrl: `https://drive.google.com/uc?export=download&id=${match[1]}`
+                    downloadUrl: `https://drive.google.com/uc?export=download&id=${match[1]}`,
+                    directImageUrl: `https://drive.google.com/uc?export=view&id=${match[1]}`
                 };
             }
-            return { viewUrl: url, downloadUrl: url };
+            return { viewUrl: url, downloadUrl: url, directImageUrl: url };
         }
+
+        function drawWrappedCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = String(text || '').split(/\s+/).filter(Boolean);
+            let line = '';
+            let currY = y;
+            for (const word of words) {
+                const testLine = line ? `${line} ${word}` : word;
+                if (ctx.measureText(testLine).width > maxWidth && line) {
+                    ctx.fillText(line, x, currY);
+                    line = word;
+                    currY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            if (line) {
+                ctx.fillText(line, x, currY);
+                currY += lineHeight;
+            }
+            return currY;
+        }
+
+        async function createCertificatePngFile(cert) {
+            const cleanName = cleanCertText(cert.name) || 'مشارك BioMed Hub';
+            const cleanWorkshop = cleanCertText(cert.workshop) || 'شهادة إتمام ومشاركة';
+            const cleanSerial = cleanCertText(cert.serialId) || 'BMH';
+            const cleanDate = cleanCertText(cert.date) || '';
+            const cleanLecturer = formatLecturerText(cert.lecturer);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1350;
+            const ctx = canvas.getContext('2d');
+
+            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350);
+            bgGrad.addColorStop(0, '#f5f3ff');
+            bgGrad.addColorStop(0.55, '#ffffff');
+            bgGrad.addColorStop(1, '#ede9fe');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 1080, 1350);
+
+            // إطار زخرفي مناسب للستوري
+            ctx.strokeStyle = '#7c3aed';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(42, 42, 996, 1266);
+
+            ctx.strokeStyle = 'rgba(124, 58, 237, 0.25)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(64, 64, 952, 1222);
+
+            // محاولة رسم شعار المنصة إن توفر
+            try {
+                const logoImg = new Image();
+                logoImg.crossOrigin = 'anonymous';
+                logoImg.src = 'M.png';
+                await new Promise((resolve, reject) => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = reject;
+                });
+                ctx.drawImage(logoImg, 476, 110, 128, 128);
+            } catch (e) {}
+
+            ctx.fillStyle = '#4c1d95';
+            ctx.font = 'bold 42px Tajawal, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('BioMed Hub | منصة الهندسة الطبية', 540, 295);
+
+            ctx.fillStyle = '#6d28d9';
+            ctx.font = 'bold 25px Tajawal, sans-serif';
+            ctx.fillText('فريق معتمد من وزارة الشباب والرياضة العراقية - دائرة الرعاية العلمية', 540, 342);
+
+            ctx.fillStyle = '#5b21b6';
+            ctx.font = 'bold 52px Tajawal, sans-serif';
+            ctx.fillText('شهادة مشاركة وإتمام', 540, 445);
+
+            ctx.fillStyle = '#1e1b4b';
+            ctx.font = 'bold 62px Tajawal, sans-serif';
+            const afterNameY = drawWrappedCanvasText(ctx, cleanName, 540, 555, 880, 76);
+
+            ctx.fillStyle = '#334155';
+            ctx.font = 'bold 36px Tajawal, sans-serif';
+            const afterTitleY = drawWrappedCanvasText(ctx, cleanWorkshop, 540, afterNameY + 35, 880, 52);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 30px Tajawal, sans-serif';
+            let infoY = afterTitleY + 45;
+            if (cleanLecturer) {
+                ctx.fillText(`المحاضر: ${cleanLecturer}`, 540, infoY);
+                infoY += 50;
+            }
+            ctx.fillText(`رمز الشهادة: ${cleanSerial}${cleanDate ? '  |  التاريخ: ' + cleanDate : ''}`, 540, infoY);
+
+            ctx.fillStyle = '#7c3aed';
+            ctx.font = 'bold 28px Tajawal, sans-serif';
+            ctx.fillText('biomedhubiq.com', 540, 1225);
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1));
+            return new File([blob], `${cleanSerial}.png`, { type: 'image/png' });
+        }
+
+        window.shareCertificatePng = async function (certObj) {
+            try {
+                const pngFile = await createCertificatePngFile(certObj);
+                if (navigator.canShare && navigator.canShare({ files: [pngFile] })) {
+                    await navigator.share({
+                        files: [pngFile],
+                        title: `شهادة ${cleanCertText(certObj.workshop || 'BioMed Hub')}`,
+                        text: `شهادتي من منصة BioMed Hub (${cleanCertText(certObj.serialId || '')})`
+                    });
+                    return;
+                }
+
+                // بديل تلقائي: تحميل الصورة بصيغة PNG ليتمكن المستخدم من رفعها للستوري مباشرة
+                const objectUrl = URL.createObjectURL(pngFile);
+                const link = document.createElement('a');
+                link.href = objectUrl;
+                link.download = pngFile.name;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+                alert('تم حفظ الشهادة بصيغة PNG على جهازك حتى ترفعها للستوري مباشرة.');
+            } catch (err) {
+                if (err && err.name === 'AbortError') return;
+                console.error('PNG share error:', err);
+                alert('تعذر مشاركة صورة PNG حالياً، جرب مرة أخرى.');
+            }
+        };
 
         async function loadUserCertificates(userEmail) {
             const container = document.getElementById('user-certificates-list');
@@ -1025,13 +1201,13 @@
                     if (!cols || cols.length < 2) continue;
                     if ((cols[1] || '').trim().toLowerCase() === targetEmail) {
                         matchedCerts.push({
-                            name: cols[0] || '',
-                            email: cols[1] || '',
-                            date: cols[2] || '',
-                            workshop: cols[3] || '',
-                            serialId: cols[4] || '',
-                            lecturer: cols[5] || '',
-                            certLink: cols[6] || ''
+                            name: cleanCertText(cols[0] || ''),
+                            email: cleanCertText(cols[1] || ''),
+                            date: cleanCertText(cols[2] || ''),
+                            workshop: cleanCertText(cols[3] || ''),
+                            serialId: cleanCertText(cols[4] || ''),
+                            lecturer: formatLecturerText(cols[5] || ''),
+                            certLink: cleanCertText(cols[6] || '')
                         });
                     }
                 }
@@ -1045,28 +1221,40 @@
                 container.innerHTML = matchedCerts.reverse().map(cert => {
                     const links = buildDriveLinks(cert.certLink);
                     const verifyUrl = `https://biomedhubiq.com/?id=${encodeURIComponent(cert.serialId)}&name=${encodeURIComponent(cert.name)}`;
+                    const sharePayload = JSON.stringify({
+                        name: cert.name,
+                        workshop: cert.workshop,
+                        serialId: cert.serialId,
+                        date: cert.date,
+                        lecturer: cert.lecturer
+                    }).replace(/'/g, '&#39;');
+
                     return `
-                    <div class="bg-slate-50/60 rounded-2xl border border-purple-100 p-5 flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+                    <div class="bmh-cert-card bg-slate-50/60 rounded-2xl border border-purple-100 p-5 flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
                         <div class="space-y-2">
                             <div class="flex items-center justify-between gap-2">
-                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-1 rounded-full">${esc(cert.serialId || 'موثقة')}</span>
-                                <span class="text-[11px] text-slate-400"><i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}</span>
+                                <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0">${esc(cert.serialId || 'موثقة')}</span>
+                                <span class="text-[11px] text-slate-400 shrink-0"><i class="fa-regular fa-calendar ml-1"></i>${esc(cert.date)}</span>
                             </div>
-                            <h4 class="text-base font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h4>
-                            <p class="text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
-                            ${cert.lecturer ? `<p class="text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
+                            <h4 class="bmh-cert-title font-black text-purple-900">${esc(cert.workshop || 'ورشة تدريبية')}</h4>
+                            <p class="bmh-cert-meta text-xs text-slate-700 font-bold"><i class="fa-solid fa-user text-purple-600 ml-1"></i> ${esc(cert.name)}</p>
+                            ${cert.lecturer ? `<p class="bmh-cert-meta text-xs text-slate-500"><i class="fa-solid fa-chalkboard-user text-purple-500 ml-1"></i> المحاضر: ${esc(cert.lecturer)}</p>` : ''}
                         </div>
-                        <div class="pt-2 flex items-center gap-2">
+                        <div class="bmh-cert-actions pt-2">
                             ${links.downloadUrl ? `
-                                <a href="${esc(links.downloadUrl)}" target="_blank" class="flex-1 text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
-                                    <i class="fa-solid fa-download ml-1"></i> تحميل الشهادة PDF
+                                <a href="${esc(links.downloadUrl)}" target="_blank" class="text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm">
+                                    <i class="fa-solid fa-download ml-1"></i> تحميل PDF
                                 </a>
-                                <a href="${esc(links.viewUrl)}" target="_blank" class="bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold py-2.5 px-3 rounded-xl transition" title="معاينة الشهادة">
+                                <a href="${esc(links.viewUrl)}" target="_blank" class="bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold py-2.5 px-3 rounded-xl transition text-center" title="معاينة الشهادة">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                             ` : `
-                                <a href="${esc(verifyUrl)}" target="_blank" class="flex-1 text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">عرض التوثيق</a>
+                                <a href="${esc(verifyUrl)}" target="_blank" class="text-center bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition">عرض التوثيق</a>
                             `}
+                            <button type="button" onclick='shareCertificatePng(${sharePayload})' class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition shadow-sm flex items-center justify-center gap-1" title="مشاركة كصورة PNG للستوري">
+                                <i class="fa-solid fa-share-nodes"></i>
+                                <span>PNG</span>
+                            </button>
                         </div>
                     </div>`;
                 }).join('');
