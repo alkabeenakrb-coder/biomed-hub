@@ -21,6 +21,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- مكتبة توليد باركود QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script>
@@ -48,7 +50,7 @@
         .bmh-id1-card {
             aspect-ratio: 85.60 / 53.98;
             width: 100%;
-            max-width: 460px;
+            max-width: 470px;
         }
 
         /* تناسق بطاقات الشهادات والنصوص والأزرار */
@@ -278,14 +280,31 @@
 
                     <div class="grid sm:grid-cols-2 gap-3">
                         <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">القسم *</label>
+                            <select id="reg-department" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm bg-white">
+                                <option value="">اختر القسم</option>
+                                <option value="هندسة الطب الحياتي">هندسة الطب الحياتي</option>
+                                <option value="هندسة تقنيات الأجهزة الطبية">هندسة تقنيات الأجهزة الطبية</option>
+                                <option value="هندسة الأطراف والمساند">هندسة الأطراف والمساند</option>
+                            </select>
+                        </div>
+                        <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">الجامعة / المعهد *</label>
-                            <input type="text" id="reg-university" placeholder="مثال: جامعة بغداد"
+                            <input type="text" id="reg-university" placeholder="مثال: جامعة ذي قار"
                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
                         </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف *</label>
                             <input type="tel" id="reg-phone" dir="ltr" inputmode="numeric" maxlength="14" placeholder="07XXXXXXXXX"
                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+                            <input type="text" id="reg-city" placeholder="مثال: كربلاء"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
                         </div>
                     </div>
 
@@ -309,11 +328,6 @@
                                 <option value="المرحلة الخامسة">المرحلة الخامسة</option>
                                 <option value="المرحلة السادسة">المرحلة السادسة</option>
                             </select>
-                        </div>
-                        <div id="reg-city-box">
-                            <label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
-                            <input type="text" id="reg-city" placeholder="مثال: بغداد"
-                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm">
                         </div>
                     </div>
                 </div>
@@ -412,14 +426,12 @@
                     <form id="accredited-request-form" class="space-y-3">
                         <div class="grid sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 mb-1">المجال الهندسي / الطبي المفضل *</label>
-                                <select id="acc-track" required class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-200 focus:border-purple-600 outline-none text-xs">
-                                    <option value="">اختر المجال</option>
-                                    <option value="صيانة وتشغيل الأجهزة الطبية">صيانة وتشغيل الأجهزة الطبية</option>
-                                    <option value="الإلكترونيات الطبية والتحكم">الإلكترونيات الطبية والتحكم</option>
-                                    <option value="الهندسة السريرية وإدارة المستشفيات">الهندسة السريرية وإدارة المستشفيات</option>
-                                    <option value="التصوير الطبي والأشعة">التصوير الطبي والأشعة</option>
-                                    <option value="البرمجة وتحليل البيانات الطبية">البرمجة وتحليل البيانات الطبية</option>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">القسم الهندسي *</label>
+                                <select id="acc-department" required class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-200 focus:border-purple-600 outline-none text-xs">
+                                    <option value="">اختر القسم</option>
+                                    <option value="هندسة الطب الحياتي">هندسة الطب الحياتي</option>
+                                    <option value="هندسة تقنيات الأجهزة الطبية">هندسة تقنيات الأجهزة الطبية</option>
+                                    <option value="هندسة الأطراف والمساند">هندسة الأطراف والمساند</option>
                                 </select>
                             </div>
                             <div>
@@ -448,7 +460,11 @@
 
                 <!-- ملخص بيانات العضو -->
                 <div class="bg-purple-50/40 rounded-2xl border border-purple-100 p-4">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">القسم</span>
+                            <strong id="summary-department" class="text-slate-800">-</strong>
+                        </div>
                         <div>
                             <span class="text-slate-400 block text-[11px]">الجامعة / المعهد</span>
                             <strong id="summary-university" class="text-slate-800">-</strong>
@@ -483,6 +499,15 @@
                             <label class="block text-[11px] font-bold text-slate-600 mb-1">الاسم الكامل</label>
                             <input type="text" id="profile-name" placeholder="مثال: مجتبى ميثم"
                                    class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">القسم</label>
+                            <select id="profile-department" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-100 focus:border-purple-600 outline-none text-xs">
+                                <option value="">اختر القسم</option>
+                                <option value="هندسة الطب الحياتي">هندسة الطب الحياتي</option>
+                                <option value="هندسة تقنيات الأجهزة الطبية">هندسة تقنيات الأجهزة الطبية</option>
+                                <option value="هندسة الأطراف والمساند">هندسة الأطراف والمساند</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-600 mb-1">الجامعة / المعهد</label>
@@ -539,7 +564,7 @@
                             <i class="fa-solid fa-id-card text-purple-600"></i>
                             <span>هوية العضوية المعتمدة</span>
                         </h3>
-                        <p class="text-[11px] text-slate-500 mt-0.5">قياس البطاقة القياسي ID-1 (85.60 ملم × 53.98 ملم) • رقم تسلسلي معتمد</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">قياس البطاقة القياسي ID-1 (85.60 ملم × 53.98 ملم) • مزودة بباركود التحقق وتاريخ النفاذ</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="id-card-header-code" dir="ltr" class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1.5 rounded-xl">BME-MEM-0001</span>
@@ -551,38 +576,52 @@
                 </div>
 
                 <div class="flex justify-center">
-                    <div id="bmh-id1-card" class="bmh-id1-card rounded-2xl bg-gradient-to-br from-purple-950 via-purple-900 to-purple-700 text-white p-5 sm:p-6 shadow-xl flex flex-col justify-between relative overflow-hidden border border-purple-400/30">
+                    <div id="bmh-id1-card" class="bmh-id1-card rounded-2xl bg-gradient-to-br from-purple-950 via-purple-900 to-purple-700 text-white p-4 sm:p-5 shadow-xl flex flex-col justify-between relative overflow-hidden border border-purple-400/30">
                         <div class="absolute -top-12 -left-12 w-40 h-40 rounded-full bg-white/10 pointer-events-none"></div>
                         <div class="absolute -bottom-14 -right-14 w-48 h-48 rounded-full bg-purple-400/10 pointer-events-none"></div>
 
-                        <div class="flex items-start justify-between gap-3 relative z-10">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shrink-0">
+                        <!-- الرأس -->
+                        <div class="flex items-start justify-between gap-2 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white p-1 flex items-center justify-center shrink-0">
                                     <img src="M.png" alt="BioMed Hub" class="w-full h-full object-contain">
                                 </div>
                                 <div>
-                                    <p class="font-black text-sm sm:text-base leading-tight text-white">BioMed Hub</p>
-                                    <p class="text-[10px] sm:text-[11px] text-purple-200">هوية عضوية معتمدة</p>
+                                    <p class="font-black text-xs sm:text-sm leading-tight text-white">BioMed Hub</p>
+                                    <p class="text-[9px] sm:text-[10px] text-purple-200">هوية عضوية معتمدة</p>
                                 </div>
                             </div>
-                            <span class="bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 text-[10px] sm:text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0">
+                            <span class="bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shrink-0">
                                 عضو معتمد
                             </span>
                         </div>
 
-                        <div class="relative z-10 my-auto py-1">
-                            <h4 id="id1-member-name" class="text-base sm:text-xl font-black text-white truncate">عضو معتمد</h4>
-                            <p id="id1-member-meta" class="text-[11px] sm:text-xs text-purple-200 truncate mt-0.5">BioMed Hub</p>
+                        <!-- المنتصف: البيانات + باركود QR -->
+                        <div class="relative z-10 my-auto flex items-center justify-between gap-3 py-1">
+                            <div class="min-w-0 flex-1 space-y-0.5">
+                                <h4 id="id1-member-name" class="text-sm sm:text-lg font-black text-white truncate">عضو معتمد</h4>
+                                <p id="id1-member-dept" class="text-[11px] sm:text-xs font-bold text-amber-300 truncate">هندسة الطب الحياتي</p>
+                                <p id="id1-member-meta" class="text-[10px] sm:text-[11px] text-purple-200 truncate">BioMed Hub</p>
+                            </div>
+
+                            <div class="bg-white p-1.5 rounded-xl shadow-md shrink-0 flex items-center justify-center">
+                                <div id="id1-qr-container" class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center"></div>
+                            </div>
                         </div>
 
-                        <div class="flex items-end justify-between gap-3 border-t border-white/15 pt-2.5 relative z-10 text-[10px] sm:text-xs">
+                        <!-- التذييل: الكود التسلسلي + تاريخ الإصدار + تاريخ النفاذ -->
+                        <div class="grid grid-cols-3 gap-2 border-t border-white/15 pt-2 relative z-10 text-[9px] sm:text-[11px] items-end">
                             <div>
-                                <span class="text-purple-200 block text-[9px] sm:text-[10px]">الرقم التسلسلي</span>
-                                <strong id="id1-member-code" dir="ltr" class="font-extrabold text-amber-300 tracking-wide text-xs sm:text-sm">BME-MEM-0001</strong>
+                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">الرقم التسلسلي</span>
+                                <strong id="id1-member-code" dir="ltr" class="font-extrabold text-amber-300 tracking-wide text-[10px] sm:text-xs">BME-MEM-0001</strong>
+                            </div>
+                            <div class="text-center">
+                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ الاعتماد</span>
+                                <strong id="id1-member-date" class="font-bold text-white">-</strong>
                             </div>
                             <div class="text-left">
-                                <span class="text-purple-200 block text-[9px] sm:text-[10px]">تاريخ الاعتماد</span>
-                                <strong id="id1-member-date" class="font-bold text-white">-</strong>
+                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ النفاذ</span>
+                                <strong id="id1-member-expiry" class="font-bold text-emerald-200">-</strong>
                             </div>
                         </div>
                     </div>
@@ -743,6 +782,34 @@
                 return 'محاضر الورشة';
             }
             return cleaned;
+        }
+
+        function computeExpiryTimestamp(accreditedAt) {
+            const baseDate = accreditedAt ? new Date(accreditedAt) : new Date();
+            const safeBase = Number.isNaN(baseDate.getTime()) ? new Date() : baseDate;
+            return new Date(safeBase.getFullYear() + 1, safeBase.getMonth(), safeBase.getDate()).getTime();
+        }
+
+        function buildVerificationUrl(codeStr, fullName, deptStr) {
+            const params = new URLSearchParams();
+            params.set('member', codeStr);
+            if (fullName) params.set('name', fullName);
+            if (deptStr) params.set('dept', deptStr);
+            return `https://biomedhubiq.com/?${params.toString()}`;
+        }
+
+        function renderQrElement(containerId, text, sizePx) {
+            const el = document.getElementById(containerId);
+            if (!el || typeof window.QRCode === 'undefined') return;
+            el.innerHTML = '';
+            new window.QRCode(el, {
+                text: text,
+                width: sizePx,
+                height: sizePx,
+                colorDark: '#2e1065',
+                colorLight: '#ffffff',
+                correctLevel: window.QRCode.CorrectLevel.M
+            });
         }
 
         let isRegisterMode = false;
@@ -1006,6 +1073,8 @@
             const isPending = data.membershipStatus === 'pending';
             const isSuspended = data.membershipStatus === 'suspended';
 
+            const deptStr = data.department || data.accreditedRequest?.department || 'هندسة الطب الحياتي';
+
             if (isAccredited) {
                 tierBadge.innerText = `عضو معتمد (${data.membershipCode})`;
                 tierBadge.className = 'bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
@@ -1015,14 +1084,25 @@
                 accreditedRequestPanel.classList.add('hidden');
 
                 idSection.classList.remove('hidden');
-                const approvedDate = data.accreditedAt ? new Date(data.accreditedAt).toLocaleDateString('ar-IQ') : new Date().toLocaleDateString('ar-IQ');
+                const approvedTs = data.accreditedAt || Date.now();
+                const expiryTs = data.expiresAt || computeExpiryTimestamp(approvedTs);
+                const approvedDate = new Date(approvedTs).toLocaleDateString('ar-IQ');
+                const expiryDate = new Date(expiryTs).toLocaleDateString('ar-IQ');
                 const metaParts = [data.university, data.city].filter(Boolean).join(' • ') || 'BioMed Hub';
+                const fullName = data.fullName || 'عضو معتمد';
+                const codeStr = data.membershipCode;
 
-                document.getElementById('id-card-header-code').innerText = data.membershipCode;
-                document.getElementById('id1-member-name').innerText = data.fullName || 'عضو معتمد';
+                document.getElementById('id-card-header-code').innerText = codeStr;
+                document.getElementById('id1-member-name').innerText = fullName;
+                document.getElementById('id1-member-dept').innerText = deptStr;
                 document.getElementById('id1-member-meta').innerText = metaParts;
-                document.getElementById('id1-member-code').innerText = data.membershipCode;
+                document.getElementById('id1-member-code').innerText = codeStr;
                 document.getElementById('id1-member-date').innerText = approvedDate;
+                document.getElementById('id1-member-expiry').innerText = expiryDate;
+
+                const verifyUrl = buildVerificationUrl(codeStr, fullName, deptStr);
+                const qrSize = window.innerWidth < 640 ? 56 : 64;
+                renderQrElement('id1-qr-container', verifyUrl, qrSize);
             } else {
                 idSection.classList.add('hidden');
                 tierBadge.innerText = 'عضو مسجل في BioMed Hub';
@@ -1047,8 +1127,12 @@
                 }
             }
 
+            if (data.department) {
+                document.getElementById('acc-department').value = data.department;
+            } else if (data.accreditedRequest?.department) {
+                document.getElementById('acc-department').value = data.accreditedRequest.department;
+            }
             if (data.accreditedRequest) {
-                document.getElementById('acc-track').value = data.accreditedRequest.track || '';
                 document.getElementById('acc-attended').value = data.accreditedRequest.attended || 'نعم (أونلاين أو حضوري)';
                 document.getElementById('acc-reason').value = data.accreditedRequest.reason || '';
             }
@@ -1057,6 +1141,7 @@
         function renderProfileSummary(data) {
             currentMemberData = data || {};
             document.getElementById('account-display-name').innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
+            document.getElementById('summary-department').innerText = data.department || '-';
             document.getElementById('summary-university').innerText = data.university || '-';
             document.getElementById('summary-education').innerText = (data.education === 'طالب' && data.stage) ? `طالب (${data.stage})` : (data.education || '-');
             document.getElementById('summary-phone').innerText = data.phone || '-';
@@ -1071,6 +1156,7 @@
                 if (snap.exists()) {
                     const data = snap.data();
                     document.getElementById('profile-name').value = data.fullName || '';
+                    document.getElementById('profile-department').value = data.department || '';
                     document.getElementById('profile-university').value = data.university || '';
                     document.getElementById('profile-phone').value = data.phone || '';
                     profileEducation.value = data.education || '';
@@ -1093,13 +1179,13 @@
 
             const btn = document.getElementById('submit-accredited-request-btn');
             const msgEl = document.getElementById('acc-request-msg');
-            const track = document.getElementById('acc-track').value;
+            const department = document.getElementById('acc-department').value;
             const attended = document.getElementById('acc-attended').value;
             const reason = document.getElementById('acc-reason').value.trim();
 
-            if (!track || !reason) {
+            if (!department || !reason) {
                 msgEl.className = 'text-xs font-bold text-red-600';
-                msgEl.innerText = 'يرجى اختيار المجال وكتابة سبب التقديم.';
+                msgEl.innerText = 'يرجى اختيار القسم وكتابة سبب التقديم.';
                 return;
             }
 
@@ -1108,10 +1194,11 @@
             msgEl.innerText = '';
 
             try {
-                const requestPayload = { track, attended, reason, submittedAt: Date.now() };
+                const requestPayload = { department, attended, reason, submittedAt: Date.now() };
                 const updatedData = {
                     email: currentUser.email,
                     fullName: currentMemberData.fullName || '',
+                    department: department,
                     university: currentMemberData.university || '',
                     phone: currentMemberData.phone || '',
                     education: currentMemberData.education || '',
@@ -1122,6 +1209,7 @@
                     accreditedRequest: requestPayload,
                     updatedAt: Date.now()
                 };
+                document.getElementById('profile-department').value = department;
                 await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
                 renderProfileSummary({ ...currentMemberData, ...updatedData });
                 msgEl.className = 'text-xs font-bold text-emerald-700';
@@ -1136,7 +1224,7 @@
             }
         });
 
-        // تصدير بطاقة الهوية بقياس ID-1 القياسي (85.60mm x 53.98mm) بدقة عالية PNG
+        // تصدير بطاقة الهوية بقياس ID-1 القياسي (85.60mm x 53.98mm) بدقة عالية PNG مع باركود QR وتاريخ النفاذ
         document.getElementById('download-id-png-btn')?.addEventListener('click', async () => {
             try {
                 const width = 1011;
@@ -1172,42 +1260,85 @@
                     });
                     ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
-                    ctx.roundRect(width - 140, 48, 86, 86, 18);
+                    ctx.roundRect(width - 140, 44, 82, 82, 18);
                     ctx.fill();
-                    ctx.drawImage(img, width - 130, 58, 66, 66);
+                    ctx.drawImage(img, width - 130, 54, 62, 62);
                 } catch (e) {}
 
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 34px Tajawal, sans-serif';
-                ctx.fillText('BioMed Hub', width - 170, 88);
+                ctx.font = 'bold 32px Tajawal, sans-serif';
+                ctx.fillText('BioMed Hub', width - 168, 82);
 
                 ctx.fillStyle = '#ddd6fe';
-                ctx.font = '500 20px Tajawal, sans-serif';
-                ctx.fillText('هوية عضوية معتمدة • قياس ID-1 القياسي', width - 170, 122);
+                ctx.font = '500 19px Tajawal, sans-serif';
+                ctx.fillText('هوية عضوية معتمدة • قياس ID-1 القياسي', width - 168, 114);
 
                 ctx.textAlign = 'left';
                 ctx.fillStyle = 'rgba(52, 211, 153, 0.22)';
                 ctx.beginPath();
-                ctx.roundRect(56, 56, 185, 46, 23);
+                ctx.roundRect(56, 52, 185, 46, 23);
                 ctx.fill();
                 ctx.fillStyle = '#a7f3d0';
                 ctx.font = 'bold 21px Tajawal, sans-serif';
-                ctx.fillText('عضو معتمد', 98, 86);
+                ctx.fillText('عضو معتمد', 98, 82);
 
                 const fullName = currentMemberData.fullName || 'عضو معتمد';
+                const deptStr = currentMemberData.department || currentMemberData.accreditedRequest?.department || 'هندسة الطب الحياتي';
                 const metaLine = [currentMemberData.university, currentMemberData.city].filter(Boolean).join(' • ') || 'BioMed Hub';
                 const codeStr = currentMemberData.membershipCode || 'BME-MEM-0001';
-                const dateStr = currentMemberData.accreditedAt ? new Date(currentMemberData.accreditedAt).toLocaleDateString('ar-IQ') : new Date().toLocaleDateString('ar-IQ');
+                const approvedTs = currentMemberData.accreditedAt || Date.now();
+                const expiryTs = currentMemberData.expiresAt || computeExpiryTimestamp(approvedTs);
+                const dateStr = new Date(approvedTs).toLocaleDateString('ar-IQ');
+                const expiryStr = new Date(expiryTs).toLocaleDateString('ar-IQ');
 
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 48px Tajawal, sans-serif';
-                ctx.fillText(fullName, width - 56, 305);
+                ctx.font = 'bold 44px Tajawal, sans-serif';
+                ctx.fillText(fullName, width - 256, 255);
+
+                ctx.fillStyle = '#fcd34d';
+                ctx.font = 'bold 28px Tajawal, sans-serif';
+                ctx.fillText(deptStr, width - 256, 305);
 
                 ctx.fillStyle = '#ede9fe';
-                ctx.font = '500 26px Tajawal, sans-serif';
-                ctx.fillText(metaLine, width - 56, 355);
+                ctx.font = '500 24px Tajawal, sans-serif';
+                ctx.fillText(metaLine, width - 256, 350);
+
+                // رسم باركود QR في الجهة اليسرى من البطاقة
+                const verifyUrl = buildVerificationUrl(codeStr, fullName, deptStr);
+                const tempQrHolder = document.createElement('div');
+                tempQrHolder.style.position = 'fixed';
+                tempQrHolder.style.left = '-9999px';
+                document.body.appendChild(tempQrHolder);
+
+                try {
+                    if (typeof window.QRCode !== 'undefined') {
+                        new window.QRCode(tempQrHolder, {
+                            text: verifyUrl,
+                            width: 168,
+                            height: 168,
+                            colorDark: '#2e1065',
+                            colorLight: '#ffffff',
+                            correctLevel: window.QRCode.CorrectLevel.M
+                        });
+                        await new Promise(r => setTimeout(r, 80));
+                        const qrCanvas = tempQrHolder.querySelector('canvas');
+                        const qrImg = tempQrHolder.querySelector('img');
+                        const qrSource = qrCanvas || qrImg;
+
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.roundRect(56, 205, 188, 188, 20);
+                        ctx.fill();
+
+                        if (qrSource) {
+                            ctx.drawImage(qrSource, 66, 215, 168, 168);
+                        }
+                    }
+                } finally {
+                    tempQrHolder.remove();
+                }
 
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
                 ctx.lineWidth = 2;
@@ -1216,23 +1347,35 @@
                 ctx.lineTo(width - 56, 485);
                 ctx.stroke();
 
+                // الرقم التسلسلي (يمين)
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#c4b5fd';
-                ctx.font = '500 19px Tajawal, sans-serif';
-                ctx.fillText('الرقم التسلسلي للعضوية', width - 56, 525);
+                ctx.font = '500 18px Tajawal, sans-serif';
+                ctx.fillText('الرقم التسلسلي للعضوية', width - 56, 524);
 
                 ctx.fillStyle = '#fcd34d';
-                ctx.font = 'bold 34px Tajawal, sans-serif';
-                ctx.fillText(codeStr, width - 56, 572);
+                ctx.font = 'bold 30px Tajawal, sans-serif';
+                ctx.fillText(codeStr, width - 56, 570);
 
-                ctx.textAlign = 'left';
+                // تاريخ الاعتماد (وسط)
+                ctx.textAlign = 'center';
                 ctx.fillStyle = '#c4b5fd';
-                ctx.font = '500 19px Tajawal, sans-serif';
-                ctx.fillText('تاريخ الاعتماد', 56, 525);
+                ctx.font = '500 18px Tajawal, sans-serif';
+                ctx.fillText('تاريخ الاعتماد', width / 2, 524);
 
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 26px Tajawal, sans-serif';
-                ctx.fillText(dateStr, 56, 570);
+                ctx.font = 'bold 24px Tajawal, sans-serif';
+                ctx.fillText(dateStr, width / 2, 568);
+
+                // تاريخ النفاذ (يسار)
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#c4b5fd';
+                ctx.font = '500 18px Tajawal, sans-serif';
+                ctx.fillText('تاريخ النفاذ', 56, 524);
+
+                ctx.fillStyle = '#a7f3d0';
+                ctx.font = 'bold 24px Tajawal, sans-serif';
+                ctx.fillText(expiryStr, 56, 568);
 
                 canvas.toBlob((blob) => {
                     if (!blob) return;
@@ -1258,6 +1401,7 @@
             const saveBtn = document.getElementById('save-profile-btn');
             const statusEl = document.getElementById('profile-save-status');
             const fullName = document.getElementById('profile-name').value.trim();
+            const department = document.getElementById('profile-department').value;
             const university = document.getElementById('profile-university').value.trim();
             const phone = sanitizePhone(document.getElementById('profile-phone').value);
             const education = profileEducation.value;
@@ -1276,7 +1420,7 @@
             statusEl.classList.add('hidden');
 
             try {
-                const updatedData = { email: currentUser.email, fullName, university, phone, education, stage, city, updatedAt: Date.now() };
+                const updatedData = { email: currentUser.email, fullName, department, university, phone, education, stage, city, updatedAt: Date.now() };
                 await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
                 renderProfileSummary({ ...currentMemberData, ...updatedData });
                 statusEl.className = 'text-xs font-bold text-emerald-700';
@@ -1303,6 +1447,7 @@
 
             if (isRegisterMode) {
                 const fullName = document.getElementById('reg-name').value.trim();
+                const department = document.getElementById('reg-department').value;
                 const university = document.getElementById('reg-university').value.trim();
                 const phone = sanitizePhone(document.getElementById('reg-phone').value);
                 const education = regEducation.value;
@@ -1310,8 +1455,8 @@
                 const city = document.getElementById('reg-city').value.trim();
                 const confirmPass = document.getElementById('auth-password-confirm').value;
 
-                if (!fullName || !university || !phone || !education) {
-                    authErrorMsg.innerText = 'يرجى ملء الاسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
+                if (!fullName || !department || !university || !phone || !education) {
+                    authErrorMsg.innerText = 'يرجى ملء الاسم، القسم، الجامعة، رقم الهاتف، والتحصيل الدراسي.';
                     authErrorMsg.classList.remove('hidden');
                     return;
                 }
@@ -1339,6 +1484,7 @@
                     await setDoc(doc(db, 'members', cred.user.uid), {
                         email: cred.user.email,
                         fullName,
+                        department,
                         university,
                         phone,
                         education,
