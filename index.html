@@ -706,7 +706,47 @@
         </button>
     </div>
 
-    <!-- نافذة التحقق المنبثقة (Popup) -->
+    <!-- نافذة التحقق من هوية العضو المعتمد (QR Code) -->
+    <div id="member-verify-popup" class="hidden fixed inset-0 bg-black/65 z-[10003] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-purple-200 text-center space-y-4">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-shield-check"></i>
+            </div>
+            <div class="space-y-1">
+                <span id="verify-member-badge" class="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block">
+                    عضوية معتمدة رسمياً
+                </span>
+                <h3 class="text-base font-black text-purple-900 pt-1">التحقق من هوية العضو</h3>
+            </div>
+            <div class="bg-purple-50/70 border border-purple-100 rounded-2xl p-3.5 text-xs space-y-2 text-right">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">الاسم:</span>
+                    <strong id="verify-member-name" class="text-purple-950">-</strong>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">القسم:</span>
+                    <strong id="verify-member-dept" class="text-purple-700">-</strong>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">الرقم التسلسلي:</span>
+                    <strong id="verify-member-code" dir="ltr" class="text-slate-800 font-extrabold">-</strong>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">تاريخ الاعتماد:</span>
+                    <strong id="verify-member-date" class="text-slate-700">-</strong>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">تاريخ النفاذ:</span>
+                    <strong id="verify-member-expiry" class="text-emerald-700 font-extrabold">-</strong>
+                </div>
+            </div>
+            <button id="close-member-verify-btn" type="button" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                إغلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- نافذة التحقق المنبثقة (Popup) للشهادات -->
     <div id="certificate-popup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;">
         <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
             <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 10px;">✅ شهادة موثقة رسمياً</h3>
@@ -832,11 +872,11 @@
         });
     </script>
 
-    <!-- سكريبت حالة الجلسة وعداد الإشعارات بالشريط العلوي + إشعارات شريط الجهاز -->
+    <!-- سكريبت حالة الجلسة وعداد الإشعارات + إشعارات الجهاز + فحص باركود الهوية -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, collection, query, orderBy, limit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, orderBy, limit, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -850,6 +890,59 @@
         const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // فحص رابط التحقق من باركود الهوية (?member=BME-MEM-...)
+        (async function checkMemberQrVerification() {
+            const params = new URLSearchParams(window.location.search);
+            const memberCode = (params.get('member') || '').trim();
+            if (!memberCode) return;
+
+            const modal = document.getElementById('member-verify-popup');
+            const closeBtn = document.getElementById('close-member-verify-btn');
+            if (!modal) return;
+
+            const closeModal = () => modal.classList.add('hidden');
+            closeBtn?.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            let record = null;
+            try {
+                const q = query(collection(db, 'members'), where('membershipCode', '==', memberCode), limit(1));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    record = snap.docs[0].data();
+                }
+            } catch (e) {
+                console.error('Member QR lookup error:', e);
+            }
+
+            const nameVal = (record?.fullName || params.get('name') || 'عضو معتمد').trim();
+            const deptVal = (record?.department || record?.accreditedRequest?.department || params.get('dept') || 'هندسة الطب الحياتي').trim();
+            const approvedTs = record?.accreditedAt || Date.now();
+            const baseDate = new Date(approvedTs);
+            const safeBase = Number.isNaN(baseDate.getTime()) ? new Date() : baseDate;
+            const expiryTs = record?.expiresAt || new Date(safeBase.getFullYear() + 1, safeBase.getMonth(), safeBase.getDate()).getTime();
+            const isExpired = Date.now() > expiryTs;
+
+            document.getElementById('verify-member-name').innerText = nameVal;
+            document.getElementById('verify-member-dept').innerText = deptVal;
+            document.getElementById('verify-member-code').innerText = memberCode;
+            document.getElementById('verify-member-date').innerText = safeBase.toLocaleDateString('ar-IQ');
+            document.getElementById('verify-member-expiry').innerText = new Date(expiryTs).toLocaleDateString('ar-IQ');
+
+            const badge = document.getElementById('verify-member-badge');
+            if (badge) {
+                if (isExpired) {
+                    badge.innerText = 'العضوية منتهية الصلاحية';
+                    badge.className = 'bg-rose-100 text-rose-700 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
+                } else {
+                    badge.innerText = 'عضوية معتمدة وفعالة';
+                    badge.className = 'bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
+                }
+            }
+
+            modal.classList.remove('hidden');
+        })();
 
         let currentUser = null;
         let unsubUserNotifs = null;
