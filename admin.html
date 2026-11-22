@@ -10,11 +10,11 @@
     <link rel="icon" type="image/png" href="M.png">
     <link rel="apple-touch-icon" sizes="180x180" href="M.png">
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <!-- Font Awesome للأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css)">
     <!-- خط Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="[https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap)" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -118,23 +118,23 @@
 
         <main class="max-w-5xl w-full mx-auto py-8 px-6 space-y-6 flex-1">
 
-            <!-- قسم إدارة حسابات الأعضاء والصلاحيات -->
+            <!-- قسم إدارة حسابات الأعضاء والعضوية المعتمدة والصلاحيات -->
             <section class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-4">
                     <div>
                         <h2 class="text-lg font-black text-purple-900 flex items-center gap-2">
                             <i class="fa-solid fa-users-gear text-purple-600"></i>
-                            <span>إدارة حسابات الأعضاء وصلاحيات الإدارة</span>
+                            <span>إدارة حسابات الأعضاء، العضوية المعتمدة، والصلاحيات</span>
                         </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">إضافة أعضاء جدد، ترقية أي عضو ليكون مشرفاً مساعداً، إرسال رابط تغيير الرمز، أو الحذف.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">اعتماد طلبات العضوية وتوليد كود تسلسلي تلقائي (BME-MEM-XXXX)، أو ترقية المشرفين، أو إرسال رابط تغيير الرمز، أو الحذف.</p>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <button type="button" id="toggleAddMemberBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>إضافة عضو جديد</span>
                         </button>
-                        <input type="text" id="memberSearchInput" placeholder="بحث بالاسم أو الإيميل..."
-                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-48">
+                        <input type="text" id="memberSearchInput" placeholder="بحث بالاسم أو الإيميل أو الكود..."
+                               class="px-3.5 py-2 rounded-xl border border-purple-200 focus:border-purple-600 outline-none text-xs w-full sm:w-52">
                         <span id="members-count-badge" class="bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-2 rounded-xl shrink-0">0</span>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">نوع الحساب</label>
                                 <select id="newMemberRole" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white focus:border-purple-600 outline-none text-xs font-bold">
-                                    <option value="member">عضو عادي (Member)</option>
+                                    <option value="member">عضو مسجل (Member)</option>
                                     <option value="admin">مشرف مساعد (Admin)</option>
                                 </select>
                             </div>
@@ -253,7 +253,6 @@
                         </div>
                         
                         <div id="questionsContainer" class="space-y-3">
-                            <!-- حقل افتراضي أول -->
                             <div class="bg-white p-4 rounded-xl border border-purple-100 space-y-2">
                                 <div class="flex items-center gap-2">
                                     <input type="text" value="الاسم الكامل ثلاثي" class="q-label-input flex-1 px-3 py-2 rounded-lg border border-slate-200 text-xs font-bold" placeholder="نص السؤال...">
@@ -392,7 +391,7 @@
                     </div>
                     <div id="linkContainer">
                         <label class="block text-xs font-bold text-slate-700 mb-1">رابط الورشة أو الانضمام:</label>
-                        <input type="text" id="wLink" dir="ltr" placeholder="https://t.me/..."
+                        <input type="text" id="wLink" dir="ltr" placeholder="[https://t.me/](https://t.me/)..."
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-purple-600 outline-none text-sm text-left">
                     </div>
                 </div>
@@ -489,9 +488,9 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
-        import { initializeApp, getApps, deleteApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { initializeApp, getApps, deleteApp } from "[https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js](https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js)";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "[https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js](https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js)";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, getDoc } from "[https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js)";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHTP2bIb6umCwJiMlLTYsM7gBTrXBxao4",
@@ -593,7 +592,21 @@
             renderForms();
         }
 
-        // --- إدارة الأعضاء ---
+        // --- توليد كود العضوية المعتمدة التسلسلي BME-MEM-0001 ---
+        function generateNextMemberCode(membersList) {
+            let maxNum = 0;
+            membersList.forEach(m => {
+                const match = String(m.membershipCode || '').match(/^BME-MEM-(\d+)$/i);
+                if (match && match[1]) {
+                    const num = parseInt(match[1], 10);
+                    if (!Number.isNaN(num) && num > maxNum) maxNum = num;
+                }
+            });
+            const nextNum = String(maxNum + 1).padStart(4, '0');
+            return `BME-MEM-${nextNum}`;
+        }
+
+        // --- إدارة الأعضاء والعضوية المعتمدة ---
         const addMemberPanel = document.getElementById('addMemberPanel');
         document.getElementById('toggleAddMemberBtn').addEventListener('click', () => addMemberPanel.classList.toggle('hidden'));
         document.getElementById('closeAddMemberBtn').addEventListener('click', () => addMemberPanel.classList.add('hidden'));
@@ -620,7 +633,12 @@
                 secondaryApp = initializeApp(firebaseConfig, "SecondaryMemberCreator_" + Date.now());
                 const secondaryAuth = getAuth(secondaryApp);
                 const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-                await setDoc(doc(db, "members", userCred.user.uid), { fullName, email, university, city, phone, role, createdAt: Date.now() });
+                await setDoc(doc(db, "members", userCred.user.uid), {
+                    fullName, email, university, city, phone, role,
+                    membershipTier: 'registered',
+                    membershipStatus: 'none',
+                    createdAt: Date.now()
+                });
                 await signOut(secondaryAuth);
                 await deleteApp(secondaryApp);
 
@@ -650,7 +668,7 @@
                         <tr class="bg-purple-50 text-purple-900 border-b border-purple-200">
                             <th class="p-3 rounded-tr-xl">الاسم الكامل</th>
                             <th class="p-3">البريد الإلكتروني</th>
-                            <th class="p-3">الجامعة / المحافظة</th>
+                            <th class="p-3">العضوية والكود</th>
                             <th class="p-3 text-center">الصلاحية</th>
                             <th class="p-3 text-center rounded-tl-xl">إجراءات</th>
                         </tr>
@@ -658,14 +676,44 @@
                     <tbody class="divide-y divide-slate-100">
                         ${list.map(m => {
                             const isAdmin = m.role === 'admin';
+                            const isAccredited = m.membershipStatus === 'accredited';
+                            const isPending = m.membershipStatus === 'pending';
+
+                            let memBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">عضو مسجل</span>';
+                            if (isAccredited) {
+                                memBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800" dir="ltr">${esc(m.membershipCode || 'BME-MEM')}</span>`;
+                            } else if (isPending) {
+                                memBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800">طلب اعتماد معلق</span>';
+                            }
+
+                            const reqNote = m.accreditedRequest?.track ? `<div class="text-[10px] text-purple-700 mt-1">المجال: ${esc(m.accreditedRequest.track)}</div>` : '';
+
                             return `
                             <tr class="hover:bg-purple-50/30 transition">
-                                <td class="p-3 font-bold text-slate-800">${esc(m.fullName || 'بدون اسم')}</td>
-                                <td class="p-3 text-slate-600" dir="ltr">${esc(m.email)}</td>
-                                <td class="p-3 text-slate-600">${esc(m.university || '-')} ${m.city ? `(${esc(m.city)})` : ''}</td>
-                                <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isAdmin ? 'مشرف (Admin)' : 'عضو عادي'}</span></td>
                                 <td class="p-3">
-                                    <div class="flex items-center justify-center gap-1.5">
+                                    <div class="font-bold text-slate-800">${esc(m.fullName || 'بدون اسم')}</div>
+                                    <div class="text-[10px] text-slate-500">${esc(m.university || '-')} ${m.city ? `(${esc(m.city)})` : ''}</div>
+                                    ${reqNote}
+                                </td>
+                                <td class="p-3 text-slate-600" dir="ltr">${esc(m.email)}</td>
+                                <td class="p-3">${memBadge}</td>
+                                <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isAdmin ? 'مشرف (Admin)' : 'عضو مسجل'}</span></td>
+                                <td class="p-3">
+                                    <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                        ${!isAccredited ? `
+                                            <button type="button" onclick="approveAccreditedMember('${esc(m.id)}', this)"
+                                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                    title="اعتماد العضوية وتوليد كود BME-MEM">
+                                                <i class="fa-solid fa-id-card"></i>
+                                                <span>اعتماد</span>
+                                            </button>
+                                        ` : `
+                                            <button type="button" onclick="suspendAccreditedMember('${esc(m.id)}', this)"
+                                                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg font-bold transition"
+                                                    title="إلغاء الاعتماد">
+                                                إلغاء الاعتماد
+                                            </button>
+                                        `}
                                         <button type="button" onclick="toggleAdminRole('${esc(m.id)}', '${isAdmin ? 'member' : 'admin'}', this)"
                                                 class="${isAdmin ? 'bg-amber-100 hover:bg-amber-200 text-amber-900' : 'bg-purple-100 hover:bg-purple-200 text-purple-800'} px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
                                                 title="${isAdmin ? 'إزالة صلاحية المشرف' : 'ترقية إلى مشرف'}">
@@ -698,8 +746,77 @@
         document.getElementById('memberSearchInput')?.addEventListener('input', (e) => {
             const q = e.target.value.trim().toLowerCase();
             if (!q) { drawMembersTable(localMembers); return; }
-            drawMembersTable(localMembers.filter(m => (m.fullName || '').toLowerCase().includes(q) || (m.email || '').toLowerCase().includes(q)));
+            drawMembersTable(localMembers.filter(m =>
+                (m.fullName || '').toLowerCase().includes(q) ||
+                (m.email || '').toLowerCase().includes(q) ||
+                (m.membershipCode || '').toLowerCase().includes(q)
+            ));
         });
+
+        window.approveAccreditedMember = async function(id, btnEl = null) {
+            const target = localMembers.find(m => m.id === id);
+            if (!target) return;
+
+            const codeToAssign = target.membershipCode || generateNextMemberCode(localMembers);
+            if (!confirm(`اعتماد عضوية (${target.fullName || target.email}) ومنحه الرقم التسلسلي (${codeToAssign})؟`)) return;
+
+            const originalHtml = btnEl ? btnEl.innerHTML : '';
+            if (btnEl) {
+                btnEl.disabled = true;
+                btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            }
+
+            try {
+                const approvedAt = Date.now();
+                await updateDoc(doc(db, "members", id), {
+                    membershipTier: 'accredited',
+                    membershipStatus: 'accredited',
+                    membershipCode: codeToAssign,
+                    accreditedAt: target.accreditedAt || approvedAt
+                });
+
+                await addDoc(collection(db, "members", id, "notifications"), {
+                    title: 'تم اعتماد عضويتك في BioMed Hub',
+                    body: `مبروك! أصبحت الآن عضواً معتمداً برقم عضوية تسلسلي (${codeToAssign}). هويتك الرقمية بقياس ID-1 متاحة الآن في صفحة حسابي.`,
+                    read: false,
+                    createdAt: Date.now()
+                });
+
+                await renderMembers();
+                alert(`تم اعتماد العضو بنجاح برقم العضوية: ${codeToAssign}`);
+            } catch (err) {
+                console.error("Approve member error:", err);
+                alert('تعذر اعتماد العضو: ' + (err.message || 'تأكد من صلاحيات Firestore'));
+            } finally {
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = originalHtml;
+                }
+            }
+        };
+
+        window.suspendAccreditedMember = async function(id, btnEl = null) {
+            if (!confirm('إلغاء صفة العضو المعتمد وإعادته إلى عضو مسجل؟')) return;
+            const originalHtml = btnEl ? btnEl.innerHTML : '';
+            if (btnEl) {
+                btnEl.disabled = true;
+                btnEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            }
+            try {
+                await updateDoc(doc(db, "members", id), {
+                    membershipTier: 'registered',
+                    membershipStatus: 'suspended'
+                });
+                await renderMembers();
+            } catch (err) {
+                alert('تعذر تحديث الحالة: ' + err.message);
+            } finally {
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = originalHtml;
+                }
+            }
+        };
 
         window.toggleAdminRole = async function(id, newRole, btnEl = null) {
             const actionText = newRole === 'admin' ? 'ترقية هذا العضو إلى مشرف (Admin)' : 'إزالة صلاحية المشرف من هذا العضو';
@@ -714,7 +831,7 @@
             try {
                 await updateDoc(doc(db, "members", id), { role: newRole });
                 await renderMembers();
-                alert(newRole === 'admin' ? 'تمت ترقية العضو إلى مشرف بنجاح.' : 'تم تحويل الحساب إلى عضو عادي.');
+                alert(newRole === 'admin' ? 'تمت ترقية العضو إلى مشرف بنجاح.' : 'تم تحويل الحساب إلى عضو مسجل.');
             } catch (err) {
                 console.error("Toggle role error:", err);
                 alert('تعذر تحديث الصلاحية: ' + (err.message || 'تأكد من صلاحيات Firestore Rules'));
@@ -1066,7 +1183,7 @@
             } else {
                 await addDoc(collection(db, "workshops"), { ...payload, createdAt: Date.now() });
                 if (shouldNotify) {
-                    await publishAnnouncement({ title: `ورشة جديدة: ${title}`, body: details || `ورشة جديدة (${speaker || 'BioMed Hub'}).`, link: link || 'https://biomedhubiq.com/#workshops' });
+                    await publishAnnouncement({ title: `ورشة جديدة: ${title}`, body: details || `ورشة جديدة (${speaker || 'BioMed Hub'}).`, link: link || '[https://biomedhubiq.com/#workshops](https://biomedhubiq.com/#workshops)' });
                 }
                 document.getElementById('msgWorkshop').innerText = 'تمت إضافة الورشة بنجاح.';
             }
@@ -1171,7 +1288,7 @@
             } else {
                 await addDoc(collection(db, "posts"), { ...payload, createdAt: Date.now() });
                 if (shouldNotify) {
-                    await publishAnnouncement({ title: `تغطية جديدة: ${title}`, body: body.slice(0, 160), link: 'https://biomedhubiq.com/#posts' });
+                    await publishAnnouncement({ title: `تغطية جديدة: ${title}`, body: body.slice(0, 160), link: '[https://biomedhubiq.com/#posts](https://biomedhubiq.com/#posts)' });
                 }
                 document.getElementById('msgPost').innerText = 'تم نشر التغطية بنجاح.';
             }
