@@ -723,6 +723,10 @@
                     <span class="text-slate-400">الاسم:</span>
                     <strong id="verify-member-name" class="text-purple-950">-</strong>
                 </div>
+                <div id="verify-member-role-row" class="hidden flex items-center justify-between gap-2">
+                    <span class="text-slate-400">الصفة / الدور:</span>
+                    <strong id="verify-member-role" class="text-amber-700 font-extrabold">-</strong>
+                </div>
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-slate-400">القسم:</span>
                     <strong id="verify-member-dept" class="text-purple-700">-</strong>
@@ -891,6 +895,24 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        function extractAssignedRoleTitle(data, fallbackParam = '') {
+            if (data && typeof data === 'object') {
+                const candidates = [
+                    data.roleTitle,
+                    data.departmentRole,
+                    data.customRole,
+                    data.teamRole,
+                    data.position,
+                    data.sectionRole
+                ];
+                for (const item of candidates) {
+                    const text = String(item ?? '').trim();
+                    if (text) return text;
+                }
+            }
+            return String(fallbackParam ?? '').trim();
+        }
+
         // فحص رابط التحقق من باركود الهوية (?member=BME-MEM-...)
         (async function checkMemberQrVerification() {
             const params = new URLSearchParams(window.location.search);
@@ -918,6 +940,7 @@
 
             const nameVal = (record?.fullName || params.get('name') || 'عضو معتمد').trim();
             const deptVal = (record?.department || record?.accreditedRequest?.department || params.get('dept') || 'هندسة الطب الحياتي').trim();
+            const roleVal = extractAssignedRoleTitle(record, params.get('role') || '');
             const approvedTs = record?.accreditedAt || Date.now();
             const baseDate = new Date(approvedTs);
             const safeBase = Number.isNaN(baseDate.getTime()) ? new Date() : baseDate;
@@ -930,13 +953,24 @@
             document.getElementById('verify-member-date').innerText = safeBase.toLocaleDateString('ar-IQ');
             document.getElementById('verify-member-expiry').innerText = new Date(expiryTs).toLocaleDateString('ar-IQ');
 
+            const roleRow = document.getElementById('verify-member-role-row');
+            const roleEl = document.getElementById('verify-member-role');
+            if (roleRow && roleEl) {
+                if (roleVal) {
+                    roleEl.innerText = roleVal;
+                    roleRow.classList.remove('hidden');
+                } else {
+                    roleRow.classList.add('hidden');
+                }
+            }
+
             const badge = document.getElementById('verify-member-badge');
             if (badge) {
                 if (isExpired) {
                     badge.innerText = 'العضوية منتهية الصلاحية';
                     badge.className = 'bg-rose-100 text-rose-700 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
                 } else {
-                    badge.innerText = 'عضوية معتمدة وفعالة';
+                    badge.innerText = roleVal ? `عضوية معتمدة • ${roleVal}` : 'عضوية معتمدة وفعالة';
                     badge.className = 'bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
                 }
             }
