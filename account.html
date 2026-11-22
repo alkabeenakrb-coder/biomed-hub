@@ -44,6 +44,13 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; }
 
+        /* بطاقة الهوية بقياس ID-1 القياسي (85.60mm x 53.98mm) */
+        .bmh-id1-card {
+            aspect-ratio: 85.60 / 53.98;
+            width: 100%;
+            max-width: 460px;
+        }
+
         /* تناسق بطاقات الشهادات والنصوص والأزرار */
         .bmh-cert-card {
             overflow: hidden;
@@ -118,12 +125,14 @@
         }
 
         html.dark input,
-        html.dark select {
+        html.dark select,
+        html.dark textarea {
             background-color: rgba(24, 16, 44, 0.9) !important;
             border-color: rgba(167, 139, 250, 0.28) !important;
             color: #f3e8ff !important;
         }
-        html.dark input::placeholder {
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
             color: #94a3b8 !important;
         }
 
@@ -345,37 +354,96 @@
 
         <!-- لوحة حساب العضو الكاملة -->
         <section id="member-account-section" class="hidden space-y-6">
-            <!-- بطاقة البيانات الشخصية -->
+            <!-- بطاقة البيانات الشخصية وحالة العضوية -->
             <div class="bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 pb-5">
                     <div class="flex items-center gap-3.5">
                         <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-black text-lg shrink-0">
                             <i class="fa-solid fa-user-graduate"></i>
                         </div>
-                        <div>
-                            <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block mb-1">
-                                حساب عضو في BioMed Hub
-                            </span>
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span id="membership-tier-badge" class="bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block">
+                                    عضو مسجل في BioMed Hub
+                                </span>
+                                <span id="membership-status-pill" class="hidden text-[11px] font-bold px-2.5 py-0.5 rounded-full inline-block"></span>
+                            </div>
                             <h2 id="account-display-name" class="text-xl font-black text-purple-900">حسابي</h2>
-                            <p id="logged-user-email" class="text-xs text-slate-500 mt-0.5"></p>
+                            <p id="logged-user-email" class="text-xs text-slate-500"></p>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:items-end gap-2">
-                        <button id="toggle-edit-profile-btn" type="button" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-pen"></i>
-                            <span>تعديل البيانات الشخصية</span>
-                        </button>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <a href="https://biomedhubiq.com/form.html?id=GA0AAaBeEvXiyQiRShk7" target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
-                                <i class="fa-solid fa-id-card-clip ml-1"></i> طلب العضوية الرسمية
-                            </a>
-                            <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-rotate"></i>
-                                <span>تحديث الشهادات</span>
+                            <button id="toggle-edit-profile-btn" type="button" class="bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-pen"></i>
+                                <span>تعديل البيانات الشخصية</span>
+                            </button>
+                            <button id="open-accredited-request-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-id-card-clip"></i>
+                                <span>طلب العضوية المعتمدة</span>
                             </button>
                         </div>
+                        <button id="refresh-certs-btn" type="button" class="bg-slate-50 hover:bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>تحديث الشهادات</span>
+                        </button>
                     </div>
+                </div>
+
+                <!-- تنبيه حالة طلب العضوية المعتمدة -->
+                <div id="membership-status-banner" class="hidden text-xs font-bold p-3 rounded-xl"></div>
+
+                <!-- نموذج تقديم طلب العضوية المعتمدة -->
+                <div id="accredited-request-panel" class="hidden bg-purple-50/60 rounded-2xl border border-purple-200 p-5 space-y-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-purple-900">
+                                <i class="fa-solid fa-award text-purple-600 ml-1"></i>
+                                طلب ترقية إلى (عضو معتمد)
+                            </h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">يمنحك أولوية المقاعد في الورش، هوية عضوية تسلسلية (BME-MEM)، والترشيح المبكر للفرص.</p>
+                        </div>
+                        <button id="close-accredited-request-btn" type="button" class="text-xs font-bold text-slate-500 hover:text-red-600">
+                            <i class="fa-solid fa-xmark"></i> إغلاق
+                        </button>
+                    </div>
+
+                    <form id="accredited-request-form" class="space-y-3">
+                        <div class="grid sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">المجال الهندسي / الطبي المفضل *</label>
+                                <select id="acc-track" required class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-200 focus:border-purple-600 outline-none text-xs">
+                                    <option value="">اختر المجال</option>
+                                    <option value="صيانة وتشغيل الأجهزة الطبية">صيانة وتشغيل الأجهزة الطبية</option>
+                                    <option value="الإلكترونيات الطبية والتحكم">الإلكترونيات الطبية والتحكم</option>
+                                    <option value="الهندسة السريرية وإدارة المستشفيات">الهندسة السريرية وإدارة المستشفيات</option>
+                                    <option value="التصوير الطبي والأشعة">التصوير الطبي والأشعة</option>
+                                    <option value="البرمجة وتحليل البيانات الطبية">البرمجة وتحليل البيانات الطبية</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">هل حضرت ورشاً سابقة مع BioMed Hub؟</label>
+                                <select id="acc-attended" class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-200 focus:border-purple-600 outline-none text-xs">
+                                    <option value="نعم (أونلاين أو حضوري)">نعم (أونلاين أو حضوري)</option>
+                                    <option value="حساب جديد وسألتزم بالحضور القادم">حساب جديد وسألتزم بالحضور القادم</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">لماذا ترغب بالحصول على العضوية المعتمدة؟ *</label>
+                            <textarea id="acc-reason" rows="2" required placeholder="اذكر باختصار هدفك والتزامك بالحضور والمشاركة..."
+                                      class="w-full px-3.5 py-2 rounded-xl bg-white border border-purple-200 focus:border-purple-600 outline-none text-xs"></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
+                            <p id="acc-request-msg" class="text-xs font-bold"></p>
+                            <button id="submit-accredited-request-btn" type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-sm mr-auto">
+                                إرسال طلب الاعتماد
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- ملخص بيانات العضو -->
@@ -460,6 +528,64 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- بطاقة الهوية الرقمية للعضو المعتمد (قياس ID-1 القياسي: 85.60mm x 53.98mm) -->
+            <div id="accredited-id-section" class="hidden bg-white rounded-3xl border border-purple-200 p-6 sm:p-8 shadow-sm space-y-5">
+                <div class="flex items-center justify-between gap-3 flex-wrap border-b border-purple-100 pb-4">
+                    <div>
+                        <h3 class="text-base font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-purple-600"></i>
+                            <span>هوية العضوية المعتمدة</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5">قياس البطاقة القياسي ID-1 (85.60 ملم × 53.98 ملم) • رقم تسلسلي معتمد</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="id-card-header-code" dir="ltr" class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1.5 rounded-xl">BME-MEM-0001</span>
+                        <button id="download-id-png-btn" type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-download"></i>
+                            <span>تحميل الهوية PNG</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <div id="bmh-id1-card" class="bmh-id1-card rounded-2xl bg-gradient-to-br from-purple-950 via-purple-900 to-purple-700 text-white p-5 sm:p-6 shadow-xl flex flex-col justify-between relative overflow-hidden border border-purple-400/30">
+                        <div class="absolute -top-12 -left-12 w-40 h-40 rounded-full bg-white/10 pointer-events-none"></div>
+                        <div class="absolute -bottom-14 -right-14 w-48 h-48 rounded-full bg-purple-400/10 pointer-events-none"></div>
+
+                        <div class="flex items-start justify-between gap-3 relative z-10">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shrink-0">
+                                    <img src="M.png" alt="BioMed Hub" class="w-full h-full object-contain">
+                                </div>
+                                <div>
+                                    <p class="font-black text-sm sm:text-base leading-tight text-white">BioMed Hub</p>
+                                    <p class="text-[10px] sm:text-[11px] text-purple-200">هوية عضوية معتمدة</p>
+                                </div>
+                            </div>
+                            <span class="bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 text-[10px] sm:text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0">
+                                عضو معتمد
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 my-auto py-1">
+                            <h4 id="id1-member-name" class="text-base sm:text-xl font-black text-white truncate">عضو معتمد</h4>
+                            <p id="id1-member-meta" class="text-[11px] sm:text-xs text-purple-200 truncate mt-0.5">BioMed Hub</p>
+                        </div>
+
+                        <div class="flex items-end justify-between gap-3 border-t border-white/15 pt-2.5 relative z-10 text-[10px] sm:text-xs">
+                            <div>
+                                <span class="text-purple-200 block text-[9px] sm:text-[10px]">الرقم التسلسلي</span>
+                                <strong id="id1-member-code" dir="ltr" class="font-extrabold text-amber-300 tracking-wide text-xs sm:text-sm">BME-MEM-0001</strong>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-purple-200 block text-[9px] sm:text-[10px]">تاريخ الاعتماد</span>
+                                <strong id="id1-member-date" class="font-bold text-white">-</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -621,6 +747,7 @@
 
         let isRegisterMode = false;
         let currentUser = null;
+        let currentMemberData = {};
 
         function scrollToNotifications() {
             const box = document.getElementById('notifications');
@@ -660,7 +787,7 @@
             try {
                 await addDoc(collection(db, 'members', uid, 'notifications'), {
                     title: 'أهلاً وسهلاً بيك في BioMed Hub',
-                    body: 'تم إنشاء حسابك بنجاح. تقدر من هنا تراجع بياناتك الشخصية، تتابع شهاداتك، وتوصلك إشعارات الورش والفعاليات.',
+                    body: 'تم إنشاء حسابك كعضو مسجل بنجاح. تقدر من هنا تراجع بياناتك، تقدم طلب العضوية المعتمدة، تتابع شهاداتك، وتوصلك إشعارات الورش.',
                     read: false,
                     createdAt: Date.now()
                 });
@@ -823,7 +950,7 @@
                 registerExtraFields.classList.remove('hidden');
                 confirmPasswordBox.classList.remove('hidden');
                 authModalTitle.innerText = 'إنشاء حساب جديد في BioMed Hub';
-                authModalSubtitle.innerText = 'أدخل بياناتك الأساسية لإنشاء حسابك في المنصة.';
+                authModalSubtitle.innerText = 'أدخل بياناتك الأساسية لإنشاء حسابك كعضو مسجل في المنصة.';
                 authSubmitBtn.innerText = 'إنشاء الحساب';
             } else {
                 tabLogin.className = 'py-2 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition';
@@ -853,6 +980,14 @@
         document.getElementById('toggle-edit-profile-btn').addEventListener('click', () => setEditPanelOpen(profileEditPanel.classList.contains('hidden')));
         document.getElementById('cancel-edit-profile-btn').addEventListener('click', () => setEditPanelOpen(false));
 
+        const accreditedRequestPanel = document.getElementById('accredited-request-panel');
+        document.getElementById('open-accredited-request-btn')?.addEventListener('click', () => {
+            accreditedRequestPanel.classList.toggle('hidden');
+        });
+        document.getElementById('close-accredited-request-btn')?.addEventListener('click', () => {
+            accreditedRequestPanel.classList.add('hidden');
+        });
+
         const handleLogout = async () => { await signOut(auth); };
         document.getElementById('nav-logout-btn').addEventListener('click', handleLogout);
         document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
@@ -860,12 +995,73 @@
             if (currentUser?.email) loadUserCertificates(currentUser.email);
         });
 
+        function renderMembershipUI(data) {
+            const tierBadge = document.getElementById('membership-tier-badge');
+            const statusPill = document.getElementById('membership-status-pill');
+            const statusBanner = document.getElementById('membership-status-banner');
+            const openBtn = document.getElementById('open-accredited-request-btn');
+            const idSection = document.getElementById('accredited-id-section');
+
+            const isAccredited = data.membershipStatus === 'accredited' && !!data.membershipCode;
+            const isPending = data.membershipStatus === 'pending';
+            const isSuspended = data.membershipStatus === 'suspended';
+
+            if (isAccredited) {
+                tierBadge.innerText = `عضو معتمد (${data.membershipCode})`;
+                tierBadge.className = 'bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-3 py-0.5 rounded-full inline-block';
+                statusPill.classList.add('hidden');
+                statusBanner.classList.add('hidden');
+                openBtn.classList.add('hidden');
+                accreditedRequestPanel.classList.add('hidden');
+
+                idSection.classList.remove('hidden');
+                const approvedDate = data.accreditedAt ? new Date(data.accreditedAt).toLocaleDateString('ar-IQ') : new Date().toLocaleDateString('ar-IQ');
+                const metaParts = [data.university, data.city].filter(Boolean).join(' • ') || 'BioMed Hub';
+
+                document.getElementById('id-card-header-code').innerText = data.membershipCode;
+                document.getElementById('id1-member-name').innerText = data.fullName || 'عضو معتمد';
+                document.getElementById('id1-member-meta').innerText = metaParts;
+                document.getElementById('id1-member-code').innerText = data.membershipCode;
+                document.getElementById('id1-member-date').innerText = approvedDate;
+            } else {
+                idSection.classList.add('hidden');
+                tierBadge.innerText = 'عضو مسجل في BioMed Hub';
+                tierBadge.className = 'bg-purple-100 text-purple-800 text-[11px] font-bold px-3 py-0.5 rounded-full inline-block';
+                openBtn.classList.remove('hidden');
+
+                if (isPending) {
+                    statusPill.innerText = 'طلب العضوية المعتمدة قيد المراجعة';
+                    statusPill.className = 'bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full inline-block';
+                    statusBanner.innerText = 'طلبك للعضوية المعتمدة مسجل وقيد المراجعة من قِبل الإدارة.';
+                    statusBanner.className = 'text-xs font-bold p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200';
+                    statusBanner.classList.remove('hidden');
+                } else if (isSuspended) {
+                    statusPill.innerText = 'العضوية المعتمدة معلقة مؤقتاً';
+                    statusPill.className = 'bg-red-100 text-red-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full inline-block';
+                    statusBanner.innerText = 'العضوية المعتمدة معلقة حالياً؛ يمكنك تحديث بياناتك وإعادة التقديم عند الحاجة.';
+                    statusBanner.className = 'text-xs font-bold p-3 rounded-xl bg-red-50 text-red-700 border border-red-200';
+                    statusBanner.classList.remove('hidden');
+                } else {
+                    statusPill.classList.add('hidden');
+                    statusBanner.classList.add('hidden');
+                }
+            }
+
+            if (data.accreditedRequest) {
+                document.getElementById('acc-track').value = data.accreditedRequest.track || '';
+                document.getElementById('acc-attended').value = data.accreditedRequest.attended || 'نعم (أونلاين أو حضوري)';
+                document.getElementById('acc-reason').value = data.accreditedRequest.reason || '';
+            }
+        }
+
         function renderProfileSummary(data) {
+            currentMemberData = data || {};
             document.getElementById('account-display-name').innerText = data.fullName ? `مرحباً، ${data.fullName}` : 'حسابي';
             document.getElementById('summary-university').innerText = data.university || '-';
             document.getElementById('summary-education').innerText = (data.education === 'طالب' && data.stage) ? `طالب (${data.stage})` : (data.education || '-');
             document.getElementById('summary-phone').innerText = data.phone || '-';
             document.getElementById('summary-city').innerText = data.city || '-';
+            renderMembershipUI(data);
         }
 
         async function loadUserProfile(user) {
@@ -890,6 +1086,170 @@
                 renderProfileSummary({});
             }
         }
+
+        document.getElementById('accredited-request-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const btn = document.getElementById('submit-accredited-request-btn');
+            const msgEl = document.getElementById('acc-request-msg');
+            const track = document.getElementById('acc-track').value;
+            const attended = document.getElementById('acc-attended').value;
+            const reason = document.getElementById('acc-reason').value.trim();
+
+            if (!track || !reason) {
+                msgEl.className = 'text-xs font-bold text-red-600';
+                msgEl.innerText = 'يرجى اختيار المجال وكتابة سبب التقديم.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = 'جاري الإرسال...';
+            msgEl.innerText = '';
+
+            try {
+                const requestPayload = { track, attended, reason, submittedAt: Date.now() };
+                const updatedData = {
+                    email: currentUser.email,
+                    fullName: currentMemberData.fullName || '',
+                    university: currentMemberData.university || '',
+                    phone: currentMemberData.phone || '',
+                    education: currentMemberData.education || '',
+                    stage: currentMemberData.stage || '',
+                    city: currentMemberData.city || '',
+                    membershipTier: 'registered',
+                    membershipStatus: 'pending',
+                    accreditedRequest: requestPayload,
+                    updatedAt: Date.now()
+                };
+                await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
+                renderProfileSummary({ ...currentMemberData, ...updatedData });
+                msgEl.className = 'text-xs font-bold text-emerald-700';
+                msgEl.innerText = 'تم إرسال طلب العضوية المعتمدة بنجاح وهو الآن قيد المراجعة.';
+            } catch (err) {
+                console.error('Error submitting accredited request:', err);
+                msgEl.className = 'text-xs font-bold text-red-600';
+                msgEl.innerText = 'تعذر إرسال الطلب، حاول مرة أخرى.';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'إرسال طلب الاعتماد';
+            }
+        });
+
+        // تصدير بطاقة الهوية بقياس ID-1 القياسي (85.60mm x 53.98mm) بدقة عالية PNG
+        document.getElementById('download-id-png-btn')?.addEventListener('click', async () => {
+            try {
+                const width = 1011;
+                const height = 638;
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+
+                const grad = ctx.createLinearGradient(0, 0, width, height);
+                grad.addColorStop(0, '#2e1065');
+                grad.addColorStop(0.55, '#4c1d95');
+                grad.addColorStop(1, '#5b21b6');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, width, height);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+                ctx.beginPath();
+                ctx.arc(120, 90, 220, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(width - 90, height - 80, 240, 0, Math.PI * 2);
+                ctx.fill();
+
+                try {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = 'M.png';
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.roundRect(width - 140, 48, 86, 86, 18);
+                    ctx.fill();
+                    ctx.drawImage(img, width - 130, 58, 66, 66);
+                } catch (e) {}
+
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 34px Tajawal, sans-serif';
+                ctx.fillText('BioMed Hub', width - 170, 88);
+
+                ctx.fillStyle = '#ddd6fe';
+                ctx.font = '500 20px Tajawal, sans-serif';
+                ctx.fillText('هوية عضوية معتمدة • قياس ID-1 القياسي', width - 170, 122);
+
+                ctx.textAlign = 'left';
+                ctx.fillStyle = 'rgba(52, 211, 153, 0.22)';
+                ctx.beginPath();
+                ctx.roundRect(56, 56, 185, 46, 23);
+                ctx.fill();
+                ctx.fillStyle = '#a7f3d0';
+                ctx.font = 'bold 21px Tajawal, sans-serif';
+                ctx.fillText('عضو معتمد', 98, 86);
+
+                const fullName = currentMemberData.fullName || 'عضو معتمد';
+                const metaLine = [currentMemberData.university, currentMemberData.city].filter(Boolean).join(' • ') || 'BioMed Hub';
+                const codeStr = currentMemberData.membershipCode || 'BME-MEM-0001';
+                const dateStr = currentMemberData.accreditedAt ? new Date(currentMemberData.accreditedAt).toLocaleDateString('ar-IQ') : new Date().toLocaleDateString('ar-IQ');
+
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 48px Tajawal, sans-serif';
+                ctx.fillText(fullName, width - 56, 305);
+
+                ctx.fillStyle = '#ede9fe';
+                ctx.font = '500 26px Tajawal, sans-serif';
+                ctx.fillText(metaLine, width - 56, 355);
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(56, 485);
+                ctx.lineTo(width - 56, 485);
+                ctx.stroke();
+
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#c4b5fd';
+                ctx.font = '500 19px Tajawal, sans-serif';
+                ctx.fillText('الرقم التسلسلي للعضوية', width - 56, 525);
+
+                ctx.fillStyle = '#fcd34d';
+                ctx.font = 'bold 34px Tajawal, sans-serif';
+                ctx.fillText(codeStr, width - 56, 572);
+
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#c4b5fd';
+                ctx.font = '500 19px Tajawal, sans-serif';
+                ctx.fillText('تاريخ الاعتماد', 56, 525);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 26px Tajawal, sans-serif';
+                ctx.fillText(dateStr, 56, 570);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${codeStr}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 4000);
+                }, 'image/png', 1);
+            } catch (err) {
+                console.error('Error generating ID PNG:', err);
+                alert('تعذر تصدير الهوية PNG حالياً.');
+            }
+        });
 
         document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -918,7 +1278,7 @@
             try {
                 const updatedData = { email: currentUser.email, fullName, university, phone, education, stage, city, updatedAt: Date.now() };
                 await setDoc(doc(db, 'members', currentUser.uid), updatedData, { merge: true });
-                renderProfileSummary(updatedData);
+                renderProfileSummary({ ...currentMemberData, ...updatedData });
                 statusEl.className = 'text-xs font-bold text-emerald-700';
                 statusEl.innerText = 'تم حفظ بيانات الحساب بنجاح';
                 statusEl.classList.remove('hidden');
@@ -984,6 +1344,9 @@
                         education,
                         stage: education === 'طالب' ? stage : '',
                         city,
+                        role: 'member',
+                        membershipTier: 'registered',
+                        membershipStatus: 'none',
                         createdAt: Date.now(),
                         updatedAt: Date.now()
                     }, { merge: true });
@@ -1125,7 +1488,6 @@
                     return;
                 }
 
-                // إذا كانت الشهادة ملف PDF في Drive أو لا ترجع صورة مباشرة: افتح رابط الشهادة الأصلي
                 const fallbackLinks = buildDriveLinks(certObj.certLink);
                 const targetUrl = fallbackLinks.viewUrl || fallbackLinks.downloadUrl;
                 if (targetUrl) {
