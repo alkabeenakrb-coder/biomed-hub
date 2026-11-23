@@ -573,7 +573,6 @@
                             <i class="fa-solid fa-id-card text-purple-600"></i>
                             <span>هوية العضوية المعتمدة</span>
                         </h3>
-                        <p class="text-[11px] text-slate-500 mt-0.5">قياس البطاقة القياسي ID-1 (85.60 ملم × 53.98 ملم) • مزودة بباركود التحقق وتاريخ النفاذ</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <span id="id-card-header-code" dir="ltr" class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1.5 rounded-xl">BME-MEM-0001</span>
@@ -622,20 +621,25 @@
                             </div>
                         </div>
 
-                        <!-- التذييل: الكود التسلسلي + تاريخ الإصدار + تاريخ النفاذ -->
-                        <div class="grid grid-cols-3 gap-2 border-t border-white/15 pt-2 relative z-10 text-[9px] sm:text-[11px] items-end">
-                            <div>
-                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">الرقم التسلسلي</span>
-                                <strong id="id1-member-code" dir="ltr" class="font-extrabold text-amber-300 tracking-wide text-[10px] sm:text-xs">BME-MEM-0001</strong>
+                        <!-- التذييل: الكود التسلسلي + تاريخ الإصدار + تاريخ النفاذ + التنويه -->
+                        <div class="relative z-10 border-t border-white/15 pt-1.5 space-y-1">
+                            <div class="grid grid-cols-3 gap-2 text-[9px] sm:text-[11px] items-end">
+                                <div>
+                                    <span class="text-purple-200 block text-[8px] sm:text-[9px]">الرقم التسلسلي</span>
+                                    <strong id="id1-member-code" dir="ltr" class="font-extrabold text-amber-300 tracking-wide text-[10px] sm:text-xs">BME-MEM-0001</strong>
+                                </div>
+                                <div class="text-center">
+                                    <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ الاعتماد</span>
+                                    <strong id="id1-member-date" class="font-bold text-white">-</strong>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ النفاذ</span>
+                                    <strong id="id1-member-expiry" class="font-bold text-emerald-200">-</strong>
+                                </div>
                             </div>
-                            <div class="text-center">
-                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ الاعتماد</span>
-                                <strong id="id1-member-date" class="font-bold text-white">-</strong>
-                            </div>
-                            <div class="text-left">
-                                <span class="text-purple-200 block text-[8px] sm:text-[9px]">تاريخ النفاذ</span>
-                                <strong id="id1-member-expiry" class="font-bold text-emerald-200">-</strong>
-                            </div>
+                            <p class="text-[7.5px] sm:text-[8.5px] text-purple-200/80 text-center leading-tight">
+                                بطاقة عضوية تعريفية خاصة بمنصة BioMed Hub وليست وثيقة رسمية.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -1331,7 +1335,7 @@
 
                 ctx.fillStyle = '#ddd6fe';
                 ctx.font = '500 19px Tajawal, sans-serif';
-                ctx.fillText('هوية عضوية معتمدة • قياس ID-1 القياسي', width - 168, 114);
+                ctx.fillText('هوية عضوية معتمدة', width - 168, 114);
 
                 const isAccredited = currentMemberData.membershipStatus === 'accredited' && !!currentMemberData.membershipCode;
                 const roleTitle = isAccredited ? extractAssignedRoleTitle(currentMemberData) : '';
@@ -1367,20 +1371,20 @@
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 42px Tajawal, sans-serif';
-                ctx.fillText(fullName, width - 256, 232);
+                ctx.fillText(fullName, width - 256, 224);
 
-                let nextY = 280;
+                let nextY = 270;
                 if (roleTitle) {
                     ctx.fillStyle = '#fde68a';
                     ctx.font = 'bold 25px Tajawal, sans-serif';
                     ctx.fillText(roleTitle, width - 256, nextY);
-                    nextY += 42;
+                    nextY += 40;
                 }
 
                 ctx.fillStyle = '#fcd34d';
                 ctx.font = 'bold 27px Tajawal, sans-serif';
                 ctx.fillText(deptStr, width - 256, nextY);
-                nextY += 42;
+                nextY += 40;
 
                 ctx.fillStyle = '#ede9fe';
                 ctx.font = '500 23px Tajawal, sans-serif';
@@ -1410,11 +1414,11 @@
 
                         ctx.fillStyle = '#ffffff';
                         ctx.beginPath();
-                        ctx.roundRect(56, 205, 188, 188, 20);
+                        ctx.roundRect(56, 200, 188, 188, 20);
                         ctx.fill();
 
                         if (qrSource) {
-                            ctx.drawImage(qrSource, 66, 215, 168, 168);
+                            ctx.drawImage(qrSource, 66, 210, 168, 168);
                         }
                     }
                 } finally {
@@ -1424,39 +1428,45 @@
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.moveTo(56, 485);
-                ctx.lineTo(width - 56, 485);
+                ctx.moveTo(56, 466);
+                ctx.lineTo(width - 56, 466);
                 ctx.stroke();
 
                 // الرقم التسلسلي (يمين)
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#c4b5fd';
                 ctx.font = '500 18px Tajawal, sans-serif';
-                ctx.fillText('الرقم التسلسلي للعضوية', width - 56, 524);
+                ctx.fillText('الرقم التسلسلي للعضوية', width - 56, 502);
 
                 ctx.fillStyle = '#fcd34d';
                 ctx.font = 'bold 30px Tajawal, sans-serif';
-                ctx.fillText(codeStr, width - 56, 570);
+                ctx.fillText(codeStr, width - 56, 545);
 
                 // تاريخ الاعتماد (وسط)
                 ctx.textAlign = 'center';
                 ctx.fillStyle = '#c4b5fd';
                 ctx.font = '500 18px Tajawal, sans-serif';
-                ctx.fillText('تاريخ الاعتماد', width / 2, 524);
+                ctx.fillText('تاريخ الاعتماد', width / 2, 502);
 
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 24px Tajawal, sans-serif';
-                ctx.fillText(dateStr, width / 2, 568);
+                ctx.fillText(dateStr, width / 2, 544);
 
                 // تاريخ النفاذ (يسار)
                 ctx.textAlign = 'left';
                 ctx.fillStyle = '#c4b5fd';
                 ctx.font = '500 18px Tajawal, sans-serif';
-                ctx.fillText('تاريخ النفاذ', 56, 524);
+                ctx.fillText('تاريخ النفاذ', 56, 502);
 
                 ctx.fillStyle = '#a7f3d0';
                 ctx.font = 'bold 24px Tajawal, sans-serif';
-                ctx.fillText(expiryStr, 56, 568);
+                ctx.fillText(expiryStr, 56, 544);
+
+                // التنويه التعريفي أسفل البطاقة
+                ctx.textAlign = 'center';
+                ctx.fillStyle = 'rgba(221, 214, 254, 0.85)';
+                ctx.font = '500 16px Tajawal, sans-serif';
+                ctx.fillText('بطاقة عضوية تعريفية خاصة بمنصة BioMed Hub وليست وثيقة رسمية.', width / 2, 602);
 
                 canvas.toBlob((blob) => {
                     if (!blob) return;
