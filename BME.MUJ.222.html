@@ -208,6 +208,22 @@
                 <div id="membersListContainer" class="overflow-x-auto">
                     <p class="text-slate-400 text-center text-xs py-6">جاري جلب الأعضاء...</p>
                 </div>
+
+                <!-- نافذة عرض كامل معلومات العضو -->
+                <div id="memberDetailsModal" class="hidden fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-purple-200">
+                        <div class="p-4 bg-purple-900 text-white flex justify-between items-center">
+                            <div>
+                                <h4 id="memberModalName" class="font-extrabold text-sm">معلومات العضو</h4>
+                                <p id="memberModalEmail" class="text-[11px] text-purple-200" dir="ltr"></p>
+                            </div>
+                            <button type="button" id="closeMemberModalBtn" class="w-8 h-8 rounded-full bg-purple-800 hover:bg-purple-700 flex items-center justify-center text-white transition">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div id="memberModalBody" class="p-5 overflow-y-auto space-y-2.5 text-xs"></div>
+                    </div>
+                </div>
             </section>
 
             <!-- قسم منشئ الاستمارات الذكي (Google Forms البديل) -->
@@ -669,6 +685,42 @@
             }
         });
 
+        window.viewMemberDetails = function(id) {
+            const m = localMembers.find(x => x.id === id);
+            if (!m) return;
+
+            const roleTitle = getMemberRoleTitle(m);
+            const modal = document.getElementById('memberDetailsModal');
+            document.getElementById('memberModalName').innerText = m.fullName || 'بدون اسم';
+            document.getElementById('memberModalEmail').innerText = m.email || '-';
+
+            const items = [
+                ['الاسم الكامل', m.fullName || '-'],
+                ['البريد الإلكتروني', m.email || '-'],
+                ['رقم الهاتف', m.phone || '-'],
+                ['الجامعة', m.university || '-'],
+                ['المحافظة', m.city || '-'],
+                ['الصفة / الدور', roleTitle || 'غير محدد'],
+                ['حالة العضوية', m.membershipStatus === 'accredited' ? 'معتمد' : (m.membershipStatus === 'pending' ? 'طلب معلق' : 'عضو مسجل')],
+                ['كود العضوية', m.membershipCode || '-'],
+                ['المجال المطلوب', m.accreditedRequest?.track || '-'],
+                ['الصلاحية', m.role === 'admin' ? 'مشرف (Admin)' : 'عضو مسجل']
+            ];
+
+            document.getElementById('memberModalBody').innerHTML = items.map(([label, val]) => `
+                <div class="flex items-center justify-between gap-3 bg-purple-50/50 border border-purple-100 rounded-xl px-3.5 py-2.5">
+                    <span class="text-slate-500 font-bold shrink-0">${esc(label)}</span>
+                    <span class="font-extrabold text-slate-800 text-left break-all">${esc(val)}</span>
+                </div>
+            `).join('');
+
+            modal.classList.remove('hidden');
+        };
+
+        document.getElementById('closeMemberModalBtn')?.addEventListener('click', () => {
+            document.getElementById('memberDetailsModal')?.classList.add('hidden');
+        });
+
         function drawMembersTable(list) {
             const container = document.getElementById('membersListContainer');
             document.getElementById('members-count-badge').innerText = `${list.length} عضو`;
@@ -717,6 +769,12 @@
                                 <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${isAdmin ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'}">${isAdmin ? 'مشرف (Admin)' : 'عضو مسجل'}</span></td>
                                 <td class="p-3">
                                     <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                        <button type="button" onclick="viewMemberDetails('${esc(m.id)}')"
+                                                class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
+                                                title="عرض كامل معلومات العضو">
+                                            <i class="fa-solid fa-eye"></i>
+                                            <span>معلومات</span>
+                                        </button>
                                         ${!isAccredited ? `
                                             <button type="button" onclick="approveAccreditedMember('${esc(m.id)}', this)"
                                                     class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1"
@@ -773,6 +831,9 @@
                 (m.fullName || '').toLowerCase().includes(q) ||
                 (m.email || '').toLowerCase().includes(q) ||
                 (m.membershipCode || '').toLowerCase().includes(q) ||
+                (m.university || '').toLowerCase().includes(q) ||
+                (m.city || '').toLowerCase().includes(q) ||
+                (m.phone || '').toLowerCase().includes(q) ||
                 getMemberRoleTitle(m).toLowerCase().includes(q)
             ));
         });
